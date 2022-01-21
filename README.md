@@ -2,7 +2,7 @@
 [![PyPI-downloads](https://img.shields.io/pypi/dm/rushd)](https://pypi.org/project/rushd)
 [![PyPI-version](https://img.shields.io/pypi/v/rushd)](https://pypi.org/project/rushd)
 [![PyPI-license](https://img.shields.io/pypi/l/rushd)](https://pypi.org/project/rushd)
-[![Supported python versions](https://img.shields.io/pypi/pyversions/atlas-rfp)](https://pypi.org/project/rushd)
+[![Supported python versions](https://img.shields.io/pypi/pyversions/rushd)](https://pypi.org/project/rushd)
 
 A package for maintaining robust, reproducible data management.
 
