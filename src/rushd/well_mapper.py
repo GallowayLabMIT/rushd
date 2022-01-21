@@ -3,8 +3,6 @@ import re
 import itertools
 
 """
-From Chris Johnstone, 2021
-
 Helper module that parses plate specifications of the form:
 MEF-low: A1-E1
 MEF-bulk: F1-H1, A2-H2, A3-B3
@@ -71,7 +69,7 @@ def well_mapping(plate_spec, separator='.'):
         or well specifications as items.
     separator: str
         The separator to use for overlapping plate specifications
-    
+
     Returns
     -------
     A dictionary that maps wells to conditions.

@@ -1,13 +1,16 @@
-from . import well_mapper
-import yaml
-import pandas as pd
-import re
 from pathlib import Path
+import re
 import sys
+from typing import List, Optional
 
-def load_with_metadata(data_path,yaml_path,filename_regex=None):
+import pandas as pd
+import yaml
+
+from . import well_mapper
+
+def load_csv_with_metadata(data_path: str, yaml_path: str, filename_regex:Optional[str]=None) -> pd.DataFrame:
     """
-    Generates a pandas DataFrame from a set of .csv files located at the given path, 
+    Generates a pandas DataFrame from a set of .csv files located at the given path,
     adding columns for metadata encoded by a given .yaml file. Metadata is associated
     with the data based on well IDs encoded in the data filenames.
 
@@ -22,7 +25,7 @@ def load_with_metadata(data_path,yaml_path,filename_regex=None):
         Regular expression to use to extract well IDs from data filenames.
         If not included, the filenames are assumed to follow this format (default
         export format from FlowJo): 'export_[well]_[other text].csv'
-    
+
     Returns
     -------
     A single pandas DataFrame containing all data with associated metadata.
@@ -35,7 +38,7 @@ def load_with_metadata(data_path,yaml_path,filename_regex=None):
     if yaml_path[-5:] == '.yaml':
         f = yaml_path
     else:
-        
+
         try:
             f = next(yaml_path.glob('*.yaml'))
 
@@ -51,10 +54,10 @@ def load_with_metadata(data_path,yaml_path,filename_regex=None):
 
     # Load data from .csv files
 
-    data_list = []
+    data_list:List[pd.DataFrame] = []
 
     for file in Path(data_path).glob('*.csv'):
-        
+
         # Find data files
 
         if filename_regex is not None:
@@ -63,6 +66,7 @@ def load_with_metadata(data_path,yaml_path,filename_regex=None):
         else:
             # Default filename from FlowJo export is 'export_[well]_[population].csv'
             # Custom regex must contain capture group 'well'
+            # TO DO: add extra categories as metadata
             regex = re.compile(r"^.*export_(?P<well>[A-G0-9]+)_(?P<population>.+)\.csv")
 
         match = regex.match(file.name)
@@ -70,21 +74,21 @@ def load_with_metadata(data_path,yaml_path,filename_regex=None):
 
         # Load data
         df = pd.read_csv(file)
-        
+
         # Add metadata to DataFrame
-        
+
         well = match.group('well')
         # Fix well ID to format letter-digit-digit
-        if len(well) == 2: 
+        if len(well) == 2:
             well = well[:1]+'0'+well[1:]
-        
+
         index = 0
         for k,v in metadata_map.items():
             df.insert(index,k,v[well])
             index += 1
         # Also add column for well ID
         df.insert(index,'Well',well)
-    
+
         data_list.append(df)
 
 

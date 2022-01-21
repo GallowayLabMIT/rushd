@@ -28,6 +28,7 @@ setuptools.setup(
     python_requires=">=3.7",
     install_requires=[
         'pyyaml',
+        'pandas',
     ],
     extras_require={
         'dev': [
