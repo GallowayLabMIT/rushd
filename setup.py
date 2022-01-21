@@ -5,7 +5,7 @@ with open('README.md', 'r', encoding='utf-8') as fh:
 
 setuptools.setup(
     name='rushd',
-    version='0.0.1',
+    version='0.0.2',
     author='Christopher Johnstone',
     author_email='meson800@gmail.com',
     description='Package for maintaining robust, reproducible data management.',
