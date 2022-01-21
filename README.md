@@ -26,17 +26,18 @@ import rushd as rd
 ## Complete Examples
 
 ## Developer install
-If you'd like to hack locally on `atlas-rfp`, after cloning this repository:
+If you'd like to hack locally on `rushd`, after cloning this repository:
 ```
 $ git clone https://github.com/GallowayLabMIT/rushd.git
 $ cd rushd
 ```
 you can create a local virtual environment, and install `rushd` in "development (editable) mode"
+with the extra requirements for tests.
 ```
 $ python -m venv env
 $ .\env\Scripts\activate    (on Windows)
 $ source env/bin/activate   (on Mac/Linux)
-$ pip install -e .
+$ pip install -e .[dev]
 ```
 After this 'local install', you can use and import `rushd` freely without
 having to re-install after each update.
@@ -51,5 +52,7 @@ This is licensed by the MIT license. Use freely!
 
 ## What does the name mean?
 The name is a reference to [Ibn Rushd](https://en.wikipedia.org/wiki/Averroes), a Muslim scholar born in Córdoba who was responsible for translating and adding scholastic commentary to ancient Greek works, especially Aristotle. His translations spurred further translations into Latin and Hebrew, reigniting interest in ancient Greek works for the first time since the fall of the Roman empire.
+
+His name is pronounced [rush-id](https://translate.google.com/?sl=auto&tl=en&text=%20%D8%A7%D8%A8%D9%86%20%D8%B1%D8%B4%D8%AF&op=translate).
 
 If we take the first and last letter, we also get `rd`: repeatable data!
