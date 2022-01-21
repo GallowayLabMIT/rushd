@@ -3,6 +3,7 @@
 [![PyPI-version](https://img.shields.io/pypi/v/rushd)](https://pypi.org/project/rushd)
 [![PyPI-license](https://img.shields.io/pypi/l/rushd)](https://pypi.org/project/rushd)
 [![Supported python versions](https://img.shields.io/pypi/pyversions/rushd)](https://pypi.org/project/rushd)
+[![codecov](https://codecov.io/gh/GallowayLabMIT/rushd/branch/main/graph/badge.svg?token=ALaU8lQxt5)](https://codecov.io/gh/GallowayLabMIT/rushd)
 
 A package for maintaining robust, reproducible data management.
 
