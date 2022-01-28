@@ -96,9 +96,11 @@ Both the non-normalized (e.g. no leading zeros, `A1`) and normalized
 """
 import re
 import itertools
-from typing import Any, Dict, Iterable, Union
+from typing import Any, Dict, List, Tuple, Set, Union
 
-def well_mapping(plate_spec:Union[Dict,Iterable[Dict]], separator:str='.')->Dict[str,Any]:
+def well_mapping(
+    plate_spec:Union[Dict[Any,str],List[Dict[Any,str]],Tuple[Dict[Any,str]]],
+    separator:str='.')->Dict[str,Any]:
     """
     Generates a well mapping, given a plate specification
     and an optional separator.
@@ -123,7 +125,7 @@ def well_mapping(plate_spec:Union[Dict,Iterable[Dict]], separator:str='.')->Dict
     cti_mapping = {v: k for k, v in enumerate(list('ABCDEFGHIJKLMNOP'))}
     itc_mapping = {k: v for k, v in enumerate(list('ABCDEFGHIJKLMNOP'))} # pylint: disable=unnecessary-comprehension
 
-    output_mapping = {}
+    output_mapping: Dict[str,Any] = {}
     for mapping_dict in plate_spec:
         for key, val in mapping_dict.items():
             if len(val) == 0:
@@ -132,7 +134,7 @@ def well_mapping(plate_spec:Union[Dict,Iterable[Dict]], separator:str='.')->Dict
             # Allow trailing commas
             tokenized = ''.join(val.split()).rstrip(',').split(',')
 
-            wells = set()
+            wells: Set[str] = set()
             for token in tokenized:
                 single_result = re.fullmatch(r'^([A-P]\d+)$', token)
                 dual_result = re.fullmatch(r'^([A-P]\d+)-([A-P]\d+)$', token)
