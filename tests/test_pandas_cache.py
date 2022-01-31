@@ -21,3 +21,12 @@ def test_pandas_cache_decorator(tmp_path: Path):
     assert n_regens == 1
     _ = gen_dataframe(invalidate=True)
     assert n_regens == 2
+    @rushd.io.cache_dataframe(str(tmp_path / 'dfcache2.gzip'))
+    def gen_dataframe_str() -> pd.DataFrame:
+        nonlocal n_regens
+        n_regens += 1
+        return pd.DataFrame({'test': [1,2,3]})
+    _ = gen_dataframe_str()
+    assert n_regens == 3
+    _ = gen_dataframe_str()
+    assert n_regens == 3
