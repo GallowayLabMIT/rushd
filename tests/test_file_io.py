@@ -1,11 +1,12 @@
-from importlib import reload
 import datetime
 import hashlib
+from importlib import reload
 import os
 from pathlib import Path
-import pytest
 import subprocess
+import sys
 
+import pytest
 import yaml
 
 import rushd
@@ -246,3 +247,19 @@ def test_str_in_out(tmp_path: Path):
     with (tmp_path / 'out.txt.yaml').open() as f:
         meta = yaml.safe_load(f)
         assert meta['dependencies'][0]['file'].endswith('in.txt')
+
+def test_permission_denied(tmp_path: Path):
+    """
+    Makes sure that we correctly handle the
+    case where we don't have permission to continue
+    upward in the filesystem tree.
+    """
+    if sys.platform.startswith("win"):
+        pytest.skip('Unable to modify file permissions on Windows')
+    (tmp_path / 'nested').mkdir()
+    (tmp_path / 'nested' / 'again').mkdir()
+    os.chdir(tmp_path / 'nested' / 'again')
+    os.chmod(tmp_path / 'nested', 0o000)
+    reload(rushd.io)
+    assert rushd.datadir is None
+    assert rushd.rootdir is None
