@@ -264,4 +264,5 @@ def test_permission_denied(tmp_path: Path):
     os.chmod(tmp_path / 'nested', 0o100)
     os.chmod(tmp_path / 'nested' / 'datadir.txt', 0o000)
     reload(rushd.io)
-    os.chmod(tmp_path / 'nested', 0o600)
+    os.chmod(tmp_path / 'nested', 0o700)
+    os.chmod(tmp_path / 'nested' / 'datadir.txt', 0o600)
