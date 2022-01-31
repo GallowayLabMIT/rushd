@@ -54,8 +54,6 @@ def _locate_datadir_txt()->Optional[Path]:
         return current_dir / 'datadir.txt'
     except PermissionError:
         return None
-    except FileNotFoundError:
-        return None
 
 def _load_root_datadir(datadir_txt: Optional[Path]) -> Tuple[Optional[Path],Optional[Path]]:
     """
