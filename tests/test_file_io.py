@@ -261,6 +261,4 @@ def test_permission_denied(tmp_path: Path):
     os.chdir(tmp_path / 'nested' / 'again')
     os.chmod(tmp_path / 'nested', 0o100)
     reload(rushd.io)
-    assert rushd.datadir is None
-    assert rushd.rootdir is None
     os.chmod(tmp_path / 'nested', 0o600)
