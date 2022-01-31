@@ -69,7 +69,7 @@ def test_git_version(tmp_path: Path):
     with (tmp_path / 'clean_repo' / 'test.txt').open('w') as f:
         f.write('Hello world')
     subprocess.run(['git', 'add', 'test.txt'], check=True, capture_output=True)
-    subprocess.run(['git', 'commit', '--author="CI <>"', '-m', 'initial'], check=True, capture_output=True)
+    subprocess.run(['git', 'commit', '--author', 'CI <>', '-m', 'initial'], check=True, capture_output=True)
 
     clean_version = rushd.io.git_version()
     assert clean_version is not None
@@ -80,7 +80,7 @@ def test_git_version(tmp_path: Path):
     with (tmp_path / 'dirty_repo' / 'test.txt').open('w') as f:
         f.write('Hello world')
     subprocess.run(['git', 'add', 'test.txt'], check=True, capture_output=True)
-    subprocess.run(['git', 'commit', '--author="CI <>"', '-m', 'initial'], check=True, capture_output=True)
+    subprocess.run(['git', 'commit', '--author', 'CI <>', '-m', 'initial'], check=True, capture_output=True)
     with (tmp_path / 'dirty_repo' / 'test.txt').open('w') as f:
         f.write('Hello world...again')
 
@@ -185,7 +185,7 @@ def test_git_property(tmp_path: Path):
     with (tmp_path / 'text.txt').open('w') as f:
         f.write('Hello world!')
     subprocess.run(['git', 'add', 'text.txt'], check=True, capture_output=True)
-    subprocess.run(['git', 'commit', '--author="CI <>"', '-m', 'initial'], check=True, capture_output=True)
+    subprocess.run(['git', 'commit', '--author', 'CI <>', '-m', 'initial'], check=True, capture_output=True)
     git_log = subprocess.run(['git', 'log', '-n1', '--format=format:%H'], check=True, capture_output=True)
 
     with rushd.io.outfile(tmp_path / 'out.txt').open('w') as f:
