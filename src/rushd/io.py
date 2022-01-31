@@ -271,34 +271,46 @@ def outfile(filename: Union[str,Path], tag: Optional[str] = None) -> Path:
     return filename
 
 ## Convenience decorator for caching dataframes
-def cache_dataframe(cache_path: Union[Path, str], invalidate: bool = False, gen_func: Callable[..., pd.DataFrame]) ->Callable[..., pd.DataFrame]:
+def cache_dataframe(cache_path: Union[Path, str]) ->Callable[..., Callable[...,pd.DataFrame]]:
     """
     Wraps caching functionality around a
     dataframe-generating function.
+
+    Notes
+    -----
+    If you wrap a function that contains an `invalidate` keyword,
+    this keyword will be removed when passed to your function!
 
     Parameters
     ----------
     cache_path: str or Path
         The path at which the dataframe cache should be saved
-    invalidate: bool
-        If the cache should be invalidated (and re-generated)
 
     Returns
     -------
     A function that generates a dataframe with optional caching.
+    An extra keyword argument, 'invalidate' is added that invalidates
+    the cache if needed
     """
     if not isinstance(cache_path, Path):
         savepath = Path(cache_path)
     else:
         savepath = cache_path
-    def wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
-        if savepath.exists():
-            df = pd.read_parquet(savepath) # type: ignore
-            print(f'Loaded a {len(df)}-row dataframe from cache.')
+    def decorator(gen_func: Callable[..., pd.DataFrame]) ->Callable[..., pd.DataFrame]:
+        def wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
+            if savepath.exists() and (
+                'invalidate' not in kwargs or
+                not kwargs['invalidate']):
+                df = pd.read_parquet(savepath) # type: ignore
+                print(f'Loaded a {len(df)}-row dataframe from cache.')
+                return df
+            new_kwargs = dict(kwargs)
+            if 'invalidate' in new_kwargs:
+                new_kwargs.pop('invalidate')
+            df = gen_func(*args, **new_kwargs)
+            print(f'Regenerated a {len(df)}-row dataframe...', end='')
+            df.to_parquet(savepath, compression='gzip') # type: ignore
+            print('cached!')
             return df
-        df = gen_func(*args, **kwargs)
-        print(f'Regenerated a {len(df)}-row dataframe...', end='')
-        df.to_parquet(savepath, compress='gzip') # type: ignore
-        print('cached!')
-        return df
-    return wrapper
+        return wrapper
+    return decorator

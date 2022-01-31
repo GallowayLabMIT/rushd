@@ -36,6 +36,7 @@ setuptools.setup(
     ],
     extras_require={
         'dev': [
+            'pyarrow',
             'pytest',
             'pytest-pep8',
             'pytest-cov',
