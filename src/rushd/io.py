@@ -14,9 +14,10 @@ your output files that identify input files.
 import datetime
 from pathlib import Path
 import subprocess
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 import hashlib
 import warnings
+import pandas as pd
 import yaml
 
 ## Datadir/rootdir-related detection
@@ -52,6 +53,8 @@ def _locate_datadir_txt()->Optional[Path]:
             current_dir = up_dir
         return current_dir / 'datadir.txt'
     except PermissionError:
+        return None
+    except FileNotFoundError:
         return None
 
 def _load_root_datadir(datadir_txt: Optional[Path]) -> Tuple[Optional[Path],Optional[Path]]:
@@ -267,6 +270,35 @@ def outfile(filename: Union[str,Path], tag: Optional[str] = None) -> Path:
         yaml.dump(yaml_result, yaml_out) # type: ignore
     return filename
 
-## Convenience function for caching dataframes
-def cache_dataframe():
-    pass
+## Convenience decorator for caching dataframes
+def cache_dataframe(cache_path: Union[Path, str], invalidate: bool = False, gen_func: Callable[..., pd.DataFrame]) ->Callable[..., pd.DataFrame]:
+    """
+    Wraps caching functionality around a
+    dataframe-generating function.
+
+    Parameters
+    ----------
+    cache_path: str or Path
+        The path at which the dataframe cache should be saved
+    invalidate: bool
+        If the cache should be invalidated (and re-generated)
+
+    Returns
+    -------
+    A function that generates a dataframe with optional caching.
+    """
+    if not isinstance(cache_path, Path):
+        savepath = Path(cache_path)
+    else:
+        savepath = cache_path
+    def wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
+        if savepath.exists():
+            df = pd.read_parquet(savepath) # type: ignore
+            print(f'Loaded a {len(df)}-row dataframe from cache.')
+            return df
+        df = gen_func(*args, **kwargs)
+        print(f'Regenerated a {len(df)}-row dataframe...', end='')
+        df.to_parquet(savepath, compress='gzip') # type: ignore
+        print('cached!')
+        return df
+    return wrapper
