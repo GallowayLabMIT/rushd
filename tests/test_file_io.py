@@ -258,7 +258,10 @@ def test_permission_denied(tmp_path: Path):
         pytest.skip('Unable to modify file permissions on Windows')
     (tmp_path / 'nested').mkdir()
     (tmp_path / 'nested' / 'again').mkdir()
+    with (tmp_path / 'datadir.txt').open('w') as f:
+        f.write('access denied here!')
     os.chdir(tmp_path / 'nested' / 'again')
     os.chmod(tmp_path / 'nested', 0o100)
+    os.chmod(tmp_path / 'nested' / 'datadir.txt', 0o000)
     reload(rushd.io)
     os.chmod(tmp_path / 'nested', 0o600)
