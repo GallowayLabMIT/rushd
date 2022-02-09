@@ -3,11 +3,20 @@
 Collection of helper modules for maintaining
 robust, reproducible data management.
 """
-from . import io
+from . import io, flow
 from .io import infile, outfile
 
+submodules = [
+    'io',
+    'flow'
+]
+
+re_exports = [
+    'infile',
+    'outfile',
+]
 # Re-exports of common functions loaded from submodules
-__all__ = ['infile', 'outfile']
+__all__ = submodules + re_exports
 
 # Re-export datadir and rootdir
 def __getattr__(name: str):
