@@ -40,7 +40,7 @@ setuptools.setup(
             'pytest',
             'pytest-pep8',
             'pytest-cov',
-            'pylint',
+            'pre-commit',
             'build',
             'twine',
         ]
