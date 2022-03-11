@@ -125,19 +125,19 @@ def test_path_translation(tmp_path: Path):
     relative to the data directory, the root directory,
     and via an absolute path
     """
-    (tmp_path / 'data').mkdir()
-    (tmp_path / 'root').mkdir()
-    (tmp_path / 'external').mkdir()
-    with (tmp_path / 'root' / 'datadir.txt').open('w') as datadir_txt:
-        datadir_txt.write(str(tmp_path / 'data'))
+    (tmp_path / "data").mkdir()
+    (tmp_path / "root").mkdir()
+    (tmp_path / "external").mkdir()
+    with (tmp_path / "root" / "datadir.txt").open("w") as datadir_txt:
+        datadir_txt.write(str(tmp_path / "data"))
 
-    with (tmp_path / 'data' / 'in_data.txt').open('w') as f:
-        f.write('foo')
-    with (tmp_path / 'root' / 'in_root.txt').open('w') as f:
-        f.write('bar')
-    with (tmp_path / 'external' / 'in_external.txt').open('w') as f:
-        f.write('baz')
-    os.chdir(tmp_path / 'root')
+    with (tmp_path / "data" / "in_data.txt").open("w") as f:
+        f.write("foo")
+    with (tmp_path / "root" / "in_root.txt").open("w") as f:
+        f.write("bar")
+    with (tmp_path / "external" / "in_external.txt").open("w") as f:
+        f.write("baz")
+    os.chdir(tmp_path / "root")
     reload(rushd.io)
     # Generate an output file and check the relative paths created
     _ = rushd.io.infile(tmp_path / "data" / "in_data.txt")
@@ -281,16 +281,16 @@ def test_permission_denied(tmp_path: Path):
     upward in the filesystem tree.
     """
     if sys.platform.startswith("win"):
-        pytest.skip('Unable to modify file permissions on Windows')
-    (tmp_path / 'nested').mkdir()
-    (tmp_path / 'nested' / 'again').mkdir()
-    with (tmp_path / 'nested' / 'datadir.txt').open('w') as f:
-        f.write('access denied here!')
-    os.chdir(tmp_path / 'nested' / 'again')
-    os.chmod(tmp_path / 'nested', 0o000)
+        pytest.skip("Unable to modify file permissions on Windows")
+    (tmp_path / "nested").mkdir()
+    (tmp_path / "nested" / "again").mkdir()
+    with (tmp_path / "nested" / "datadir.txt").open("w") as f:
+        f.write("access denied here!")
+    os.chdir(tmp_path / "nested" / "again")
+    os.chmod(tmp_path / "nested", 0o000)
     try:
         reload(rushd.io)
-        os.chmod(tmp_path / 'nested', 0o700)
+        os.chmod(tmp_path / "nested", 0o700)
         reload(rushd.io)
     finally:
-        os.chmod(tmp_path / 'nested', 0o700)
+        os.chmod(tmp_path / "nested", 0o700)
