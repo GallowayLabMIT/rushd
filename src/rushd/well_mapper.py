@@ -102,7 +102,7 @@ from typing import Any, Dict, List, Set, Tuple, Union
 
 def well_mapping(
     plate_spec: Union[Dict[Any, str], List[Dict[Any, str]], Tuple[Dict[Any, str]]],
-    separator: str = ".",
+    separator: str = '.',
 ) -> Dict[str, Any]:
     """Generate a well mapping given a plate specification.
 
@@ -125,32 +125,32 @@ def well_mapping(
         plate_spec = [plate_spec]
 
     # Char To Int mapping and Int To Char mapping
-    cti_mapping = {v: k for k, v in enumerate(list("ABCDEFGHIJKLMNOP"))}
+    cti_mapping = {v: k for k, v in enumerate(list('ABCDEFGHIJKLMNOP'))}
     itc_mapping = {
-        k: v for k, v in enumerate(list("ABCDEFGHIJKLMNOP"))
+        k: v for k, v in enumerate(list('ABCDEFGHIJKLMNOP'))
     }  # pylint: disable=unnecessary-comprehension
 
     output_mapping: Dict[str, Any] = {}
     for mapping_dict in plate_spec:
         for key, val in mapping_dict.items():
             if len(val) == 0:
-                raise ValueError("Empty mapping spec is not allowed!")
+                raise ValueError('Empty mapping spec is not allowed!')
             # Remove all whitespace
             # Allow trailing commas
-            tokenized = "".join(val.split()).rstrip(",").split(",")
+            tokenized = ''.join(val.split()).rstrip(',').split(',')
 
             wells: Set[str] = set()
             for token in tokenized:
-                single_result = re.fullmatch(r"^([A-P]\d+)$", token)
-                dual_result = re.fullmatch(r"^([A-P]\d+)-([A-P]\d+)$", token)
+                single_result = re.fullmatch(r'^([A-P]\d+)$', token)
+                dual_result = re.fullmatch(r'^([A-P]\d+)-([A-P]\d+)$', token)
                 if single_result is None and dual_result is None:
-                    raise ValueError(f"Invalid mapping spec: {key}:{val}, problem spec: {token}")
+                    raise ValueError(f'Invalid mapping spec: {key}:{val}, problem spec: {token}')
 
                 if single_result is not None:
                     # Add a single well to the well mapping. Add both the normalized and
                     # non-normalized versions
-                    wells.add(f"{single_result.group(1)[0]}{int(single_result.group(1)[1:]):02d}")
-                    wells.add(f"{single_result.group(1)[0]}{int(single_result.group(1)[1:])}")
+                    wells.add(f'{single_result.group(1)[0]}{int(single_result.group(1)[1:]):02d}')
+                    wells.add(f'{single_result.group(1)[0]}{int(single_result.group(1)[1:])}')
                 elif dual_result is not None:
                     # Iterate over all wells
                     corners = [
@@ -173,8 +173,8 @@ def well_mapping(
                         # Add the non-normalized and normalized (leading zeros)
                         # versions. Adding an existing entry is a no-op, so no
                         # harm done.
-                        wells.add(f"{itc_mapping[well[0]]}{well[1]}")
-                        wells.add(f"{itc_mapping[well[0]]}{well[1]:02d}")
+                        wells.add(f'{itc_mapping[well[0]]}{well[1]}')
+                        wells.add(f'{itc_mapping[well[0]]}{well[1]:02d}')
             for well in wells:
                 if well not in output_mapping:
                     output_mapping[well] = key

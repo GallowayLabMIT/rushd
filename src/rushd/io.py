@@ -49,14 +49,14 @@ def _locate_datadir_txt() -> Optional[Path]:
         current_dir = Path.cwd()
         # Resolve to an absolute path
         current_dir = current_dir.resolve()
-        while not (current_dir / "datadir.txt").is_file():
+        while not (current_dir / 'datadir.txt').is_file():
             up_dir = current_dir.parent
             # Make sure we didn't reach the filesystem root
             if up_dir == current_dir:
                 return None
             # otherwise, continue searching
             current_dir = up_dir
-        return current_dir / "datadir.txt"
+        return current_dir / 'datadir.txt'
     except PermissionError:
         return None
 
@@ -68,7 +68,7 @@ def _load_root_datadir(
     Locate the root and datadir, returning Paths if possible.
 
     Uses the location of the datadir.txt file to define the data directory
-    and the "root" directory.
+    and the 'root' directory.
 
     Parameters
     ----------
@@ -88,7 +88,7 @@ def _load_root_datadir(
 
 _rootdir, _datadir = _load_root_datadir(_locate_datadir_txt())
 if _datadir is None:
-    warnings.warn("Unable to locate datadir.txt", category=ImportWarning)
+    warnings.warn('Unable to locate datadir.txt', category=ImportWarning)
 
 
 def __getattr__(name: str) -> Path:
@@ -98,20 +98,20 @@ def __getattr__(name: str) -> Path:
     rushd.io exports two attributes,
     the datadir export and the rootdir export.
     """
-    if name == "datadir":
+    if name == 'datadir':
         if _datadir is None:
             raise NoDatadirError(
-                f"No datadir.txt file found in working directory {Path.cwd()} or parents"
+                f'No datadir.txt file found in working directory {Path.cwd()} or parents'
             )
         return _datadir
-    if name == "rootdir":
+    if name == 'rootdir':
         if _rootdir is None:
             raise NoDatadirError(
-                f"No datadir.txt file found in working directory {Path.cwd()} or parents,"
-                " so could not define root"
+                f'No datadir.txt file found in working directory {Path.cwd()} or parents,'
+                ' so could not define root'
             )
         return _rootdir
-    raise AttributeError(f"No attribute {name} in rushd.io")
+    raise AttributeError(f'No attribute {name} in rushd.io')
 
 
 def git_version() -> Optional[str]:
@@ -124,16 +124,16 @@ def git_version() -> Optional[str]:
     not contained within a git repository.
     """
     git_log = subprocess.run(
-        ["git", "log", "-n1", "--format=format:%H"], check=False, capture_output=True
+        ['git', 'log', '-n1', '--format=format:%H'], check=False, capture_output=True
     )
     git_diff_index = subprocess.run(
-        ["git", "diff-index", "--quiet", "HEAD", "--"], check=False, capture_output=True
+        ['git', 'diff-index', '--quiet', 'HEAD', '--'], check=False, capture_output=True
     )
 
     # Unable to locate git, or not in a repo
     if git_log.returncode != 0:
         return None
-    return git_log.stdout.decode() + ("-dirty" if git_diff_index.returncode != 0 else "")
+    return git_log.stdout.decode() + ('-dirty' if git_diff_index.returncode != 0 else '')
 
 
 # Convenience functions for storing files and their hashes
@@ -194,7 +194,7 @@ def infile(filename: Union[str, Path], tag: Optional[str] = None, should_hash: b
     if should_hash:
         chunk_size = 2**20
         sha256 = hashlib.sha256()
-        with open(filename, "rb") as bfile:
+        with open(filename, 'rb') as bfile:
             while True:
                 data = bfile.read(chunk_size)
                 if not data:
@@ -250,14 +250,14 @@ def outfile(filename: Union[str, Path], tag: Optional[str] = None) -> Path:
         filename = Path(filename)
 
     yaml_result: Dict[str, Union[str, List[Dict[str, str]]]] = {
-        "type": "tracked_outfile",
-        "name": filename.name,
-        "date": datetime.datetime.now().date().isoformat(),
+        'type': 'tracked_outfile',
+        'name': filename.name,
+        'date': datetime.datetime.now().date().isoformat(),
     }
     # Save git version if we are in a git repo
     git = git_version()
     if git:
-        yaml_result["git_version"] = git
+        yaml_result['git_version'] = git
 
     if tag:
         files: Dict[Path, Optional[str]] = _tagged_inputs[tag] if tag in _tagged_inputs else {}
@@ -273,25 +273,25 @@ def outfile(filename: Union[str, Path], tag: Optional[str] = None) -> Path:
         if abs_datadir and _is_relative_to(abs_filepath, abs_datadir):
             result.update(
                 {
-                    "file": str(abs_filepath.relative_to(abs_datadir)),
-                    "path_type": "datadir_relative",
+                    'file': str(abs_filepath.relative_to(abs_datadir)),
+                    'path_type': 'datadir_relative',
                 }
             )
         elif abs_rootdir and _is_relative_to(abs_filepath, abs_rootdir):
             result.update(
                 {
-                    "file": str(abs_filepath.relative_to(abs_rootdir)),
-                    "path_type": "rootdir_relative",
+                    'file': str(abs_filepath.relative_to(abs_rootdir)),
+                    'path_type': 'rootdir_relative',
                 }
             )
         else:
-            result.update({"file": str(abs_filepath), "path_type": "absolute"})
+            result.update({'file': str(abs_filepath), 'path_type': 'absolute'})
         if file_hash:
-            result.update({"sha256": file_hash})
+            result.update({'sha256': file_hash})
         file_yaml.append(result)
-    yaml_result.update({"dependencies": file_yaml})
+    yaml_result.update({'dependencies': file_yaml})
 
-    with (filename.parent / (filename.name + ".yaml")).open("w") as yaml_out:
+    with (filename.parent / (filename.name + '.yaml')).open('w') as yaml_out:
         yaml.dump(yaml_result, yaml_out)  # type: ignore
     return filename
 
@@ -324,17 +324,17 @@ def cache_dataframe(cache_path: Union[Path, str]) -> Callable[..., Callable[...,
 
     def decorator(gen_func: Callable[..., pd.DataFrame]) -> Callable[..., pd.DataFrame]:
         def wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
-            if savepath.exists() and ("invalidate" not in kwargs or not kwargs["invalidate"]):
+            if savepath.exists() and ('invalidate' not in kwargs or not kwargs['invalidate']):
                 df = pd.read_parquet(savepath)  # type: ignore
-                print(f"Loaded a {len(df)}-row dataframe from cache.")
+                print(f'Loaded a {len(df)}-row dataframe from cache.')
                 return df
             new_kwargs = dict(kwargs)
-            if "invalidate" in new_kwargs:
-                new_kwargs.pop("invalidate")
+            if 'invalidate' in new_kwargs:
+                new_kwargs.pop('invalidate')
             df = gen_func(*args, **new_kwargs)
-            print(f"Regenerated a {len(df)}-row dataframe...", end="")
-            df.to_parquet(savepath, compression="gzip")  # type: ignore
-            print("cached!")
+            print(f'Regenerated a {len(df)}-row dataframe...', end='')
+            df.to_parquet(savepath, compression='gzip')  # type: ignore
+            print('cached!')
             return df
 
         return wrapper
