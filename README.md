@@ -46,6 +46,11 @@ having to re-install after each update.
 ## Changelog
 See the [CHANGELOG](CHANGELOG.md) for detailed changes.
 ```
+## [0.1.0] - 2022-03-11
+### Added
+- Initial flow processing workflow
+### Modified
+- Automatic use of black, isort, and flake in CI
 ```
 
 ## License
