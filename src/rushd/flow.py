@@ -1,6 +1,6 @@
-from pathlib import Path
 import re
 import sys
+from pathlib import Path
 from typing import List, Optional
 
 import pandas as pd
@@ -8,7 +8,10 @@ import yaml
 
 from . import well_mapper
 
-def load_csv_with_metadata(data_path: str, yaml_path: str, filename_regex:Optional[str]=None) -> pd.DataFrame:
+
+def load_csv_with_metadata(
+    data_path: str, yaml_path: str, filename_regex: Optional[str] = None
+) -> pd.DataFrame:
     """
     Generates a pandas DataFrame from a set of .csv files located at the given path,
     adding columns for metadata encoded by a given .yaml file. Metadata is associated
@@ -35,28 +38,28 @@ def load_csv_with_metadata(data_path: str, yaml_path: str, filename_regex:Option
 
     # If the path is the actual yaml file and not just the directory that it's in, read that in
     # otherwise, read in the first yaml file found in the specified directory.
-    if yaml_path[-5:] == '.yaml':
+    if yaml_path[-5:] == ".yaml":
         f = yaml_path
     else:
 
         try:
-            f = next(yaml_path.glob('*.yaml'))
+            f = next(yaml_path.glob("*.yaml"))
 
         except StopIteration:
-            print('No YAML file found in {}'.format(
-                yaml_path), file=sys.stderr)
+            print("No YAML file found in {}".format(yaml_path), file=sys.stderr)
             sys.exit(1)
 
     with open(f) as file:
         metadata = yaml.safe_load(file)
-        metadata_map = {k:well_mapper.well_mapping(v) for k,v in metadata['metadata'].items()}
-
+        metadata_map = {
+            k: well_mapper.well_mapping(v) for k, v in metadata["metadata"].items()
+        }
 
     # Load data from .csv files
 
-    data_list:List[pd.DataFrame] = []
+    data_list: List[pd.DataFrame] = []
 
-    for file in Path(data_path).glob('*.csv'):
+    for file in Path(data_path).glob("*.csv"):
 
         # Find data files
 
@@ -70,30 +73,29 @@ def load_csv_with_metadata(data_path: str, yaml_path: str, filename_regex:Option
             regex = re.compile(r"^.*export_(?P<well>[A-G0-9]+)_(?P<population>.+)\.csv")
 
         match = regex.match(file.name)
-        if match is None: continue
+        if match is None:
+            continue
 
         # Load data
         df = pd.read_csv(file)
 
         # Add metadata to DataFrame
 
-        well = match.group('well')
+        well = match.group("well")
         # Fix well ID to format letter-digit-digit
         if len(well) == 2:
-            well = well[:1]+'0'+well[1:]
+            well = well[:1] + "0" + well[1:]
 
         index = 0
-        for k,v in metadata_map.items():
-            df.insert(index,k,v[well])
+        for k, v in metadata_map.items():
+            df.insert(index, k, v[well])
             index += 1
         # Also add column for well ID
-        df.insert(index,'Well',well)
+        df.insert(index, "Well", well)
 
         data_list.append(df)
-
 
     # Concatenate all the data into a single DataFrame
     data = pd.concat(data_list, ignore_index=True)
 
     return data
-

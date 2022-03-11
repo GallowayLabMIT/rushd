@@ -3,17 +3,14 @@
 Collection of helper modules for maintaining
 robust, reproducible data management.
 """
-from . import io, flow
+from . import flow, io
 from .io import infile, outfile
 
-submodules = [
-    'io',
-    'flow'
-]
+submodules = ["io", "flow"]
 
 re_exports = [
-    'infile',
-    'outfile',
+    "infile",
+    "outfile",
 ]
 # Re-exports of common functions loaded from submodules
 __all__ = submodules + re_exports
@@ -23,8 +20,8 @@ def __getattr__(name: str):
     """
     Sets up the module attribute exports.
     """
-    if name == 'datadir':
+    if name == "datadir":
         return io.datadir
-    if name == 'rootdir':
+    if name == "rootdir":
         return io.rootdir
     raise AttributeError(f"No attribute {name} in rushd")
