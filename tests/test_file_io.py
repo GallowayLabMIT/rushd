@@ -158,10 +158,7 @@ def test_path_translation(tmp_path: Path):
                 assert Path(filename) == Path("in_root.txt")
                 assert path_type == "rootdir_relative"
             if filename.endswith("in_external.txt"):
-                assert (
-                    Path(filename)
-                    == (tmp_path / "external" / "in_external.txt").resolve()
-                )
+                assert Path(filename) == (tmp_path / "external" / "in_external.txt").resolve()
                 assert path_type == "absolute"
 
 

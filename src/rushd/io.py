@@ -158,9 +158,7 @@ def _is_relative_to(path: Path, base_path: Path) -> bool:
         return False
 
 
-def infile(
-    filename: Union[str, Path], tag: Optional[str] = None, should_hash: bool = True
-) -> Path:
+def infile(filename: Union[str, Path], tag: Optional[str] = None, should_hash: bool = True) -> Path:
     """
     Passthrough wrapper around a path that (optionally)
     hashes and adds the file to a internally tracked list.
@@ -251,9 +249,7 @@ def outfile(filename: Union[str, Path], tag: Optional[str] = None) -> Path:
         yaml_result["git_version"] = git
 
     if tag:
-        files: Dict[Path, Optional[str]] = (
-            _tagged_inputs[tag] if tag in _tagged_inputs else {}
-        )
+        files: Dict[Path, Optional[str]] = _tagged_inputs[tag] if tag in _tagged_inputs else {}
     else:
         files: Dict[Path, Optional[str]] = _untagged_inputs
     file_yaml: List[Dict[str, str]] = []
@@ -290,9 +286,7 @@ def outfile(filename: Union[str, Path], tag: Optional[str] = None) -> Path:
 
 
 ## Convenience decorator for caching dataframes
-def cache_dataframe(
-    cache_path: Union[Path, str]
-) -> Callable[..., Callable[..., pd.DataFrame]]:
+def cache_dataframe(cache_path: Union[Path, str]) -> Callable[..., Callable[..., pd.DataFrame]]:
     """
     Wraps caching functionality around a
     dataframe-generating function.
@@ -320,9 +314,7 @@ def cache_dataframe(
 
     def decorator(gen_func: Callable[..., pd.DataFrame]) -> Callable[..., pd.DataFrame]:
         def wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
-            if savepath.exists() and (
-                "invalidate" not in kwargs or not kwargs["invalidate"]
-            ):
+            if savepath.exists() and ("invalidate" not in kwargs or not kwargs["invalidate"]):
                 df = pd.read_parquet(savepath)  # type: ignore
                 print(f"Loaded a {len(df)}-row dataframe from cache.")
                 return df

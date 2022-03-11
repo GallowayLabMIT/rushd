@@ -143,19 +143,13 @@ def well_mapping(
                 single_result = re.fullmatch(r"^([A-P]\d+)$", token)
                 dual_result = re.fullmatch(r"^([A-P]\d+)-([A-P]\d+)$", token)
                 if single_result is None and dual_result is None:
-                    raise ValueError(
-                        f"Invalid mapping spec: {key}:{val}, problem spec: {token}"
-                    )
+                    raise ValueError(f"Invalid mapping spec: {key}:{val}, problem spec: {token}")
 
                 if single_result is not None:
                     # Add a single well to the well mapping. Add both the normalized and
                     # non-normalized versions
-                    wells.add(
-                        f"{single_result.group(1)[0]}{int(single_result.group(1)[1:]):02d}"
-                    )
-                    wells.add(
-                        f"{single_result.group(1)[0]}{int(single_result.group(1)[1:])}"
-                    )
+                    wells.add(f"{single_result.group(1)[0]}{int(single_result.group(1)[1:]):02d}")
+                    wells.add(f"{single_result.group(1)[0]}{int(single_result.group(1)[1:])}")
                 elif dual_result is not None:
                     # Iterate over all wells
                     corners = [

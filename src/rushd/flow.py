@@ -51,9 +51,7 @@ def load_csv_with_metadata(
 
     with open(f) as file:
         metadata = yaml.safe_load(file)
-        metadata_map = {
-            k: well_mapper.well_mapping(v) for k, v in metadata["metadata"].items()
-        }
+        metadata_map = {k: well_mapper.well_mapping(v) for k, v in metadata["metadata"].items()}
 
     # Load data from .csv files
 
