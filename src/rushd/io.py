@@ -40,8 +40,8 @@ def _locate_datadir_txt()->Optional[Path]:
     ------
     UntrackedRepositoryError: if the search path could not find a root tame.yaml file.
     """
-    current_dir = Path.cwd()
     try:
+        current_dir = Path.cwd()
         # Resolve to an absolute path
         current_dir = current_dir.resolve()
         while not (current_dir / 'datadir.txt').is_file():

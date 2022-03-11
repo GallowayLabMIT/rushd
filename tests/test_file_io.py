@@ -110,7 +110,8 @@ def test_path_translation(tmp_path: Path):
     """
     Tests that infiles can be loaded
     relative to the data directory, the root directory,
-    and via an absolute path"""
+    and via an absolute path
+    """
     (tmp_path / 'data').mkdir()
     (tmp_path / 'root').mkdir()
     (tmp_path / 'external').mkdir()
@@ -262,6 +263,9 @@ def test_permission_denied(tmp_path: Path):
         f.write('access denied here!')
     os.chdir(tmp_path / 'nested' / 'again')
     os.chmod(tmp_path / 'nested', 0o000)
-    reload(rushd.io)
-    os.chmod(tmp_path / 'nested', 0o700)
-    reload(rushd.io)
+    try:
+        reload(rushd.io)
+        os.chmod(tmp_path / 'nested', 0o700)
+        reload(rushd.io)
+    finally:
+        os.chmod(tmp_path / 'nested', 0o700)
