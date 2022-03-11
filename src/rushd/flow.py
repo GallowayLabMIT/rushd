@@ -54,7 +54,7 @@ def load_csv_with_metadata(data_path: str, yaml_path: str, filename_regex:Option
     # Load data from .csv files
     data_list:List[pd.DataFrame] = []
 
-    for file in Path(data_path).glob('*.csv'):
+    for file in Path(data_path).glob("*.csv"):
 
         # Default filename from FlowJo export is 'export_[well]_[population].csv'
         if filename_regex is None: filename_regex = r"^.*export_(?P<well>[A-G0-9]+)_(?P<population>.+)\.csv"
@@ -63,7 +63,8 @@ def load_csv_with_metadata(data_path: str, yaml_path: str, filename_regex:Option
         if 'well' not in regex.groupindex:
             raise RegexError("Regular expression does not contain capturing group 'well'")
         match = regex.match(file.name)
-        if match is None: continue
+        if match is None:
+            continue
 
         # Load data
         df = pd.read_csv(file)
@@ -71,8 +72,8 @@ def load_csv_with_metadata(data_path: str, yaml_path: str, filename_regex:Option
         # Add metadata to DataFrame
         well = match.group('well')
         index = 0
-        for k,v in metadata_map.items():
-            df.insert(index,k,v[well])
+        for k, v in metadata_map.items():
+            df.insert(index, k, v[well])
             index += 1
 
         for k in regex.groupindex.keys():
@@ -81,11 +82,9 @@ def load_csv_with_metadata(data_path: str, yaml_path: str, filename_regex:Option
 
         data_list.append(df)
 
-
     # Concatenate all the data into a single DataFrame
     if len(data_list)==0:
         raise RegexError(f"No data files match the regular expression \"{filename_regex}\"")
     else: data = pd.concat(data_list, ignore_index=True)
 
     return data
-
