@@ -123,6 +123,10 @@ def test_invalid_custom_regex(tmp_path: Path):
             - cond1: A1,G12
         """
         )
+    with open(str(tmp_path / "export_A1_singlets.csv"), "w") as f:
+        f.write("""channel1,channel2\n1,2""")
+    with open(str(tmp_path / "export_G12_singlets.csv"), "w") as f:
+        f.write("""channel1,channel2\n10,20""")
     regex = r"^.*export_(?P<ID>[A-G0-9]+)_(?P<population>.+)\.csv"
     yaml_path = str(tmp_path) + "/test.yaml"
     with pytest.raises(flow.RegexError):
