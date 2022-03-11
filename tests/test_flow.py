@@ -68,6 +68,7 @@ def test_default_regex(tmp_path: Path):
         f.write("""channel1,channel2\n10,20""")
     yaml_path = str(tmp_path) + "/test.yaml"
     df = flow.load_csv_with_metadata(str(tmp_path), yaml_path)
+    df.sort_values(by="well", inplace=True, ignore_index=True)
 
     data = [["cond1", "A1", "singlets", 1, 2], ["cond1", "G12", "singlets", 10, 20]]
     df_manual = pd.DataFrame(
