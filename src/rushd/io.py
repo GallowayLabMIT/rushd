@@ -1,5 +1,6 @@
 """
 A submodule implementing common IO handling mechanisms.
+
 ## Rationale
 File and folder management is a common problem when
 handling large datasets. You often want to separate
@@ -22,9 +23,11 @@ import pandas as pd
 import yaml
 
 
-## Datadir/rootdir-related detection
+# Datadir/rootdir-related detection
 class NoDatadirError(RuntimeError):
     """
+    No datadir.txt file found.
+
     Error raised when rushd is unable to locate
     a datadir.txt path in the current file.
     """
@@ -32,13 +35,12 @@ class NoDatadirError(RuntimeError):
 
 def _locate_datadir_txt() -> Optional[Path]:
     """
-    Starting at the current working directory, walks up the
-    filesystem until a root 'datadir.txt' file is found. This
-    path is returned.
+    Walk up the filesystem from the current directory until a 'datadir.txt' file is found.
 
     Returns
     -------
     A Path pointing to the root datadir file, None if a root datadir could not be found.
+
     Raises
     ------
     UntrackedRepositoryError: if the search path could not find a root tame.yaml file.
@@ -63,6 +65,8 @@ def _load_root_datadir(
     datadir_txt: Optional[Path],
 ) -> Tuple[Optional[Path], Optional[Path]]:
     """
+    Locate the root and datadir, returning Paths if possible.
+
     Uses the location of the datadir.txt file to define the data directory
     and the "root" directory.
 
@@ -89,7 +93,7 @@ if _datadir is None:
 
 def __getattr__(name: str) -> Path:
     """
-    Sets up module exports.
+    Set up module exports.
 
     rushd.io exports two attributes,
     the datadir export and the rootdir export.
@@ -103,7 +107,8 @@ def __getattr__(name: str) -> Path:
     if name == "rootdir":
         if _rootdir is None:
             raise NoDatadirError(
-                f"No datadir.txt file found in working directory {Path.cwd()} or parents, so could not define root"
+                f"No datadir.txt file found in working directory {Path.cwd()} or parents,"
+                " so could not define root"
             )
         return _rootdir
     raise AttributeError(f"No attribute {name} in rushd.io")
@@ -111,7 +116,8 @@ def __getattr__(name: str) -> Path:
 
 def git_version() -> Optional[str]:
     """
-    Returns the current repository state as a string.
+    Return the current version control state as a string.
+
     The state is a string {hash}, with {-dirty} appended
     if there are edits that have not been saved.
     Returns None if the current working directory is
@@ -130,15 +136,16 @@ def git_version() -> Optional[str]:
     return git_log.stdout.decode() + ("-dirty" if git_diff_index.returncode != 0 else "")
 
 
-## Convenience functions for storing files and their hashes
+# Convenience functions for storing files and their hashes
 _untagged_inputs: Dict[Path, Optional[str]] = {}
 _tagged_inputs: Dict[str, Dict[Path, Optional[str]]] = {}
 
 
 def _is_relative_to(path: Path, base_path: Path) -> bool:
     """
-    Checks that a path can be written relative
-    to a base path. Needed on Pythons < 3.9.
+    Check that a path can be written relative to a base path.
+
+    This function is needed on Python versions < 3.9.
 
     Parameters
     ----------
@@ -160,6 +167,8 @@ def _is_relative_to(path: Path, base_path: Path) -> bool:
 
 def infile(filename: Union[str, Path], tag: Optional[str] = None, should_hash: bool = True) -> Path:
     """
+    Wrap a filename, marking it as an input data file.
+
     Passthrough wrapper around a path that (optionally)
     hashes and adds the file to a internally tracked list.
     This list accumulates files that potentially went into
@@ -206,6 +215,8 @@ def infile(filename: Union[str, Path], tag: Optional[str] = None, should_hash: b
 
 def outfile(filename: Union[str, Path], tag: Optional[str] = None) -> Path:
     """
+    Wrap a filename, declaring it as a tracked output file.
+
     Passthrough method that write a YAML file defining
     which files went into creating a certain output file.
 
@@ -285,11 +296,10 @@ def outfile(filename: Union[str, Path], tag: Optional[str] = None) -> Path:
     return filename
 
 
-## Convenience decorator for caching dataframes
+# Convenience decorator for caching dataframes
 def cache_dataframe(cache_path: Union[Path, str]) -> Callable[..., Callable[..., pd.DataFrame]]:
     """
-    Wraps caching functionality around a
-    dataframe-generating function.
+    Wrap caching functionality around a dataframe-generating function.
 
     Notes
     -----

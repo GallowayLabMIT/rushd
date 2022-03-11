@@ -1,4 +1,5 @@
-"""
+"""Converts user-specified plate specifications into well maps.
+
 Rationale
 ---------
 Helper module that parses plate specifications of the form:
@@ -103,9 +104,8 @@ def well_mapping(
     plate_spec: Union[Dict[Any, str], List[Dict[Any, str]], Tuple[Dict[Any, str]]],
     separator: str = ".",
 ) -> Dict[str, Any]:
-    """
-    Generates a well mapping, given a plate specification
-    and an optional separator.
+    """Generate a well mapping given a plate specification.
+
     Parameters
     ----------
     plate_spec: dict or iterable
@@ -119,7 +119,8 @@ def well_mapping(
     -------
     A dictionary that maps wells to conditions.
     """
-    # Save plate_spec into a list of a single dictionary if it isn't already an iterable of dictionaries
+    # Save plate_spec into a list of a single dictionary if it isn't already
+    # an iterable of dictionaries
     if isinstance(plate_spec, Dict):
         plate_spec = [plate_spec]
 

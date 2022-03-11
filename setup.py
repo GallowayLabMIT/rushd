@@ -1,3 +1,10 @@
+"""Setup configuration rushd.
+
+For local development, use
+`pip install -e .[dev]`
+which will install additional dev tools.
+"""
+
 import setuptools
 
 with open("README.md", "r", encoding="utf-8") as fh:
