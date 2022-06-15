@@ -63,18 +63,17 @@ def load_csv_with_metadata(
     -------
     A single pandas DataFrame containing all data with associated metadata.
     """
-    # Check if path to .yaml file is valid
-    if yaml_path[-5:] != '.yaml':
-        raise YamlError(f'{yaml_path} is not a .yaml file')
-
-    with open(yaml_path) as file:
-        metadata = yaml.safe_load(file)
-        if (type(metadata) is not dict) or ('metadata' not in metadata):
-            raise YamlError(
-                'Incorrectly formatted .yaml file.'
-                " All metadata must be stored under the header 'metadata'"
-            )
-        metadata_map = {k: well_mapper.well_mapping(v) for k, v in metadata['metadata'].items()}
+    try:
+        with open(yaml_path) as file:
+            metadata = yaml.safe_load(file)
+            if (type(metadata) is not dict) or ('metadata' not in metadata):
+                raise YamlError(
+                    'Incorrectly formatted .yaml file.'
+                    " All metadata must be stored under the header 'metadata'"
+                )
+            metadata_map = {k: well_mapper.well_mapping(v) for k, v in metadata['metadata'].items()}
+    except FileNotFoundError:
+        raise YamlError('Specified metadata YAML file does not exist!')
 
     # Load data from .csv files
     data_list: List[pd.DataFrame] = []
