@@ -98,7 +98,8 @@ def load_csv_with_metadata(
         well = match.group('well')
         index = 0
         for k, v in metadata_map.items():
-            df.insert(index, k, v[well])
+            # Replace custom metadata keys with <NA> if not present
+            df.insert(index, k, v[well] if well in v else [pd.NA] * len(df))
             index += 1
 
         for k in regex.groupindex.keys():
@@ -111,7 +112,7 @@ def load_csv_with_metadata(
     if len(data_list) == 0:
         raise RegexError(f"No data files match the regular expression '{filename_regex}'")
     else:
-        data = pd.concat(data_list, ignore_index=True)
+        data = pd.concat(data_list, ignore_index=True).replace(np.NaN, pd.NA)  # type: ignore
 
     return data
 

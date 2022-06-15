@@ -159,6 +159,37 @@ def test_384_well(tmp_path: Path):
     assert df.equals(df_manual)
 
 
+def test_na_for_unspecified_columns(tmp_path: Path):
+    """
+    Tests that unspecified metadata entries get NA applied
+    for the column entry.
+    """
+    with open(str(tmp_path / 'test.yaml'), 'w') as f:
+        f.write(
+            """
+        metadata:
+            condition:
+            - cond1: A1
+            second_condition:
+            - cond2: A2
+        """
+        )
+    with open(str(tmp_path / 'export_A1_singlets.csv'), 'w') as f:
+        f.write("""channel1,channel2\n1,2""")
+    with open(str(tmp_path / 'export_A2_singlets.csv'), 'w') as f:
+        f.write("""channel1,channel2\n10,20""")
+    yaml_path = str(tmp_path) + '/test.yaml'
+    df = flow.load_csv_with_metadata(str(tmp_path), yaml_path)
+    df.sort_values(by='well', inplace=True, ignore_index=True)
+
+    data = [['cond1', pd.NA, 'A1', 'singlets', 1, 2], [pd.NA, 'cond2', 'A2', 'singlets', 10, 20]]
+    df_manual = pd.DataFrame(
+        data,
+        columns=['condition', 'second_condition', 'well', 'population', 'channel1', 'channel2'],
+    )
+    assert df.equals(df_manual)
+
+
 def test_valid_custom_regex(tmp_path: Path):
     """
     Tests that files can be loaded using valid custom file name
