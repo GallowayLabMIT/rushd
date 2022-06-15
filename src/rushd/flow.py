@@ -82,7 +82,7 @@ def load_csv_with_metadata(
 
         # Default filename from FlowJo export is 'export_[well]_[population].csv'
         if filename_regex is None:
-            filename_regex = r'^.*export_(?P<well>[A-G0-9]+)_(?P<population>.+)\.csv'
+            filename_regex = r'^.*export_(?P<well>[A-P]\d+)_(?P<population>.+)\.csv'
 
         regex = re.compile(filename_regex)
         if 'well' not in regex.groupindex:

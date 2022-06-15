@@ -105,6 +105,60 @@ def test_default_regex(tmp_path: Path):
     assert df.equals(df_manual)
 
 
+def test_96_well(tmp_path: Path):
+    """
+    Tests that the maximum extents of a 96-well can be processed.
+    """
+    with open(str(tmp_path / 'test.yaml'), 'w') as f:
+        f.write(
+            """
+        metadata:
+            condition:
+            - cond1: A1,H12
+        """
+        )
+    with open(str(tmp_path / 'export_A1_singlets.csv'), 'w') as f:
+        f.write("""channel1,channel2\n1,2""")
+    with open(str(tmp_path / 'export_H12_singlets.csv'), 'w') as f:
+        f.write("""channel1,channel2\n10,20""")
+    yaml_path = str(tmp_path) + '/test.yaml'
+    df = flow.load_csv_with_metadata(str(tmp_path), yaml_path)
+    df.sort_values(by='well', inplace=True, ignore_index=True)
+
+    data = [['cond1', 'A1', 'singlets', 1, 2], ['cond1', 'H12', 'singlets', 10, 20]]
+    df_manual = pd.DataFrame(
+        data, columns=['condition', 'well', 'population', 'channel1', 'channel2']
+    )
+    assert df.equals(df_manual)
+
+
+def test_384_well(tmp_path: Path):
+    """
+    Tests that the maximum extents of a 384-well can be processed.
+    """
+    with open(str(tmp_path / 'test.yaml'), 'w') as f:
+        f.write(
+            """
+        metadata:
+            condition:
+            - cond1: A1,P24
+        """
+        )
+    with open(str(tmp_path / 'export_A1_singlets.csv'), 'w') as f:
+        f.write("""channel1,channel2\n1,2""")
+    with open(str(tmp_path / 'export_P24_singlets.csv'), 'w') as f:
+        f.write("""channel1,channel2\n10,20""")
+    yaml_path = str(tmp_path) + '/test.yaml'
+    df = flow.load_csv_with_metadata(str(tmp_path), yaml_path)
+    df.sort_values(by='well', inplace=True, ignore_index=True)
+
+    data = [['cond1', 'A1', 'singlets', 1, 2], ['cond1', 'P24', 'singlets', 10, 20]]
+    df_manual = pd.DataFrame(
+        data, columns=['condition', 'well', 'population', 'channel1', 'channel2']
+    )
+    assert df.equals(df_manual)
+
+
 def test_valid_custom_regex(tmp_path: Path):
     """
     Tests that files can be loaded using valid custom file name
