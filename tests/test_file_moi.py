@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import List
 
 import numpy as np
 import pandas as pd
@@ -8,15 +9,15 @@ from pytest_mock import MockerFixture
 from rushd.flow import MOIinputError, moi
 
 
-def generate_art_data(seed, moi, replicate=1):
+def generate_art_data(seed, moi, replicate=1) -> pd.DataFrame:
     """
-    Generates an artifical data set of 50000 cells, 10000 at each titration level,
+    Generates an artificial data set of 50000 cells, 10000 at each titration level,
     assuming the input moi.
     """
-    np.random.RandomState(seed)
-    art_data = []
+    rstate = np.random.RandomState(seed)
+    art_data: List[pd.DataFrame] = []
     for scale in [1, 0.1, 0.01, 0.001, 0.0001]:
-        cells = np.random.poisson(scale * moi, size=10000)
+        cells = rstate.poisson(scale * moi, size=10000)
         temp_df = pd.DataFrame(
             {
                 'condition': np.ones(cells.shape),
@@ -28,8 +29,7 @@ def generate_art_data(seed, moi, replicate=1):
             }
         )
         art_data.append(temp_df)
-    art_data = pd.concat(art_data, ignore_index=True)
-    return art_data
+    return pd.concat(art_data, ignore_index=True)
 
 
 def test_invalid_dataframe():
