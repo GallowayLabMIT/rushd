@@ -68,7 +68,8 @@ def _load_root_datadir(
     Locate the root and datadir, returning Paths if possible.
 
     Uses the location of the datadir.txt file to define the data directory
-    and the 'root' directory.
+    and the 'root' directory. Leading and trailing newlines are stripped
+    before the datadir is processed.
 
     Parameters
     ----------
@@ -82,7 +83,7 @@ def _load_root_datadir(
     if datadir_txt is None:
         return (None, None)
     rootdir = datadir_txt.parent
-    datadir = Path(datadir_txt.read_text())
+    datadir = Path(datadir_txt.read_text().strip('\n'))
     return (rootdir if rootdir.is_dir() else None, datadir if datadir.is_dir() else None)
 
 

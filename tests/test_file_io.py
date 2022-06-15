@@ -38,6 +38,22 @@ def test_datadir_rootdir(tmp_path: Path):
     assert rushd.rootdir == (tmp_path / 'root')
 
 
+def test_extra_whitespace_datadir(tmp_path: Path):
+    """
+    Tests that extra (newline) whitespace is removed
+    before processing the datadir and rootdir.
+    """
+    (tmp_path / 'root').mkdir()
+    (tmp_path / 'data').mkdir()
+    with (tmp_path / 'root' / 'datadir.txt').open('w') as datadir_txt:
+        datadir_txt.write('\n' + str(tmp_path / 'data') + '\n')
+    # Test same-directory datadir.txt lookup
+    os.chdir(tmp_path / 'root')
+    reload(rushd.io)
+    assert rushd.datadir == (tmp_path / 'data')
+    assert rushd.rootdir == (tmp_path / 'root')
+
+
 def test_datadir_rootdir_failure(tmp_path: Path):
     """
     Tests that failed datadir/rootdir discovery leads to
