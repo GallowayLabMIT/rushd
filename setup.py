@@ -42,6 +42,7 @@ setuptools.setup(
         'pandas',
         'matplotlib',
         'scipy',
+        'typing-extensions;python_version<"3.8"',
     ],
     extras_require={
         'dev': [

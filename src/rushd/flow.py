@@ -6,7 +6,14 @@ Combines user data from multiple .csv files into a single DataFrame.
 """
 import re
 from pathlib import Path
-from typing import List, Literal, Optional, Union
+from typing import List, Optional, Union
+
+# Support Python 3.7 by importing Literal from typing_extensions
+try:
+    from typing import Literal
+except ImportError:
+    from typing_extensions import Literal
+
 
 import matplotlib.pyplot as plt
 import numpy as np
