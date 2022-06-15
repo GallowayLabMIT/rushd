@@ -6,10 +6,13 @@ Combines user data from multiple .csv files into a single DataFrame.
 """
 import re
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Literal, Optional, Union
 
+import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import yaml
+from scipy.optimize import curve_fit
 
 from . import well_mapper
 
@@ -20,6 +23,10 @@ class YamlError(RuntimeError):
 
 class RegexError(RuntimeError):
     """Error raised when there is an issue with the file name regular expression."""
+
+
+class MOIinputError(RuntimeError):
+    """Error raised when there is an issue with the provided dataframe."""
 
 
 def load_csv_with_metadata(
@@ -101,3 +108,156 @@ def load_csv_with_metadata(
         data = pd.concat(data_list, ignore_index=True)
 
     return data
+
+
+def moi(
+    data_frame: pd.DataFrame,
+    color_column_name: str,
+    color_cutoff: float,
+    output_path: Optional[Union[str, Path]] = None,
+    summary_method: Union[Literal['mean'], Literal['median']] = 'median',
+) -> pd.DataFrame:
+    """
+    Calculate moi information from flowjo data with appropriate metadata.
+
+    Generates a pandas DataFrame of virus titers from a pandas DataFrame of flowjo data.
+
+    Parameters
+    ----------
+    data_frame: pd.DataFrame
+        The pandas DataFrame to analyze. It must have the following columns:
+            condition: the conditions/types of virus being analyzed
+            replicate: the replicate of the data (can have all data as the same replicate)
+            starting_cell_count: the number of cells in the well at the time of infection
+            scaling: the dilution factor of each row
+            max_virus: the maximum virus added to that column
+                scaling times max_virus should result in the volume of virus stock added to a well
+    color_column_name: str
+        The name of the column on which to gate infection.
+    color_cutoff: float
+        The level of fluoresence on which to gate infecction.
+    output_path: str or path (optional)
+        The path to the output folder. If None, instead prints all plots to screen. Defaults to None
+    summary_method: str (optional)
+        Whether to return the calculated titer as the mean or median of the replicates.
+
+    Returns
+    -------
+    A single pandas DataFrame containing the titer of each condition in TU per uL.
+    """
+    df = data_frame
+    if color_column_name not in df.columns:
+        raise MOIinputError(f'Input dataframe does not have a column called {color_column_name}')
+
+    if output_path is not None:
+        (Path(output_path) / 'figures').mkdir(parents=True, exist_ok=True)
+
+    if {'condition', 'replicate', 'starting_cell_count', 'scaling', 'max_virus'}.issubset(
+        df.columns
+    ):
+        df['virus_amount'] = df['scaling'] * df['max_virus']
+        int_df = df[(df[color_column_name] > color_cutoff)]
+
+        # Summarize cell counts for virus
+        sum_df = (
+            int_df.groupby(['condition', 'replicate', 'starting_cell_count', 'virus_amount'])
+            .count()
+            .iloc[:, 0]
+        )
+        sum_df = sum_df.reset_index()
+        sum_df.columns.values[4] = 'virus_cell_count'
+        # Summarize cell counts overall
+        overall_counts = (
+            df.groupby(['condition', 'replicate', 'starting_cell_count', 'virus_amount'])
+            .count()
+            .iloc[:, 0]
+        )
+        overall_counts = overall_counts.reset_index()
+        # Merge into one dataframe
+        sum_df = pd.merge(
+            sum_df,
+            overall_counts,
+            how='outer',
+            on=['condition', 'replicate', 'starting_cell_count', 'virus_amount'],
+        )
+        sum_df['virus_cell_count'] = sum_df['virus_cell_count'].fillna(0)
+
+        # Calculate fraction infected, moi, and the titer
+        sum_df['fraction_inf'] = sum_df['virus_cell_count'] / sum_df['starting_cell_count']
+        sum_df['moi'] = -np.log(1 - sum_df['fraction_inf'])
+        sum_df['titer'] = sum_df['starting_cell_count'] * sum_df['moi'] / sum_df['virus_amount']
+
+        # Graph the MOI/Fraction Infected curve for each condition, then save in the output folder
+        for cond in np.unique(sum_df['condition']):
+            current_df = sum_df[(sum_df['condition'] == cond)]
+            plt.figure()
+            plt.plot(np.linspace(0.0001, 2.3, 100), 1 - np.exp(-np.linspace(0.0001, 2.3, 100)))
+            for rep in np.unique(current_df['replicate']):
+                plot_df = current_df[(current_df['replicate'] == rep)]
+                plt.scatter(plot_df['moi'], plot_df['fraction_inf'])
+            plt.xscale('log')
+            plt.yscale('log')
+            plt.xlabel('Log MOI')
+            plt.ylabel('Log Fraction Infected')
+            plt.title(cond)
+            plt.legend(['ref', 1, 2, 3])
+            if output_path is None:
+                plt.show()
+            else:
+                plt.savefig(
+                    Path(output_path) / 'figures' / f'{str(cond)}_MOIcurve.png', bbox_inches='tight'
+                )
+
+        def poisson_model(virus_vol, tui_ratio_per_vol):
+            return 1 - np.exp(-tui_ratio_per_vol * virus_vol)
+
+        # create the final dataframe
+        final_titers = (
+            sum_df.groupby(['condition', 'replicate', 'starting_cell_count']).count().iloc[:, 0]
+        )
+        final_titers = final_titers.reset_index()
+        final_titers.columns.values[3] = 'tui_ratio_per_vol'
+
+        tui = []
+        # Calculate TU per cell per vol for each condition/replicate and graph/save best fit
+        for cond in np.unique(sum_df['condition']):
+            current_df = sum_df[(sum_df['condition'] == cond)]
+            plt.figure()
+            for rep in np.unique(current_df['replicate']):
+                plot_df = current_df[(current_df['replicate'] == rep)]
+                plot_df = plot_df.sort_values('virus_amount')
+
+                popt, pcov = curve_fit(
+                    poisson_model, plot_df['virus_amount'], plot_df['fraction_inf']
+                )
+
+                plt.scatter(plot_df['virus_amount'], plot_df['fraction_inf'])
+                plt.plot(plot_df['virus_amount'], poisson_model(plot_df['virus_amount'], *popt))
+
+                tui.append(popt[0])
+
+            plt.title(cond)
+            plt.xscale('log')
+            plt.ylabel('Fraction infected')
+            plt.xlabel('Log (uL of virus in well)')
+            if output_path is None:
+                plt.show()
+            else:
+                plt.savefig(
+                    Path(output_path) / 'figures' / f'{str(cond)}_titer.png', bbox_inches='tight'
+                )
+        # convert TU per cell per vol to TU per uL
+        final_titers['moi'] = tui
+        final_titers['titer_in_uL'] = final_titers['moi'] * final_titers['starting_cell_count']
+        if summary_method == 'mean':
+            final_output = final_titers.groupby('condition').mean()
+        else:
+            final_output = final_titers.groupby('condition').median()
+        if output_path is not None:
+            final_output.to_csv(Path(output_path) / 'MOI_titer_data.csv')
+        return final_output
+    else:
+        want = {'condition', 'replicate', 'starting_cell_count', 'scaling', 'max_virus'}
+        have = df.columns
+        lost = want.difference(have)
+        raise MOIinputError(f'Missing the following columns from the input dataframe: {lost}')

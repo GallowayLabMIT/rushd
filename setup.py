@@ -40,6 +40,8 @@ setuptools.setup(
     install_requires=[
         'pyyaml',
         'pandas',
+        'matplotlib',
+        'scipy',
     ],
     extras_require={
         'dev': [
@@ -47,6 +49,7 @@ setuptools.setup(
             'pytest',
             'pytest-pep8',
             'pytest-cov',
+            'pytest-mock',
             'pre-commit',
             'build',
             'twine',
