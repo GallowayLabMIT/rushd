@@ -5,6 +5,7 @@ Allows users to specify custom metadata applied via well mapping.
 Combines user data from multiple .csv files into a single DataFrame.
 """
 import re
+import warnings
 from pathlib import Path
 from typing import List, Optional, Union
 
@@ -14,7 +15,6 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -22,6 +22,10 @@ import yaml
 from scipy.optimize import curve_fit
 
 from . import well_mapper
+
+
+class MetadataWarning(UserWarning):
+    """Warning raised when the passed metadata is possibly incorrect, but valid."""
 
 
 class YamlError(RuntimeError):
@@ -71,6 +75,15 @@ def load_csv_with_metadata(
                     'Incorrectly formatted .yaml file.'
                     " All metadata must be stored under the header 'metadata'"
                 )
+            for k, v in metadata['metadata'].items():
+                if isinstance(v, dict):
+                    warnings.warn(
+                        f'Metadata column "{k}" is a YAML dictionary, not a list!'
+                        ' Make sure your entries under this key start with dashes.'
+                        ' Passing a dictionary does not allow duplicate keys and'
+                        ' is sort-order-dependent.',
+                        MetadataWarning,
+                    )
             metadata_map = {k: well_mapper.well_mapping(v) for k, v in metadata['metadata'].items()}
     except FileNotFoundError:
         raise YamlError('Specified metadata YAML file does not exist!')

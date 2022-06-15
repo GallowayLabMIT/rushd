@@ -190,6 +190,30 @@ def test_na_for_unspecified_columns(tmp_path: Path):
     assert df.equals(df_manual)
 
 
+def test_passed_list_metadata(tmp_path: Path):
+    """
+    Tests that metadata entries passed as dictionaries (instead of lists)
+    give a warning, because these can be sort-dependent and hide duplicate keys.
+    """
+    with open(str(tmp_path / 'test.yaml'), 'w') as f:
+        f.write(
+            """
+        metadata:
+            condition:
+              cond1: A1
+              cond2: A2
+              cond1: A3
+        """
+        )
+    with open(str(tmp_path / 'export_A1_singlets.csv'), 'w') as f:
+        f.write("""channel1,channel2\n1,2""")
+    with open(str(tmp_path / 'export_A2_singlets.csv'), 'w') as f:
+        f.write("""channel1,channel2\n10,20""")
+    yaml_path = str(tmp_path) + '/test.yaml'
+    with pytest.warns(flow.MetadataWarning):
+        _ = flow.load_csv_with_metadata(str(tmp_path), yaml_path)
+
+
 def test_valid_custom_regex(tmp_path: Path):
     """
     Tests that files can be loaded using valid custom file name
