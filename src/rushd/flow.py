@@ -10,7 +10,7 @@ from typing import List, Optional, Union
 
 # Support Python 3.7 by importing Literal from typing_extensions
 try:
-    from typing import Literal
+    from typing import Literal  # type: ignore
 except ImportError:
     from typing_extensions import Literal
 
@@ -228,15 +228,13 @@ def moi(
         tui = []
         # Calculate TU per cell per vol for each condition/replicate and graph/save best fit
         for cond in np.unique(sum_df['condition']):
-            current_df = sum_df[(sum_df['condition'] == cond)]
+            current_df = sum_df.loc[(sum_df['condition'] == cond)]
             plt.figure()
             for rep in np.unique(current_df['replicate']):
-                plot_df = current_df[(current_df['replicate'] == rep)]
+                plot_df = current_df.loc[(current_df['replicate'] == rep)]
                 plot_df = plot_df.sort_values('virus_amount')
 
-                popt, pcov = curve_fit(
-                    poisson_model, plot_df['virus_amount'], plot_df['fraction_inf']
-                )
+                popt, _ = curve_fit(poisson_model, plot_df['virus_amount'], plot_df['fraction_inf'])
 
                 plt.scatter(plot_df['virus_amount'], plot_df['fraction_inf'])
                 plt.plot(plot_df['virus_amount'], poisson_model(plot_df['virus_amount'], *popt))
