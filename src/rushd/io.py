@@ -221,6 +221,9 @@ def outfile(filename: Union[str, Path], tag: Optional[str] = None) -> Path:
     Passthrough method that write a YAML file defining
     which files went into creating a certain output file.
 
+    Any needed subdirectories will be created if the outfile is relative
+    to datadir or rootdir.
+
     Parameters
     ----------
     filename: str or Path
@@ -265,11 +268,11 @@ def outfile(filename: Union[str, Path], tag: Optional[str] = None) -> Path:
     else:
         files: Dict[Path, Optional[str]] = _untagged_inputs
     file_yaml: List[Dict[str, str]] = []
+    abs_datadir = _datadir.resolve() if _datadir else None
+    abs_rootdir = _rootdir.resolve() if _rootdir else None
     for filepath, file_hash in files.items():
         result: Dict[str, str] = {}
         abs_filepath = filepath.resolve()
-        abs_datadir = _datadir.resolve() if _datadir else None
-        abs_rootdir = _rootdir.resolve() if _rootdir else None
 
         if abs_datadir and _is_relative_to(abs_filepath, abs_datadir):
             result.update(
@@ -291,6 +294,14 @@ def outfile(filename: Union[str, Path], tag: Optional[str] = None) -> Path:
             result.update({'sha256': file_hash})
         file_yaml.append(result)
     yaml_result.update({'dependencies': file_yaml})
+
+    # Create all necessary subdirectories if our path is relative to rootdir
+    # or datadirectory.
+    abs_filename_parent = filename.parent.resolve()
+    if (abs_datadir and _is_relative_to(abs_filename_parent, abs_datadir)) or (
+        abs_rootdir and _is_relative_to(abs_filename_parent, abs_rootdir)
+    ):
+        abs_filename_parent.mkdir(parents=True, exist_ok=True)
 
     with (filename.parent / (filename.name + '.yaml')).open('w') as yaml_out:
         yaml.dump(yaml_result, yaml_out)  # type: ignore

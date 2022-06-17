@@ -38,6 +38,30 @@ def test_datadir_rootdir(tmp_path: Path):
     assert rushd.rootdir == (tmp_path / 'root')
 
 
+def test_subdirectory_outdir_creation(tmp_path: Path):
+    """
+    Tests that rd.io.outfile creates needed subdirectories
+    when creating an outfile, but only if the path is relative
+    to the rootdir or datadir.
+    """
+    (tmp_path / 'root').mkdir()
+    (tmp_path / 'data').mkdir()
+    with (tmp_path / 'root' / 'datadir.txt').open('w') as datadir_txt:
+        datadir_txt.write(str(tmp_path / 'data'))
+    os.chdir(tmp_path / 'root')
+    reload(rushd.io)
+
+    _ = rushd.outfile(tmp_path / 'root' / 'inner' / 'inner_test.txt')
+    _ = rushd.outfile(tmp_path / 'data' / 'even' / 'more' / 'nesting' / 'inner_test.txt')
+
+    assert (tmp_path / 'root' / 'inner').exists()
+    assert (tmp_path / 'data' / 'even' / 'more' / 'nesting').exists()
+
+    # Try test case where we are _outside_ the root or data
+    with pytest.raises(FileNotFoundError):
+        _ = rushd.outfile(tmp_path / 'somewhere' / 'else' / 'external_text.txt')
+
+
 def test_extra_whitespace_datadir(tmp_path: Path):
     """
     Tests that extra (newline) whitespace is removed
