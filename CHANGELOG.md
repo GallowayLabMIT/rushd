@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `rd.flow.moi` calculates viral MOI, creating summary graphs and tables.
 ### Modified
 - `rd.outfile` now creates necessary subdirectories within rootdir/datadir.
-- `rd.flow.load_csv_with_metadata`
+- `rd.flow.load_csv_with_metadata` now allows `str` and `Path` arguments
+- `rd.flow.load_csv_with_metadata` properly handles well IDs up to A1-P24 (384-well plate)
+- `rd.flow.load_csv_with_metadata` fills unspecified metadata with `NA`
 
 ## [0.1.0] - 2022-03-11
 ### Added

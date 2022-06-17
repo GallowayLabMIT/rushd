@@ -46,11 +46,14 @@ having to re-install after each update.
 ## Changelog
 See the [CHANGELOG](CHANGELOG.md) for detailed changes.
 ```
-## [0.1.0] - 2022-03-11
+## [0.2.0] - 2022-06-17
 ### Added
-- Initial flow processing workflow
+- `rd.flow.moi` calculates viral MOI, creating summary graphs and tables.
 ### Modified
-- Automatic use of black, isort, and flake in CI
+- `rd.outfile` now creates necessary subdirectories within rootdir/datadir.
+- `rd.flow.load_csv_with_metadata` now allows `str` and `Path` arguments
+- `rd.flow.load_csv_with_metadata` properly handles well IDs up to A1-P24 (384-well plate)
+- `rd.flow.load_csv_with_metadata` fills unspecified metadata with `NA`
 ```
 
 ## License
