@@ -41,7 +41,7 @@ class MOIinputError(RuntimeError):
 
 
 def load_csv_with_metadata(
-    data_path: str, yaml_path: str, filename_regex: Optional[str] = None
+    data_path: Union[str, Path], yaml_path: Union[str, Path], filename_regex: Optional[str] = None
 ) -> pd.DataFrame:
     """
     Load .csv data into DataFrame with associate metadata.
