@@ -67,8 +67,13 @@ def load_csv_with_metadata(
     -------
     A single pandas DataFrame containing all data with associated metadata.
     """
+    if not isinstance(yaml_path, Path):
+        yaml_path = Path(yaml_path)
+    if not isinstance(data_path, Path):
+        data_path = Path(data_path)
+
     try:
-        with open(yaml_path) as file:
+        with yaml_path.open() as file:
             metadata = yaml.safe_load(file)
             if (type(metadata) is not dict) or ('metadata' not in metadata):
                 raise YamlError(
@@ -91,7 +96,7 @@ def load_csv_with_metadata(
     # Load data from .csv files
     data_list: List[pd.DataFrame] = []
 
-    for file in Path(data_path).glob('*.csv'):
+    for file in data_path.glob('*.csv'):
 
         # Default filename from FlowJo export is 'export_[well]_[population].csv'
         if filename_regex is None:

@@ -6,12 +6,12 @@ import pytest
 from rushd import flow
 
 
-def test_invalid_yaml_path():
+def test_invalid_yaml_path(tmp_path: Path):
     """
     Tests that invalid .yaml files throw errors
     """
     with pytest.raises(flow.YamlError):
-        _ = flow.load_csv_with_metadata('', '')
+        _ = flow.load_csv_with_metadata('', tmp_path / 'nonexistent.yaml')
     with pytest.raises(flow.YamlError):
         _ = flow.load_csv_with_metadata('', 'wells')
 
@@ -76,6 +76,38 @@ def test_alt_yaml_filenames(tmp_path: Path):
             data, columns=['condition', 'well', 'population', 'channel1', 'channel2']
         )
         assert df.equals(df_manual)
+
+
+def test_arg_types(tmp_path: Path):
+    """
+    Tests that both str and Path arguments are accepted for yaml and data paths
+    """
+    with open(str(tmp_path / 'test.yaml'), 'w') as f:
+        f.write(
+            """
+        metadata:
+            condition:
+            - cond1: A1,G12
+        """
+        )
+    with open(str(tmp_path / 'export_A1_singlets.csv'), 'w') as f:
+        f.write("""channel1,channel2\n1,2""")
+    with open(str(tmp_path / 'export_G12_singlets.csv'), 'w') as f:
+        f.write("""channel1,channel2\n10,20""")
+
+    yaml_path = str(tmp_path) + '/test.yaml'
+    df_str = flow.load_csv_with_metadata(str(tmp_path), yaml_path)
+    df_str.sort_values(by='well', inplace=True, ignore_index=True)
+
+    yaml_path = Path(yaml_path)
+    df_path = flow.load_csv_with_metadata(tmp_path, yaml_path)
+    df_path.sort_values(by='well', inplace=True, ignore_index=True)
+
+    data = [['cond1', 'A1', 'singlets', 1, 2], ['cond1', 'G12', 'singlets', 10, 20]]
+    df_manual = pd.DataFrame(
+        data, columns=['condition', 'well', 'population', 'channel1', 'channel2']
+    )
+    assert df_str.equals(df_manual) and df_path.equals(df_manual)
 
 
 def test_default_regex(tmp_path: Path):
