@@ -118,7 +118,7 @@ version_run = subprocess.run(
     ['git', 'for-each-ref', '--format=%(refname:lstrip=-1)', 'refs/remotes/origin', 'refs/tags'],
     capture_output=True,
 )
-versions_to_skip = {'gh-pages'}
+versions_to_skip = {'HEAD', 'gh-pages', 'v0.1.0', 'v0.2.0'}
 if version_run.returncode == 0:
     for branch in version_run.stdout.decode('utf-8').split('\n'):
         if branch not in versions_to_skip:

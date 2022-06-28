@@ -77,11 +77,11 @@ cat > index.html <<EOF
 <html>
    <head>
       <title>rushd Docs</title>
-      <meta http-equiv = "refresh" content="0; url='/${REPO_NAME}/en/latest/'" />
-      <link rel="canonical" href='/${REPO_NAME}/en/latest/'" />
+      <meta http-equiv = "refresh" content="0; url='/${REPO_NAME}/en/main/'" />
+      <link rel="canonical" href='/${REPO_NAME}/en/main/'" />
    </head>
    <body>
-      <p>Please wait while you're redirected to our <a href="/${REPO_NAME}/en/latest/">documentation</a>.</p>
+      <p>Please wait while you're redirected to our <a href="/${REPO_NAME}/en/main/">documentation</a>.</p>
    </body>
 </html>
 EOF
