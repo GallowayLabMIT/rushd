@@ -54,6 +54,8 @@ setuptools.setup(
             'pre-commit',
             'build',
             'twine',
+            'sphinx',
+            'sphinx-rtd-theme',
         ]
     },
 )
