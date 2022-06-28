@@ -56,6 +56,7 @@ setuptools.setup(
             'twine',
             'sphinx',
             'sphinx-rtd-theme',
+            'sphinx-autodoc-typehints',
         ]
     },
 )
