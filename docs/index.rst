@@ -3,12 +3,21 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to rushd's documentation!
-=================================
+rushd: maintaining robust, reproducible data management
+========================================================
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Contents
+
+   Tutorials <tutorial/index>
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Reference
+
+   API <api/rushd.rst>
+
 
 
 

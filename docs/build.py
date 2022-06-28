@@ -39,4 +39,7 @@ if __name__ == '__main__':
         str(output_path),
     ]
     subprocess.run(autodoc_args)
+    # Remove
+    if (docs_path / 'api' / 'modules.rst').exists():
+        (docs_path / 'api' / 'modules.rst').unlink()
     subprocess.run(html_args)
