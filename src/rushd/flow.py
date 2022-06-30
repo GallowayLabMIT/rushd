@@ -209,29 +209,6 @@ def moi(
 
         # Calculate fraction infected, moi, and the titer
         sum_df['fraction_inf'] = sum_df['virus_cell_count'] / sum_df['starting_cell_count']
-        sum_df['moi'] = -np.log(1 - sum_df['fraction_inf'])
-        sum_df['titer'] = sum_df['starting_cell_count'] * sum_df['moi'] / sum_df['virus_amount']
-
-        # Graph the MOI/Fraction Infected curve for each condition, then save in the output folder
-        for cond in np.unique(sum_df['condition']):
-            current_df = sum_df[(sum_df['condition'] == cond)]
-            plt.figure()
-            plt.plot(np.linspace(0.0001, 2.3, 100), 1 - np.exp(-np.linspace(0.0001, 2.3, 100)))
-            for rep in np.unique(current_df['replicate']):
-                plot_df = current_df[(current_df['replicate'] == rep)]
-                plt.scatter(plot_df['moi'], plot_df['fraction_inf'])
-            plt.xscale('log')
-            plt.yscale('log')
-            plt.xlabel('Log MOI')
-            plt.ylabel('Log Fraction Infected')
-            plt.title(cond)
-            plt.legend(['ref', 1, 2, 3])
-            if output_path is None:
-                plt.show()
-            else:
-                plt.savefig(
-                    Path(output_path) / 'figures' / f'{str(cond)}_MOIcurve.png', bbox_inches='tight'
-                )
 
         def poisson_model(virus_vol, tui_ratio_per_vol):
             return 1 - np.exp(-tui_ratio_per_vol * virus_vol)
@@ -244,22 +221,22 @@ def moi(
         final_titers.columns.values[3] = 'tui_ratio_per_vol'
 
         tui = []
-        # Calculate TU per cell per vol for each condition/replicate and graph/save best fit
+        # Calculate TU per cell per vol for each condition/replicate
+        # via curvefit, then graph expected fraction infected for each uL of virus
+        # and graph/save best fit
         for cond in np.unique(sum_df['condition']):
             current_df = sum_df.loc[(sum_df['condition'] == cond)]
             plt.figure()
             for rep in np.unique(current_df['replicate']):
                 plot_df = current_df.loc[(current_df['replicate'] == rep)]
                 plot_df = plot_df.sort_values('virus_amount')
-
+                # curve fit uLs of virus put in with fraction infected to get
+                # "Transfection Units per cell per volume"
                 popt, _ = curve_fit(poisson_model, plot_df['virus_amount'], plot_df['fraction_inf'])
-
                 plt.scatter(plot_df['virus_amount'], plot_df['fraction_inf'])
                 plt.plot(plot_df['virus_amount'], poisson_model(plot_df['virus_amount'], *popt))
-
                 tui.append(popt[0])
-
-            plt.title(cond)
+            plt.title(f'Best Fit of Poisson Distribution for {cond}')
             plt.xscale('log')
             plt.ylabel('Fraction infected')
             plt.xlabel('Log (uL of virus in well)')
@@ -268,6 +245,25 @@ def moi(
             else:
                 plt.savefig(
                     Path(output_path) / 'figures' / f'{str(cond)}_titer.png', bbox_inches='tight'
+                )
+            # graph MOI vs Fraction Infected with reference line
+            plt.figure()
+            plt.plot(np.linspace(0.0001, 2.3, 100), 1 - np.exp(-np.linspace(0.0001, 2.3, 100)))
+            for rep in np.unique(current_df['replicate']):
+                plot_df = current_df[(current_df['replicate'] == rep)]
+                plot_df = plot_df.sort_values('virus_amount')
+                popt, _ = curve_fit(poisson_model, plot_df['virus_amount'], plot_df['fraction_inf'])
+                plt.scatter(popt[0] * plot_df['virus_amount'], plot_df['fraction_inf'])
+            plt.xscale('log')
+            plt.yscale('log')
+            plt.xlabel('Log MOI')
+            plt.ylabel('Log Fraction Infected')
+            plt.title(f'MOI v Fraction Infected Spread for {cond}')
+            if output_path is None:
+                plt.show()
+            else:
+                plt.savefig(
+                    Path(output_path) / 'figures' / f'{str(cond)}_MOIcurve.png', bbox_inches='tight'
                 )
         # convert TU per cell per vol to TU per uL
         final_titers['moi'] = tui
