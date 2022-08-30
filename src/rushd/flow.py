@@ -170,7 +170,7 @@ def moi(
     -------
     A single pandas DataFrame containing the titer of each condition in TU per uL.
     """
-    df = data_frame
+    df = data_frame.copy()
     if color_column_name not in df.columns:
         raise MOIinputError(f'Input dataframe does not have a column called {color_column_name}')
 
@@ -198,6 +198,7 @@ def moi(
             .iloc[:, 0]
         )
         overall_counts = overall_counts.reset_index()
+        overall_counts.columns.values[4] = 'flowed_cell_count'
         # Merge into one dataframe
         sum_df = pd.merge(
             sum_df,
@@ -208,7 +209,7 @@ def moi(
         sum_df['virus_cell_count'] = sum_df['virus_cell_count'].fillna(0)
 
         # Calculate fraction infected, moi, and the titer
-        sum_df['fraction_inf'] = sum_df['virus_cell_count'] / sum_df['starting_cell_count']
+        sum_df['fraction_inf'] = sum_df['virus_cell_count'] / sum_df['flowed_cell_count']
 
         def poisson_model(virus_vol, tui_ratio_per_vol):
             return 1 - np.exp(-tui_ratio_per_vol * virus_vol)
@@ -230,9 +231,9 @@ def moi(
             for rep in np.unique(current_df['replicate']):
                 plot_df = current_df.loc[(current_df['replicate'] == rep)]
                 plot_df = plot_df.sort_values('virus_amount')
-                # curve fit uLs of virus put in with fraction infected to get
-                # "Transfection Units per cell per volume"
-                popt, _ = curve_fit(poisson_model, plot_df['virus_amount'], plot_df['fraction_inf'])
+
+                popt, _ = curve_fit(poisson_model, plot_df['virus_amount'], plot_df['fraction_inf'], p0=0.5, bounds=(0, np.inf))
+
                 plt.scatter(plot_df['virus_amount'], plot_df['fraction_inf'])
                 plt.plot(plot_df['virus_amount'], poisson_model(plot_df['virus_amount'], *popt))
                 tui.append(popt[0])
