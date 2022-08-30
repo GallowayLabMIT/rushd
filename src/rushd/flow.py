@@ -232,7 +232,13 @@ def moi(
                 plot_df = current_df.loc[(current_df['replicate'] == rep)]
                 plot_df = plot_df.sort_values('virus_amount')
 
-                popt, _ = curve_fit(poisson_model, plot_df['virus_amount'], plot_df['fraction_inf'], p0=0.5, bounds=(0, np.inf))
+                popt, _ = curve_fit(
+                    poisson_model,
+                    plot_df['virus_amount'],
+                    plot_df['fraction_inf'],
+                    p0=0.5,
+                    bounds=(0, np.inf),
+                )
 
                 plt.scatter(plot_df['virus_amount'], plot_df['fraction_inf'])
                 plt.plot(plot_df['virus_amount'], poisson_model(plot_df['virus_amount'], *popt))
