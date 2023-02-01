@@ -179,5 +179,5 @@ def well_mapping(
                 if well not in output_mapping:
                     output_mapping[well] = key
                 else:
-                    output_mapping[well] = output_mapping[well] + separator + key
+                    output_mapping[well] = str(output_mapping[well]) + separator + str(key)
     return output_mapping

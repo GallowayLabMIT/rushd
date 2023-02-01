@@ -36,6 +36,10 @@ class RegexError(RuntimeError):
     """Error raised when there is an issue with the file name regular expression."""
 
 
+class GroupsError(RuntimeError):
+    """Error raised when there is an issue with the data groups DataFrame."""
+
+
 class MOIinputError(RuntimeError):
     """Error raised when there is an issue with the provided dataframe."""
 
@@ -44,7 +48,7 @@ def load_csv_with_metadata(
     data_path: Union[str, Path], yaml_path: Union[str, Path], filename_regex: Optional[str] = None
 ) -> pd.DataFrame:
     """
-    Load .csv data into DataFrame with associate metadata.
+    Load .csv data into DataFrame with associated metadata.
 
     Generates a pandas DataFrame from a set of .csv files located at the given path,
     adding columns for metadata encoded by a given .yaml file. Metadata is associated
@@ -52,9 +56,9 @@ def load_csv_with_metadata(
 
     Parameters
     ----------
-    data_path: str
+    data_path: str or Path
         Path to directory containing data files (.csv)
-    yaml_path: str
+    yaml_path: str or Path
         Path to .yaml file to use for associating metadata with well IDs.
         All metadata must be contained under the header 'metadata'.
     filename_regex: str or raw str (optional)
@@ -132,6 +136,66 @@ def load_csv_with_metadata(
     else:
         data = pd.concat(data_list, ignore_index=True).replace(np.NaN, pd.NA)  # type: ignore
 
+    return data
+
+
+def load_groups_with_metadata(
+    groups_df: pd.DataFrame,
+    base_path: Optional[Union[str, Path]] = '',
+    filename_regex: Optional[str] = None,
+) -> pd.DataFrame:
+    """
+    Load .csv data into DataFrame with associated metadata by group.
+
+    Each group of .csv files may be located at a different path and be
+    associated with additional user-defined metadata.
+
+    Parameters
+    ----------
+    groups_df: Pandas DataFrame
+        Each row of the DataFrame is evaluated as a separate group. Columns must
+        include 'data_path' and 'yaml_path', specifying absolute or relative paths
+        to the group of .csv files and metadata .yaml files, respectively.
+    base_path: str or Path (optional)
+        If specified, path that data and yaml paths in input_df are defined relative to.
+    filename_regex: str or raw str (optional)
+        Regular expression to use to extract well IDs from data filenames.
+        Must contain the capturing group 'well' for the sample well IDs.
+        Other capturing groups in the regex will be added as metadata.
+        If not included, the filenames are assumed to follow this format (default
+        export format from FlowJo): 'export_[well]_[population].csv'
+
+    Returns
+    -------
+    A single pandas DataFrame containing data from all groups with associated metadata.
+    """
+    if not ('data_path' in groups_df.columns):
+        raise GroupsError("'groups_df' must contain column 'data_path'")
+    if not ('yaml_path' in groups_df.columns):
+        raise GroupsError("'groups_df' must contain column 'yaml_path'")
+
+    if base_path and not isinstance(base_path, Path):
+        base_path = Path(base_path)
+    elif not base_path:
+        base_path = ''
+
+    group_list: List[pd.DataFrame] = []
+    for group in groups_df.to_dict(orient='index').values():
+
+        # Load data in group
+        data_path = base_path / Path(group['data_path'])
+        yaml_path = base_path / Path(group['yaml_path'])
+        group_data = load_csv_with_metadata(data_path, yaml_path, filename_regex)
+
+        # Add associated metadata (not paths)
+        for k, v in group.items():
+            if not (k == 'data_path') and not (k == 'yaml_path'):
+                group_data[k] = v
+
+        group_list.append(group_data)
+
+    # Concatenate all the data into a single DataFrame
+    data = pd.concat(group_list, ignore_index=True)
     return data
 
 

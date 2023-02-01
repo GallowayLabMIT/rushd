@@ -22,6 +22,15 @@ def test_custom_separator():
         assert result['A01'] == f'foo{sep}bar'
 
 
+def test_combo_key_type():
+    """
+    Tests that we can combine strings and nonstrings with a separator.
+    """
+    result = well_mapping([{0: 'A1'}, {'bar': 'A1'}])
+    print(result)
+    assert result['A01'] == '0.bar'
+
+
 def test_valid_mapping_spec():
     """
     Tests valid specifications do not throw an error

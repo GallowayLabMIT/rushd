@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import pandas as pd
@@ -322,3 +323,135 @@ def test_no_files(tmp_path: Path):
     yaml_path = str(tmp_path) + '/test.yaml'
     with pytest.raises(flow.RegexError):
         _ = flow.load_csv_with_metadata(str(tmp_path), yaml_path)
+
+
+def test_group_valid(tmp_path: Path):
+    """
+    Tests that groups of files can be loaded (no base path)
+    """
+    # Create data
+    sub_dir = ['dir1', 'dir2']
+    os.mkdir(tmp_path / sub_dir[0])
+    os.mkdir(tmp_path / sub_dir[1])
+    with open(str(tmp_path / sub_dir[0] / 'test.yaml'), 'w') as f:
+        f.write(
+            """
+        metadata:
+            condition:
+            - cond1: A1,G12
+        """
+        )
+    with open(str(tmp_path / sub_dir[0] / 'export_A1_singlets.csv'), 'w') as f:
+        f.write("""channel1,channel2\n1,2""")
+    with open(str(tmp_path / sub_dir[0] / 'export_G12_singlets.csv'), 'w') as f:
+        f.write("""channel1,channel2\n10,20""")
+
+    with open(str(tmp_path / sub_dir[1] / 'test.yaml'), 'w') as f:
+        f.write(
+            """
+        metadata:
+            condition:
+            - cond1: A1,G12
+        """
+        )
+    with open(str(tmp_path / sub_dir[1] / 'export_A1_singlets.csv'), 'w') as f:
+        f.write("""channel1,channel2\n3,4""")
+    with open(str(tmp_path / sub_dir[1] / 'export_G12_singlets.csv'), 'w') as f:
+        f.write("""channel1,channel2\n30,40""")
+
+    # Call function
+    groups = pd.DataFrame(
+        {
+            'data_path': [Path(tmp_path / d) for d in sub_dir],
+            'yaml_path': [Path(tmp_path / d / 'test.yaml') for d in sub_dir],
+            'extra_metadata': ['meta1', 'meta2'],
+        }
+    )
+    df = flow.load_groups_with_metadata(groups)
+
+    # Check against manual output
+    data = [
+        ['cond1', 'A1', 'singlets', 1, 2, 'meta1'],
+        ['cond1', 'G12', 'singlets', 10, 20, 'meta1'],
+        ['cond1', 'A1', 'singlets', 3, 4, 'meta2'],
+        ['cond1', 'G12', 'singlets', 30, 40, 'meta2'],
+    ]
+    df_manual = pd.DataFrame(
+        data, columns=['condition', 'well', 'population', 'channel1', 'channel2', 'extra_metadata']
+    )
+    print(df)
+    print(df_manual)
+    assert df.equals(df_manual)
+
+
+def test_group_valid_base_path(tmp_path: Path):
+    """
+    Tests that groups of files can be loaded with a base path
+    """
+    # Create data
+    sub_dir = ['dir1', 'dir2']
+    os.mkdir(tmp_path / sub_dir[0])
+    os.mkdir(tmp_path / sub_dir[1])
+    with open(str(tmp_path / sub_dir[0] / 'test.yaml'), 'w') as f:
+        f.write(
+            """
+        metadata:
+            condition:
+            - cond1: A1,G12
+        """
+        )
+    with open(str(tmp_path / sub_dir[0] / 'export_A1_singlets.csv'), 'w') as f:
+        f.write("""channel1,channel2\n1,2""")
+    with open(str(tmp_path / sub_dir[0] / 'export_G12_singlets.csv'), 'w') as f:
+        f.write("""channel1,channel2\n10,20""")
+
+    with open(str(tmp_path / sub_dir[1] / 'test.yaml'), 'w') as f:
+        f.write(
+            """
+        metadata:
+            condition:
+            - cond1: A1,G12
+        """
+        )
+    with open(str(tmp_path / sub_dir[1] / 'export_A1_singlets.csv'), 'w') as f:
+        f.write("""channel1,channel2\n3,4""")
+    with open(str(tmp_path / sub_dir[1] / 'export_G12_singlets.csv'), 'w') as f:
+        f.write("""channel1,channel2\n30,40""")
+
+    # Call function
+    groups = pd.DataFrame(
+        {
+            'data_path': sub_dir,
+            'yaml_path': [str(Path(d) / 'test.yaml') for d in sub_dir],
+            'extra_metadata': ['meta1', 'meta2'],
+        }
+    )
+    df = flow.load_groups_with_metadata(groups, tmp_path)
+
+    # Check against manual output
+    data = [
+        ['cond1', 'A1', 'singlets', 1, 2, 'meta1'],
+        ['cond1', 'G12', 'singlets', 10, 20, 'meta1'],
+        ['cond1', 'A1', 'singlets', 3, 4, 'meta2'],
+        ['cond1', 'G12', 'singlets', 30, 40, 'meta2'],
+    ]
+    df_manual = pd.DataFrame(
+        data, columns=['condition', 'well', 'population', 'channel1', 'channel2', 'extra_metadata']
+    )
+    print(df)
+    print(df_manual)
+    assert df.equals(df_manual)
+
+
+def test_group_invalid_df():
+    """
+    Tests that proper error is thrown when the DataFrame
+    specifying groups of data is missing the required columns
+    """
+    df1 = pd.DataFrame(columns=['yaml_path', 'foo'])
+    df2 = pd.DataFrame(columns=['bar', 'data_path'])
+    df3 = pd.DataFrame(columns=['foo'])
+    df_list = [df1, df2, df3]
+    for df in df_list:
+        with pytest.raises(flow.GroupsError):
+            _ = flow.load_groups_with_metadata(df)
