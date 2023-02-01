@@ -381,8 +381,8 @@ def test_group_valid(tmp_path: Path):
     )
     print(df)
     print(df_manual)
-    df.sort_values(['extra_metadata', 'well'], inplace=True)
-    df_manual.sort_values(['extra_metadata', 'well'], inplace=True)
+    df.sort_values(by=['extra_metadata', 'well'], inplace=True)
+    df_manual.sort_values(by=['extra_metadata', 'well'], inplace=True)
     assert df.equals(df_manual)
 
 
@@ -440,8 +440,8 @@ def test_group_valid_base_path(tmp_path: Path):
     df_manual = pd.DataFrame(
         data, columns=['condition', 'well', 'population', 'channel1', 'channel2', 'extra_metadata']
     )
-    df.sort_values(['extra_metadata', 'well'], inplace=True)
-    df_manual.sort_values(['extra_metadata', 'well'], inplace=True)
+    df.sort_values(by=['extra_metadata', 'well'], inplace=True, ignore_index=True)
+    df_manual.sort_values(by=['extra_metadata', 'well'], inplace=True, ignore_index=True)
     print(df)
     print(df_manual)
     assert df.equals(df_manual)
