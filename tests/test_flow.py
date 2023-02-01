@@ -381,6 +381,8 @@ def test_group_valid(tmp_path: Path):
     )
     print(df)
     print(df_manual)
+    df.sort_values(['extra_metadata', 'well'])
+    df_manual.sort_values(['extra_metadata', 'well'])
     assert df.equals(df_manual)
 
 
@@ -426,7 +428,7 @@ def test_group_valid_base_path(tmp_path: Path):
             'extra_metadata': ['meta1', 'meta2'],
         }
     )
-    df = flow.load_groups_with_metadata(groups, tmp_path)
+    df = flow.load_groups_with_metadata(groups, str(tmp_path))
 
     # Check against manual output
     data = [
@@ -438,6 +440,8 @@ def test_group_valid_base_path(tmp_path: Path):
     df_manual = pd.DataFrame(
         data, columns=['condition', 'well', 'population', 'channel1', 'channel2', 'extra_metadata']
     )
+    df.sort_values(['extra_metadata', 'well'])
+    df_manual.sort_values(['extra_metadata', 'well'])
     print(df)
     print(df_manual)
     assert df.equals(df_manual)
