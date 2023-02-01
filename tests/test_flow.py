@@ -381,8 +381,8 @@ def test_group_valid(tmp_path: Path):
     )
     print(df)
     print(df_manual)
-    df.sort_values(by=['extra_metadata', 'well'], inplace=True)
-    df_manual.sort_values(by=['extra_metadata', 'well'], inplace=True)
+    df.sort_values(by=['extra_metadata', 'well'], inplace=True, ignore_index=True)
+    df_manual.sort_values(by=['extra_metadata', 'well'], inplace=True, ignore_index=True)
     assert df.equals(df_manual)
 
 
