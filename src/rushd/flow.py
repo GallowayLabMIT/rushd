@@ -79,35 +79,35 @@ def load_csv_with_metadata(
     try:
         with yaml_path.open() as file:
             metadata = yaml.safe_load(file)
-            if (type(metadata) is not dict) or ('metadata' not in metadata):
+            if (type(metadata) is not dict) or ("metadata" not in metadata):
                 raise YamlError(
-                    'Incorrectly formatted .yaml file.'
+                    "Incorrectly formatted .yaml file."
                     " All metadata must be stored under the header 'metadata'"
                 )
-            for k, v in metadata['metadata'].items():
+            for k, v in metadata["metadata"].items():
                 if isinstance(v, dict):
                     warnings.warn(
                         f'Metadata column "{k}" is a YAML dictionary, not a list!'
-                        ' Make sure your entries under this key start with dashes.'
-                        ' Passing a dictionary does not allow duplicate keys and'
-                        ' is sort-order-dependent.',
+                        " Make sure your entries under this key start with dashes."
+                        " Passing a dictionary does not allow duplicate keys and"
+                        " is sort-order-dependent.",
                         MetadataWarning,
                     )
-            metadata_map = {k: well_mapper.well_mapping(v) for k, v in metadata['metadata'].items()}
-    except FileNotFoundError:
-        raise YamlError('Specified metadata YAML file does not exist!')
+            metadata_map = {k: well_mapper.well_mapping(v) for k, v in metadata["metadata"].items()}
+    except FileNotFoundError as err:
+        raise YamlError("Specified metadata YAML file does not exist!") from err
 
     # Load data from .csv files
     data_list: List[pd.DataFrame] = []
 
-    for file in data_path.glob('*.csv'):
+    for file in data_path.glob("*.csv"):
 
         # Default filename from FlowJo export is 'export_[well]_[population].csv'
         if filename_regex is None:
-            filename_regex = r'^.*export_(?P<well>[A-P]\d+)_(?P<population>.+)\.csv'
+            filename_regex = r"^.*export_(?P<well>[A-P]\d+)_(?P<population>.+)\.csv"
 
         regex = re.compile(filename_regex)
-        if 'well' not in regex.groupindex:
+        if "well" not in regex.groupindex:
             raise RegexError("Regular expression does not contain capturing group 'well'")
         match = regex.match(file.name)
         if match is None:
@@ -117,7 +117,7 @@ def load_csv_with_metadata(
         df = pd.read_csv(file)
 
         # Add metadata to DataFrame
-        well = match.group('well')
+        well = match.group("well")
         index = 0
         for k, v in metadata_map.items():
             # Replace custom metadata keys with <NA> if not present
@@ -141,7 +141,7 @@ def load_csv_with_metadata(
 
 def load_groups_with_metadata(
     groups_df: pd.DataFrame,
-    base_path: Optional[Union[str, Path]] = '',
+    base_path: Optional[Union[str, Path]] = "",
     filename_regex: Optional[str] = None,
 ) -> pd.DataFrame:
     """
@@ -169,27 +169,27 @@ def load_groups_with_metadata(
     -------
     A single pandas DataFrame containing data from all groups with associated metadata.
     """
-    if not ('data_path' in groups_df.columns):
+    if "data_path" not in groups_df.columns:
         raise GroupsError("'groups_df' must contain column 'data_path'")
-    if not ('yaml_path' in groups_df.columns):
+    if "yaml_path" not in groups_df.columns:
         raise GroupsError("'groups_df' must contain column 'yaml_path'")
 
     if base_path and not isinstance(base_path, Path):
         base_path = Path(base_path)
     elif not base_path:
-        base_path = ''
+        base_path = ""
 
     group_list: List[pd.DataFrame] = []
-    for group in groups_df.to_dict(orient='index').values():
+    for group in groups_df.to_dict(orient="index").values():
 
         # Load data in group
-        data_path = base_path / Path(group['data_path'])
-        yaml_path = base_path / Path(group['yaml_path'])
+        data_path = base_path / Path(group["data_path"])
+        yaml_path = base_path / Path(group["yaml_path"])
         group_data = load_csv_with_metadata(data_path, yaml_path, filename_regex)
 
         # Add associated metadata (not paths)
         for k, v in group.items():
-            if not (k == 'data_path') and not (k == 'yaml_path'):
+            if not (k == "data_path") and not (k == "yaml_path"):
                 group_data[k] = v
 
         group_list.append(group_data)
@@ -204,7 +204,7 @@ def moi(
     color_column_name: str,
     color_cutoff: float,
     output_path: Optional[Union[str, Path]] = None,
-    summary_method: Union[Literal['mean'], Literal['median']] = 'median',
+    summary_method: Union[Literal["mean"], Literal["median"]] = "median",
 ) -> pd.DataFrame:
     """
     Calculate moi information from flowjo data with appropriate metadata.
@@ -236,118 +236,118 @@ def moi(
     """
     df = data_frame.copy()
     if color_column_name not in df.columns:
-        raise MOIinputError(f'Input dataframe does not have a column called {color_column_name}')
+        raise MOIinputError(f"Input dataframe does not have a column called {color_column_name}")
 
     if output_path is not None:
-        (Path(output_path) / 'figures').mkdir(parents=True, exist_ok=True)
+        (Path(output_path) / "figures").mkdir(parents=True, exist_ok=True)
 
-    if {'condition', 'replicate', 'starting_cell_count', 'scaling', 'max_virus'}.issubset(
+    if {"condition", "replicate", "starting_cell_count", "scaling", "max_virus"}.issubset(
         df.columns
     ):
-        df['virus_amount'] = df['scaling'] * df['max_virus']
+        df["virus_amount"] = df["scaling"] * df["max_virus"]
         int_df = df[(df[color_column_name] > color_cutoff)]
 
         # Summarize cell counts for virus
         sum_df = (
-            int_df.groupby(['condition', 'replicate', 'starting_cell_count', 'virus_amount'])
+            int_df.groupby(["condition", "replicate", "starting_cell_count", "virus_amount"])
             .count()
             .iloc[:, 0]
         )
         sum_df = sum_df.reset_index()
-        sum_df.columns.values[4] = 'virus_cell_count'
+        sum_df.columns.values[4] = "virus_cell_count"
         # Summarize cell counts overall
         overall_counts = (
-            df.groupby(['condition', 'replicate', 'starting_cell_count', 'virus_amount'])
+            df.groupby(["condition", "replicate", "starting_cell_count", "virus_amount"])
             .count()
             .iloc[:, 0]
         )
         overall_counts = overall_counts.reset_index()
-        overall_counts.columns.values[4] = 'flowed_cell_count'
+        overall_counts.columns.values[4] = "flowed_cell_count"
         # Merge into one dataframe
         sum_df = pd.merge(
             sum_df,
             overall_counts,
-            how='outer',
-            on=['condition', 'replicate', 'starting_cell_count', 'virus_amount'],
+            how="outer",
+            on=["condition", "replicate", "starting_cell_count", "virus_amount"],
         )
-        sum_df['virus_cell_count'] = sum_df['virus_cell_count'].fillna(0)
+        sum_df["virus_cell_count"] = sum_df["virus_cell_count"].fillna(0)
 
         # Calculate fraction infected, moi, and the titer
-        sum_df['fraction_inf'] = sum_df['virus_cell_count'] / sum_df['flowed_cell_count']
+        sum_df["fraction_inf"] = sum_df["virus_cell_count"] / sum_df["flowed_cell_count"]
 
         def poisson_model(virus_vol, tui_ratio_per_vol):
             return 1 - np.exp(-tui_ratio_per_vol * virus_vol)
 
         # create the final dataframe
         final_titers = (
-            sum_df.groupby(['condition', 'replicate', 'starting_cell_count']).count().iloc[:, 0]
+            sum_df.groupby(["condition", "replicate", "starting_cell_count"]).count().iloc[:, 0]
         )
         final_titers = final_titers.reset_index()
-        final_titers.columns.values[3] = 'tui_ratio_per_vol'
+        final_titers.columns.values[3] = "tui_ratio_per_vol"
 
         tui = []
         # Calculate TU per cell per vol for each condition/replicate
         # via curvefit, then graph expected fraction infected for each uL of virus
         # and graph/save best fit
-        for cond in np.unique(sum_df['condition']):
-            current_df = sum_df.loc[(sum_df['condition'] == cond)]
+        for cond in np.unique(sum_df["condition"]):
+            current_df = sum_df.loc[(sum_df["condition"] == cond)]
             plt.figure()
-            for rep in np.unique(current_df['replicate']):
-                plot_df = current_df.loc[(current_df['replicate'] == rep)]
-                plot_df = plot_df.sort_values('virus_amount')
+            for rep in np.unique(current_df["replicate"]):
+                plot_df = current_df.loc[(current_df["replicate"] == rep)]
+                plot_df = plot_df.sort_values("virus_amount")
 
                 popt, _ = curve_fit(
                     poisson_model,
-                    plot_df['virus_amount'],
-                    plot_df['fraction_inf'],
+                    plot_df["virus_amount"],
+                    plot_df["fraction_inf"],
                     p0=0.5,
                     bounds=(0, np.inf),
                 )
 
-                plt.scatter(plot_df['virus_amount'], plot_df['fraction_inf'])
-                plt.plot(plot_df['virus_amount'], poisson_model(plot_df['virus_amount'], *popt))
+                plt.scatter(plot_df["virus_amount"], plot_df["fraction_inf"])
+                plt.plot(plot_df["virus_amount"], poisson_model(plot_df["virus_amount"], *popt))
                 tui.append(popt[0])
-            plt.title(f'Best Fit of Poisson Distribution for {cond}')
-            plt.xscale('log')
-            plt.ylabel('Fraction infected')
-            plt.xlabel('Log (uL of virus in well)')
+            plt.title(f"Best Fit of Poisson Distribution for {cond}")
+            plt.xscale("log")
+            plt.ylabel("Fraction infected")
+            plt.xlabel("Log (uL of virus in well)")
             if output_path is None:
                 plt.show()
             else:
                 plt.savefig(
-                    Path(output_path) / 'figures' / f'{str(cond)}_titer.png', bbox_inches='tight'
+                    Path(output_path) / "figures" / f"{str(cond)}_titer.png", bbox_inches="tight"
                 )
             # graph MOI vs Fraction Infected with reference line
             plt.figure()
             plt.plot(np.linspace(0.0001, 2.3, 100), 1 - np.exp(-np.linspace(0.0001, 2.3, 100)))
-            for rep in np.unique(current_df['replicate']):
-                plot_df = current_df[(current_df['replicate'] == rep)]
-                plot_df = plot_df.sort_values('virus_amount')
-                popt, _ = curve_fit(poisson_model, plot_df['virus_amount'], plot_df['fraction_inf'])
-                plt.scatter(popt[0] * plot_df['virus_amount'], plot_df['fraction_inf'])
-            plt.xscale('log')
-            plt.yscale('log')
-            plt.xlabel('Log MOI')
-            plt.ylabel('Log Fraction Infected')
-            plt.title(f'MOI v Fraction Infected Spread for {cond}')
+            for rep in np.unique(current_df["replicate"]):
+                plot_df = current_df[(current_df["replicate"] == rep)]
+                plot_df = plot_df.sort_values("virus_amount")
+                popt, _ = curve_fit(poisson_model, plot_df["virus_amount"], plot_df["fraction_inf"])
+                plt.scatter(popt[0] * plot_df["virus_amount"], plot_df["fraction_inf"])
+            plt.xscale("log")
+            plt.yscale("log")
+            plt.xlabel("Log MOI")
+            plt.ylabel("Log Fraction Infected")
+            plt.title(f"MOI v Fraction Infected Spread for {cond}")
             if output_path is None:
                 plt.show()
             else:
                 plt.savefig(
-                    Path(output_path) / 'figures' / f'{str(cond)}_MOIcurve.png', bbox_inches='tight'
+                    Path(output_path) / "figures" / f"{str(cond)}_MOIcurve.png", bbox_inches="tight"
                 )
         # convert TU per cell per vol to TU per uL
-        final_titers['moi'] = tui
-        final_titers['titer_in_uL'] = final_titers['moi'] * final_titers['starting_cell_count']
-        if summary_method == 'mean':
-            final_output = final_titers.groupby('condition').mean()
+        final_titers["moi"] = tui
+        final_titers["titer_in_uL"] = final_titers["moi"] * final_titers["starting_cell_count"]
+        if summary_method == "mean":
+            final_output = final_titers.groupby("condition").mean()
         else:
-            final_output = final_titers.groupby('condition').median()
+            final_output = final_titers.groupby("condition").median()
         if output_path is not None:
-            final_output.to_csv(Path(output_path) / 'MOI_titer_data.csv')
+            final_output.to_csv(Path(output_path) / "MOI_titer_data.csv")
         return final_output
     else:
-        want = {'condition', 'replicate', 'starting_cell_count', 'scaling', 'max_virus'}
+        want = {"condition", "replicate", "starting_cell_count", "scaling", "max_virus"}
         have = df.columns
         lost = want.difference(have)
-        raise MOIinputError(f'Missing the following columns from the input dataframe: {lost}')
+        raise MOIinputError(f"Missing the following columns from the input dataframe: {lost}")

@@ -6,11 +6,11 @@ robust, reproducible data management.
 from . import flow, io  # noqa
 from .io import infile, outfile  # noqa
 
-submodules = ['io', 'flow']
+submodules = ["io", "flow"]
 
 re_exports = [
-    'infile',
-    'outfile',
+    "infile",
+    "outfile",
 ]
 # Re-exports of common functions loaded from submodules
 __all__ = submodules + re_exports
@@ -19,8 +19,8 @@ __all__ = submodules + re_exports
 # Re-export datadir and rootdir
 def __getattr__(name: str):
     """Set up the module attribute exports."""
-    if name == 'datadir':
+    if name == "datadir":
         return io.datadir
-    if name == 'rootdir':
+    if name == "rootdir":
         return io.rootdir
-    raise AttributeError(f'No attribute {name} in rushd')
+    raise AttributeError(f"No attribute {name} in rushd")
