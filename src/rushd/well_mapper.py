@@ -175,9 +175,11 @@ def well_mapping(
                         # harm done.
                         wells.add(f"{itc_mapping[well[0]]}{well[1]}")
                         wells.add(f"{itc_mapping[well[0]]}{well[1]:02d}")
-            for well in wells:
-                if well not in output_mapping:
-                    output_mapping[well] = key
+            for parsed_well in wells:
+                if parsed_well not in output_mapping:
+                    output_mapping[parsed_well] = key
                 else:
-                    output_mapping[well] = str(output_mapping[well]) + separator + str(key)
+                    output_mapping[parsed_well] = (
+                        str(output_mapping[parsed_well]) + separator + str(key)
+                    )
     return output_mapping

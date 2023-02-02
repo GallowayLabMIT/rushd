@@ -77,8 +77,8 @@ def load_csv_with_metadata(
         data_path = Path(data_path)
 
     try:
-        with yaml_path.open() as file:
-            metadata = yaml.safe_load(file)
+        with yaml_path.open() as yaml_file:
+            metadata = yaml.safe_load(yaml_file)
             if (type(metadata) is not dict) or ("metadata" not in metadata):
                 raise YamlError(
                     "Incorrectly formatted .yaml file."
