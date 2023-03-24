@@ -12,8 +12,8 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="rushd",
-    version="0.2.0",
-    author="Christopher Johnstone, Kasey Love",
+    version="0.3.0",
+    author="Christopher Johnstone, Kasey Love, Conrad Oakes",
     author_email="meson800@gmail.com",
     description="Package for maintaining robust, reproducible data management.",
     long_description=long_description,

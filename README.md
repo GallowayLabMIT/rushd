@@ -46,14 +46,12 @@ having to re-install after each update.
 ## Changelog
 See the [CHANGELOG](CHANGELOG.md) for detailed changes.
 ```
-## [0.2.0] - 2022-06-17
+## [0.3.0] - 2023-03-01
 ### Added
-- `rd.flow.moi` calculates viral MOI, creating summary graphs and tables.
+- `rd.flow.load_groups_with_metadata` loads files from several folders (groups, e.g. corresponding to plates) into a single dataframe
 ### Modified
-- `rd.outfile` now creates necessary subdirectories within rootdir/datadir.
-- `rd.flow.load_csv_with_metadata` now allows `str` and `Path` arguments
-- `rd.flow.load_csv_with_metadata` properly handles well IDs up to A1-P24 (384-well plate)
-- `rd.flow.load_csv_with_metadata` fills unspecified metadata with `NA`
+- `rd.flow.moi` properly generates plots of MOI vs fraction infected for checking calculation accuracy
+- `rd.well_mapper` properly handles metadata concatenation
 ```
 
 ## License

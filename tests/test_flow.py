@@ -458,3 +458,83 @@ def test_group_invalid_df():
     for df in df_list:
         with pytest.raises(flow.GroupsError):
             _ = flow.load_groups_with_metadata(df)
+
+
+def test_group_custom_regex(tmp_path: Path):
+    """
+    Tests that groups of files can be loaded with custom regexes specified in
+    the input dataframe.
+    """
+    # Create data
+    sub_dir = ["dir1", "dir2"]
+    os.mkdir(tmp_path / sub_dir[0])
+    os.mkdir(tmp_path / sub_dir[1])
+    with open(str(tmp_path / sub_dir[0] / "test.yaml"), "w") as f:
+        f.write(
+            """
+        metadata:
+            condition:
+            - cond1: A1,G12
+        """
+        )
+    with open(str(tmp_path / sub_dir[0] / "export_A1_singlets.csv"), "w") as f:
+        f.write("""channel1,channel2\n1,2""")
+    with open(str(tmp_path / sub_dir[0] / "export_G12_singlets.csv"), "w") as f:
+        f.write("""channel1,channel2\n10,20""")
+
+    with open(str(tmp_path / sub_dir[1] / "test.yaml"), "w") as f:
+        f.write(
+            """
+        metadata:
+            condition:
+            - cond1: B1,H12
+        """
+        )
+    with open(str(tmp_path / sub_dir[1] / "export_plate1_293T_B1_singlets.csv"), "w") as f:
+        f.write("""channel1,channel2\n3,4""")
+    with open(str(tmp_path / sub_dir[1] / "export_plate1_293T_H12_singlets.csv"), "w") as f:
+        f.write("""channel1,channel2\n30,40""")
+
+    # Call function
+    default_regex = r"^.*export_(?P<well>[A-P]\d+)_(?P<population>.+)\.csv"
+    custom_regex = (
+        r"^.*export_plate(?P<plate>\d)_(?P<cell>\w+)_(?P<well>[A-P]\d+)_(?P<population>.+)\.csv"
+    )
+    groups = pd.DataFrame(
+        {
+            "data_path": sub_dir,
+            "yaml_path": [str(Path(d) / "test.yaml") for d in sub_dir],
+            "filename_regex": [default_regex, custom_regex],
+            "extra_metadata": ["meta1", "meta2"],
+        }
+    )
+    df = flow.load_groups_with_metadata(groups, str(tmp_path))
+
+    # Check against manual output
+    data = [
+        ["cond1", "A1", "singlets", pd.NA, pd.NA, 1, 2, "meta1", default_regex],
+        ["cond1", "G12", "singlets", pd.NA, pd.NA, 10, 20, "meta1", default_regex],
+        ["cond1", "B1", "singlets", "1", "293T", 3, 4, "meta2", custom_regex],
+        ["cond1", "H12", "singlets", "1", "293T", 30, 40, "meta2", custom_regex],
+    ]
+    df_manual = pd.DataFrame(
+        data,
+        columns=[
+            "condition",
+            "well",
+            "population",
+            "plate",
+            "cell",
+            "channel1",
+            "channel2",
+            "extra_metadata",
+            "filename_regex",
+        ],
+    )
+    df.sort_values(by=["extra_metadata", "well"], inplace=True, ignore_index=True)
+    df.sort_index(axis=1, inplace=True)
+    df_manual.sort_values(by=["extra_metadata", "well"], inplace=True, ignore_index=True)
+    df_manual.sort_index(axis=1, inplace=True)
+    print(df["plate"])
+    print(df_manual["plate"])
+    pd.testing.assert_frame_equal(df_manual, df)

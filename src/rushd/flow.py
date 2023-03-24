@@ -156,12 +156,18 @@ def load_groups_with_metadata(
         Each row of the DataFrame is evaluated as a separate group. Columns must
         include 'data_path' and 'yaml_path', specifying absolute or relative paths
         to the group of .csv files and metadata .yaml files, respectively.
+        Optionally, regular expressions for the file names can be specified for each
+        group using the column 'filename_regex' (this will override the
+        'filename_regex' argument).
     base_path: str or Path (optional)
         If specified, path that data and yaml paths in input_df are defined relative to.
     filename_regex: str or raw str (optional)
         Regular expression to use to extract well IDs from data filenames.
         Must contain the capturing group 'well' for the sample well IDs.
         Other capturing groups in the regex will be added as metadata.
+        This value applies to all groups; to specify different regexes for each group,
+        add the column 'filename_regex' to groups_df (this will override the
+        'filename_regex' argument).
         If not included, the filenames are assumed to follow this format (default
         export format from FlowJo): 'export_[well]_[population].csv'
 
@@ -185,6 +191,8 @@ def load_groups_with_metadata(
         # Load data in group
         data_path = base_path / Path(group["data_path"])
         yaml_path = base_path / Path(group["yaml_path"])
+        if "filename_regex" in groups_df.columns:
+            filename_regex = group["filename_regex"]
         group_data = load_csv_with_metadata(data_path, yaml_path, filename_regex)
 
         # Add associated metadata (not paths)
@@ -195,7 +203,7 @@ def load_groups_with_metadata(
         group_list.append(group_data)
 
     # Concatenate all the data into a single DataFrame
-    data = pd.concat(group_list, ignore_index=True)
+    data = pd.concat(group_list, ignore_index=True).replace(np.NaN, pd.NA)
     return data
 
 
