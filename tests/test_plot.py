@@ -12,6 +12,9 @@ metadata:
     inducible_spacerlength:
         - 0: A1-H9
         - 2: A10-H12
+    test_negative_linear:
+        - -1: A1-H9
+        - 2: A10-H12
     orientation:
         - tandem: A1-H3, A10-H12
         - convergent: A4-H6
@@ -45,7 +48,7 @@ def test_plot_n_outputs(tmp_path: Path, mocker: MockerFixture):
     out_path = tmp_path / "output"
     out_path.mkdir()
     rushd.plot.plot_well_metadata(tmp_path / "metadata.yaml", output_dir=out_path)
-    assert len(list(out_path.glob("*"))) == 12
+    assert len(list(out_path.glob("*"))) == 5 * 3
 
 
 def test_column_autodetection(tmp_path: Path):
@@ -72,6 +75,14 @@ def test_column_autodetection(tmp_path: Path):
     plt.close()
     assert autodetected_linear == manual_linear
 
+    rushd.plot.plot_mapping(mapping["test_negative_linear"])
+    autodetected_linear = [p.get_facecolor() for p in plt.gca().get_legend().get_patches()]
+    plt.close()
+    rushd.plot.plot_mapping(mapping["test_negative_linear"], style="linear")
+    manual_linear = [p.get_facecolor() for p in plt.gca().get_legend().get_patches()]
+    plt.close()
+    assert autodetected_linear == manual_linear
+
     rushd.plot.plot_mapping(mapping["orientation"])
     autodetected_category = [p.get_facecolor() for p in plt.gca().get_legend().get_patches()]
     plt.close()
@@ -79,3 +90,36 @@ def test_column_autodetection(tmp_path: Path):
     manual_category = [p.get_facecolor() for p in plt.gca().get_legend().get_patches()]
     plt.close()
     assert autodetected_category == manual_category
+
+
+def test_custom_style(tmp_path: Path):
+    """
+    Test that custom styles can be passed to be plotted.
+    """
+    with (tmp_path / "metadata.yaml").open("w") as meta_file:
+        meta_file.write(TEST_METADATA)
+    mapping = rushd.flow.load_well_metadata(tmp_path / "metadata.yaml")
+
+    custom_style = {
+        "tandem": (1.0, 0.0, 0.0, 1.0),
+        "convergent": (0.0, 1.0, 0.0, 1.0),
+        "divergent": (0.0, 0.0, 1.0, 1.0),
+    }
+    rushd.plot.plot_mapping(mapping["orientation"], style=custom_style)
+    color_text_mapping = {
+        t.get_text(): p.get_facecolor()
+        for t, p in zip(plt.gca().get_legend().get_texts(), plt.gca().get_legend().get_patches())
+    }
+    plt.close()
+    assert custom_style == color_text_mapping
+
+
+def test_larger_plates(tmp_path: Path):
+    """
+    Test that larger plates can be processed
+    """
+    with (tmp_path / "metadata.yaml").open("w") as meta_file:
+        meta_file.write("metadata:\n  example:\n    - test: A1-G14")
+    mapping = rushd.flow.load_well_metadata(tmp_path / "metadata.yaml")
+    rushd.plot.plot_mapping(mapping["example"])
+    plt.close()
