@@ -7,7 +7,7 @@ Combines user data from multiple .csv files into a single DataFrame.
 import re
 import warnings
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 # Support Python 3.7 by importing Literal from typing_extensions
 try:
@@ -44,6 +44,39 @@ class MOIinputError(RuntimeError):
     """Error raised when there is an issue with the provided dataframe."""
 
 
+def load_well_metadata(yaml_path: Union[str, Path]) -> Dict[Any, Any]:
+    """Load a YAML file and convert it into a well mapping.
+
+    Parameters
+    ----------
+    yaml_path: Path to the .yaml file to use for associating metadata with well IDs.
+
+    Returns
+    -------
+    A dictionary that contains a well mapping for all metadata columns.
+    """
+    if not isinstance(yaml_path, Path):
+        yaml_path = Path(yaml_path)
+
+    with yaml_path.open() as yaml_file:
+        metadata = yaml.safe_load(yaml_file)
+        if (type(metadata) is not dict) or ("metadata" not in metadata):
+            raise YamlError(
+                "Incorrectly formatted .yaml file."
+                " All metadata must be stored under the header 'metadata'"
+            )
+        for k, v in metadata["metadata"].items():
+            if isinstance(v, dict):
+                warnings.warn(
+                    f'Metadata column "{k}" is a YAML dictionary, not a list!'
+                    " Make sure your entries under this key start with dashes."
+                    " Passing a dictionary does not allow duplicate keys and"
+                    " is sort-order-dependent.",
+                    MetadataWarning,
+                )
+    return {k: well_mapper.well_mapping(v) for k, v in metadata["metadata"].items()}
+
+
 def load_csv_with_metadata(
     data_path: Union[str, Path], yaml_path: Union[str, Path], filename_regex: Optional[str] = None
 ) -> pd.DataFrame:
@@ -71,29 +104,11 @@ def load_csv_with_metadata(
     -------
     A single pandas DataFrame containing all data with associated metadata.
     """
-    if not isinstance(yaml_path, Path):
-        yaml_path = Path(yaml_path)
     if not isinstance(data_path, Path):
         data_path = Path(data_path)
 
     try:
-        with yaml_path.open() as yaml_file:
-            metadata = yaml.safe_load(yaml_file)
-            if (type(metadata) is not dict) or ("metadata" not in metadata):
-                raise YamlError(
-                    "Incorrectly formatted .yaml file."
-                    " All metadata must be stored under the header 'metadata'"
-                )
-            for k, v in metadata["metadata"].items():
-                if isinstance(v, dict):
-                    warnings.warn(
-                        f'Metadata column "{k}" is a YAML dictionary, not a list!'
-                        " Make sure your entries under this key start with dashes."
-                        " Passing a dictionary does not allow duplicate keys and"
-                        " is sort-order-dependent.",
-                        MetadataWarning,
-                    )
-            metadata_map = {k: well_mapper.well_mapping(v) for k, v in metadata["metadata"].items()}
+        metadata_map = load_well_metadata(yaml_path)
     except FileNotFoundError as err:
         raise YamlError("Specified metadata YAML file does not exist!") from err
 
