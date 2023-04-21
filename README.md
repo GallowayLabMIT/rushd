@@ -1,4 +1,5 @@
 # rushd
+[![Stable documentation](https://img.shields.io/badge/Documentation-stable-blue)](https://gallowaylabmit.github.io/rushd/en/main/)
 [![PyPI-downloads](https://img.shields.io/pypi/dm/rushd)](https://pypi.org/project/rushd)
 [![PyPI-version](https://img.shields.io/pypi/v/rushd)](https://pypi.org/project/rushd)
 [![PyPI-license](https://img.shields.io/pypi/l/rushd)](https://pypi.org/project/rushd)
@@ -24,7 +25,8 @@ Simply import `rushd`!
 import rushd as rd
 ```
 
-## Complete Examples
+## Documentation
+See the documentation available at https://gallowaylabmit.github.io/rushd
 
 ## Developer install
 If you'd like to hack locally on `rushd`, after cloning this repository:
@@ -46,12 +48,9 @@ having to re-install after each update.
 ## Changelog
 See the [CHANGELOG](CHANGELOG.md) for detailed changes.
 ```
-## [0.3.0] - 2023-03-01
+## [0.4.0] - 2023-04-21
 ### Added
-- `rd.flow.load_groups_with_metadata` loads files from several folders (groups, e.g. corresponding to plates) into a single dataframe
-### Modified
-- `rd.flow.moi` properly generates plots of MOI vs fraction infected for checking calculation accuracy
-- `rd.well_mapper` properly handles metadata concatenation
+- `rd.plot.plot_well_metadata` to make nice plots corresponding to well metadata specified as a YAML file.
 ```
 
 ## License

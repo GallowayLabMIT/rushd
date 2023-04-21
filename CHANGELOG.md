@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2023-04-21
+### Added
+- `rd.plot.plot_well_metadata` to make nice plots corresponding to well metadata specified as a YAML file.
+
 ## [0.3.0] - 2023-03-01
 ### Added
 - `rd.flow.load_groups_with_metadata` loads files from several folders (groups, e.g. corresponding to plates) into a single dataframe

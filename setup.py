@@ -12,7 +12,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="rushd",
-    version="0.3.0",
+    version="0.4.0",
     author="Christopher Johnstone, Kasey Love, Conrad Oakes",
     author_email="meson800@gmail.com",
     description="Package for maintaining robust, reproducible data management.",
@@ -23,12 +23,13 @@ setuptools.setup(
         "Bug Tracker": "https://github.com/GallowayLabMIT/rushd/issues",
     },
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 5 - Production/Stable",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Topic :: Scientific/Engineering",
