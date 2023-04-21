@@ -6,7 +6,7 @@ robust, reproducible data management.
 from . import flow, io, plot  # noqa
 from .io import infile, outfile  # noqa
 
-submodules = ["io", "flow"]
+submodules = ["io", "flow", "plot"]
 
 re_exports = [
     "infile",

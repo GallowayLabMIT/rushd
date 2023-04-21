@@ -1,4 +1,7 @@
 Tutorials
 =========
 
-None yet!
+.. toctree::
+   :maxdepth: 2
+
+   plot_well_metadata

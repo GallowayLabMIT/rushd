@@ -31,10 +31,13 @@ def plot_mapping(
 
     Parameters
     ----------
-    mapping: The mapping from well names to condition values to plot.
-    plate_size: The width and height of the plate, in number of wells.
+    mapping
+        The mapping from well names to condition values to plot.
+    plate_size
+        The width and height of the plate, in number of wells.
         Defaults to a 96- or 384-well plate, depending on the size of the mapping.
-    fig: A matplotlib Figure to use to plot on. If not specified, a new figure is created.
+    fig
+        A matplotlib Figure to use to plot on. If not specified, a new figure is created.
 
     Returns
     -------
@@ -51,7 +54,14 @@ def plot_mapping(
         else:
             plate_size = (12, 8)
 
-    mapping_vals = list(set(mapping.values()))
+    # Only use the two-digit mappings so they sort properly
+    sorted_mapping_values = [
+        t[1]
+        for t in sorted(
+            [tup for tup in mapping.items() if len(tup[0]) == 3], key=lambda tup: tup[0]
+        )
+    ]
+    mapping_vals = sorted(set(sorted_mapping_values), key=lambda x: sorted_mapping_values.index(x))
     if style is None:
         # Autodetect mapping.
         # If it is all numbers, then we find the median. If all numbers are non-negative
@@ -127,6 +137,7 @@ def plot_mapping(
     ax.set_yticks(
         [-i for i in range(plate_size[1])], labels=[row_str[i] for i in range(plate_size[1])]
     )
+    fig.tight_layout()
 
 
 def plot_well_metadata(
@@ -142,11 +153,16 @@ def plot_well_metadata(
 
     Parameters
     ----------
-    filename: The path to the YAML file containing the mapping
-    output_dir: If given, outputs plate maps as PNGs, PDFs, and SVGs into this folder
-    plate_size: The width and height of the plate, in number of wells.
+    filename: `str` or `pathlib.Path`
+        The path to the YAML file containing the mapping
+    output_dir: optional `pathlib.Path`
+        If given, outputs plate maps as PNGs, PDFs, and SVGs into this folder.
+        If not given, plots are `plt.show`'d interactively.
+    plate_size: optional `Tuple[int,int]`
+        The width and height of the plate, in number of wells.
         Defaults to a 96- or 384-well plate.
-    columns: The list of columns to plot. If not specified, all metadata columns are plotted.
+    columns: optional `List[str]`
+        The list of columns to plot. If not specified, all metadata columns are plotted.
     """
     mapping = flow.load_well_metadata(filename)
     if columns is None:

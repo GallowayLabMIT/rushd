@@ -40,7 +40,14 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
     "sphinx_autodoc_typehints",
+    "matplotlib.sphinxext.plot_directive",
 ]
+
+# napolean/typehints options
+typehints_defaults = "braces"
+
+# matplotlib Sphinx options
+plot_include_source = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]

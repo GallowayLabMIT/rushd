@@ -18,8 +18,14 @@ if __name__ == "__main__":
     # Remove the output folder if it exists and we force a rebuild
     if args.force_rebuild and output_path.is_dir():
         shutil.rmtree(output_path)
-
     python_exe = sys.executable
+
+    # Run build code scripts
+    subprocess.run(
+        [python_exe, docs_path / "_build_code" / "plot_well_metadata.py"],
+        cwd=docs_path / "_build_code",
+    )
+
     autodoc_args = [
         python_exe,
         "-m",
