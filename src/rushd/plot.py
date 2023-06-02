@@ -92,7 +92,8 @@ def plot_mapping(
         max_val = max(mapping_vals)
         base_cmap = plt.get_cmap("viridis")  # type: ignore
         mapping_colors = {
-            x: base_cmap((x - min_val) / (max_val - min_val) * 0.85) for x in mapping_vals
+            x: base_cmap((x - min_val) / (max_val - min_val) * 0.85 if min_val != max_val else 0.0)
+            for x in mapping_vals
         }
     elif style == "log":
         mapping_vals = sorted(mapping_vals)

@@ -123,3 +123,12 @@ def test_larger_plates(tmp_path: Path):
     mapping = rushd.flow.load_well_metadata(tmp_path / "metadata.yaml")
     rushd.plot.plot_mapping(mapping["example"])
     plt.close()
+
+
+def test_single_entry_zero(tmp_path: Path):
+    """Tests that single entries where max=min do not crash the plotter"""
+    with (tmp_path / "metadata.yaml").open("w") as meta_file:
+        meta_file.write("metadata:\n  foo:\n    - 0: A1-H6")
+    mapping = rushd.flow.load_well_metadata(tmp_path / "metadata.yaml")
+    rushd.plot.plot_mapping(mapping["foo"])
+    plt.close()
