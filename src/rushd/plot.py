@@ -49,7 +49,7 @@ def plot_mapping(
 
     if plate_size is None:
         # Check if we have any wells beyond H or beyond 12
-        if any([k[0] > "H" or int(k[1:]) > 12 for k in mapping.keys()]):
+        if any(k[0] > "H" or int(k[1:]) > 12 for k in mapping.keys()):
             plate_size = (24, 16)
         else:
             plate_size = (12, 8)
@@ -66,7 +66,7 @@ def plot_mapping(
         # Autodetect mapping.
         # If it is all numbers, then we find the median. If all numbers are non-negative
         # and the median lies outside [.15, .85] percentile ranges, guess log scale.
-        if not all([isinstance(x, (int, float)) for x in mapping_vals]):
+        if not all(isinstance(x, (int, float)) for x in mapping_vals):
             style = "category"
         else:
             min_val = min(mapping_vals)

@@ -126,9 +126,9 @@ def well_mapping(
 
     # Char To Int mapping and Int To Char mapping
     cti_mapping = {v: k for k, v in enumerate(list("ABCDEFGHIJKLMNOP"))}
-    itc_mapping = {
-        k: v for k, v in enumerate(list("ABCDEFGHIJKLMNOP"))
-    }  # pylint: disable=unnecessary-comprehension
+    itc_mapping = dict(
+        enumerate(list("ABCDEFGHIJKLMNOP"))
+    )  # pylint: disable=unnecessary-comprehension
 
     output_mapping: Dict[str, Any] = {}
     for mapping_dict in plate_spec:

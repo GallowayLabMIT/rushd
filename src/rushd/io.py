@@ -89,7 +89,7 @@ def _load_root_datadir(
 
 _rootdir, _datadir = _load_root_datadir(_locate_datadir_txt())
 if _datadir is None:
-    warnings.warn("Unable to locate datadir.txt", category=ImportWarning)
+    warnings.warn("Unable to locate datadir.txt", category=ImportWarning, stacklevel=2)
 
 
 def __getattr__(name: str) -> Path:

@@ -73,6 +73,7 @@ def load_well_metadata(yaml_path: Union[str, Path]) -> Dict[Any, Any]:
                     " Passing a dictionary does not allow duplicate keys and"
                     " is sort-order-dependent.",
                     MetadataWarning,
+                    stacklevel=2,
                 )
     return {k: well_mapper.well_mapping(v) for k, v in metadata["metadata"].items()}
 
