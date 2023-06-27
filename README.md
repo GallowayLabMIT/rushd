@@ -48,6 +48,9 @@ having to re-install after each update.
 ## Changelog
 See the [CHANGELOG](CHANGELOG.md) for detailed changes.
 ```
+## [0.4.1] - 2023-06-27
+### Modified
+- Updated the `rd.plot.plot_mapping` command to properly handle the single-numeric case.
 ## [0.4.0] - 2023-04-21
 ### Added
 - `rd.plot.plot_well_metadata` to make nice plots corresponding to well metadata specified as a YAML file.
