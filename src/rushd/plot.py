@@ -13,6 +13,7 @@ import matplotlib
 import matplotlib.figure
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 from . import flow
 
@@ -179,3 +180,129 @@ def plot_well_metadata(
             plt.savefig(output_dir / f"{column}.svg", bbox_inches="tight")
             plt.savefig(output_dir / f"{column}.pdf", bbox_inches="tight")
         plt.close()
+
+
+def generate_xticklabels(
+    f: matplotlib.figure.Figure,
+    ax: matplotlib.axes,
+    df_labels: pd.DataFrame,
+    col_ax,
+    col_labels: list,
+    align_ticklabels: Optional[
+        Union[Literal["left"], Literal["center"], Literal["right"]]
+    ] = "center",
+    align_annotation: Optional[
+        Union[Literal["left"], Literal["center"], Literal["right"]]
+    ] = "right",
+):
+    """
+    Create table-like x-axis tick labels based on provided metadata.
+
+    Parameters
+    ----------
+    f: Matplotlib figure
+        Figure to edit
+    ax: Matplotlib axis
+        Axis to edit
+    df_labels: Pandas DataFrame
+        DataFrame of metadata related to original xticklabels. Columns are metadata values,
+        including the x-axis value.
+    col_ax:
+        Column of 'df_labels' that contains the original xticklabels. For seaborn plots, this
+        should be equivalent to the column passed to the x variable.
+    col_labels:
+        List of columns of 'df_labels' to use to replace the xticklabels.
+    align_ticklabels: 'left', 'center', or 'right'
+        Text alignment for multi-line xticklabels.
+    align_annotation: 'left', 'center', or 'right'
+        Text alignment for multi-line annotations comprising the columns of 'df_labels' used to
+        replace the xticklabels. These appear to the bottom left of the plot, with the bounding
+        box right-aligned with the right of the yticklabels and aligned vertically center with
+        the vertical center of the xticklabels.
+
+    Returns
+    -------
+    None; modifies the figure in place.
+
+    Example Usage
+    -------------
+    Figure 'fig' and axis 'ax' where some data is plotted with the variable 'category'
+    on the x-axis.
+    E.g.,
+        ```
+        fig, ax = plt.subplots()
+        sns.stripplot(data=data, x='category', y='y', ax=ax)
+        ```
+
+    The goal is to replace the xticklabels with the metadata specified in 'df_labels'.
+        ```
+        df_labels = pd.DataFrame({
+            'category': ['cat_A', 'cat_B'],
+            'metadata1': ['foo', 'bar'],
+            'metdata2': ['-', '+']
+        })
+        ```
+    df_labels:
+        -------------------------------------
+        | category  | metadata1 | metadata2 |
+        -------------------------------------
+        | cat_A     | foo       | -         |
+        | cat_B     | bar       | +         |
+        -------------------------------------
+
+    Call the function:
+        ```
+        generate_xticklabels(fig, ax, df_labels, 'category', ['metadata1','metadata2'])
+        ```
+
+    Original x-axis:
+             _______________
+                |       |
+              cat_A   cat_B
+
+    New x-axis:
+             _______________
+                |       |
+    metadata1  foo     bar
+    metadata2   -       +
+
+    """
+    # Draw plotting canvas to generate original xticklabels
+    f.canvas.draw()
+
+    # Create dictionary from DataFrame, where keys are original xticklabels
+    #  and values are dictionaries of (metadata_key, metadata_value) pairs
+    dict_labels_by_xticklabel = df_labels.set_index(col_ax).to_dict(orient="index")
+
+    # Loop over xticklabels and set new values
+    ax_labels = []
+    for item in ax.get_xticklabels():
+        dict_labels = dict_labels_by_xticklabel[item.get_text()]
+
+        # For each specified metadata key (col_labels), get the metadata value
+        #  and concatenate all values into separate lines of a single string
+        new_xticklabel = "\n".join([str(dict_labels[i]) for i in col_labels])
+        ax_labels.append(new_xticklabel)
+
+    ax.set_xticklabels(ax_labels, multialignment=align_ticklabels)
+
+    # Get Artists for first axes labels
+    xlabel_bbox = ax.get_xticklabels()[0]
+    ylabel_bbox = ax.get_yticklabels()[0]
+
+    font_size = plt.rcParams["xtick.labelsize"]
+
+    # Annotate plot with metadata keys
+    #   x value: align the right of the annotation bbox (ha='right')
+    #       with the right (x=1) of the ylabel bbox (xcoord=ylabel_bbox)
+    #   y value: align the vertical center of the annotation bbox (va='center')
+    #       with the vertical center (y=0.5) of the xlabel bbox (ycoord=xlabel_bbox)
+    ax.annotate(
+        text="\n".join(col_labels),
+        xy=(1, 0.5),
+        xycoords=(ylabel_bbox, xlabel_bbox),
+        ha="right",
+        va="center",
+        multialignment=align_annotation,
+        fontsize=font_size,
+    )
