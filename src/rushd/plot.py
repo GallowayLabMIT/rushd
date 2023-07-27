@@ -9,6 +9,8 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
+import warnings
+
 import matplotlib
 import matplotlib.figure
 import matplotlib.pyplot as plt
@@ -183,11 +185,11 @@ def plot_well_metadata(
 
 
 def generate_xticklabels(
-    f: matplotlib.figure.Figure,
-    ax: matplotlib.axes,
     df_labels: pd.DataFrame,
-    col_ax,
-    col_labels: list,
+    ax_col,
+    label_cols: list,
+    *,
+    ax: Optional[matplotlib.axes.Axes] = None,
     align_ticklabels: Optional[
         Union[Literal["left"], Literal["center"], Literal["right"]]
     ] = "center",
@@ -200,18 +202,16 @@ def generate_xticklabels(
 
     Parameters
     ----------
-    f: Matplotlib figure
-        Figure to edit
-    ax: Matplotlib axis
-        Axis to edit
     df_labels: Pandas DataFrame
         DataFrame of metadata related to original xticklabels. Columns are metadata values,
         including the x-axis value.
-    col_ax:
+    ax_col:
         Column of 'df_labels' that contains the original xticklabels. For seaborn plots, this
         should be equivalent to the column passed to the x variable.
-    col_labels:
+    label_cols:
         List of columns of 'df_labels' to use to replace the xticklabels.
+    ax: Optional Matplotlib axes
+        Axes to edit, uses current axes if none specified.
     align_ticklabels: 'left', 'center', or 'right'
         Text alignment for multi-line xticklabels.
     align_annotation: 'left', 'center', or 'right'
@@ -222,16 +222,14 @@ def generate_xticklabels(
 
     Returns
     -------
-    None; modifies the figure in place.
+    None; modifies the axes in place.
 
     Example Usage
     -------------
-    Figure 'fig' and axis 'ax' where some data is plotted with the variable 'category'
-    on the x-axis.
+    Plot where some data is plotted with the variable 'category' on the x-axis.
     E.g.,
         ```
-        fig, ax = plt.subplots()
-        sns.stripplot(data=data, x='category', y='y', ax=ax)
+        sns.stripplot(data=data, x='category', y='y')
         ```
 
     The goal is to replace the xticklabels with the metadata specified in 'df_labels'.
@@ -239,7 +237,7 @@ def generate_xticklabels(
         df_labels = pd.DataFrame({
             'category': ['cat_A', 'cat_B'],
             'metadata1': ['foo', 'bar'],
-            'metdata2': ['-', '+']
+            'metadata2': ['-', '+']
         })
         ```
     df_labels:
@@ -252,7 +250,7 @@ def generate_xticklabels(
 
     Call the function:
         ```
-        generate_xticklabels(fig, ax, df_labels, 'category', ['metadata1','metadata2'])
+        generate_xticklabels(df_labels, 'category', ['metadata1','metadata2'])
         ```
 
     Original x-axis:
@@ -268,20 +266,22 @@ def generate_xticklabels(
 
     """
     # Draw plotting canvas to generate original xticklabels
-    f.canvas.draw()
+    if ax is None:
+        ax = plt.gca()
+    ax.figure.canvas.draw()
 
     # Create dictionary from DataFrame, where keys are original xticklabels
     #  and values are dictionaries of (metadata_key, metadata_value) pairs
-    dict_labels_by_xticklabel = df_labels.set_index(col_ax).to_dict(orient="index")
+    dict_labels_by_xticklabel = df_labels.set_index(ax_col).to_dict(orient="index")
 
     # Loop over xticklabels and set new values
     ax_labels = []
     for item in ax.get_xticklabels():
         dict_labels = dict_labels_by_xticklabel[item.get_text()]
 
-        # For each specified metadata key (col_labels), get the metadata value
+        # For each specified metadata key (label_cols), get the metadata value
         #  and concatenate all values into separate lines of a single string
-        new_xticklabel = "\n".join([str(dict_labels[i]) for i in col_labels])
+        new_xticklabel = "\n".join([str(dict_labels[i]) for i in label_cols])
         ax_labels.append(new_xticklabel)
 
     ax.set_xticklabels(ax_labels, multialignment=align_ticklabels)
@@ -298,11 +298,18 @@ def generate_xticklabels(
     #   y value: align the vertical center of the annotation bbox (va='center')
     #       with the vertical center (y=0.5) of the xlabel bbox (ycoord=xlabel_bbox)
     ax.annotate(
-        text="\n".join(col_labels),
+        text="\n".join(label_cols),
         xy=(1, 0.5),
         xycoords=(ylabel_bbox, xlabel_bbox),
         ha="right",
         va="center",
         multialignment=align_annotation,
         fontsize=font_size,
+    )
+
+    # Ignore UserWarning from Matplotlib
+    warnings.filterwarnings(
+        "ignore",
+        message="FixedFormatter should only be used together with FixedLocator",
+        category=UserWarning,
     )

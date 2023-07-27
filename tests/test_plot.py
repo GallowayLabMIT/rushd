@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import pandas as pd
 import rushd.plot
 from pytest_mock import MockerFixture
 
@@ -132,3 +133,16 @@ def test_single_entry_zero(tmp_path: Path):
     mapping = rushd.flow.load_well_metadata(tmp_path / "metadata.yaml")
     rushd.plot.plot_mapping(mapping["foo"])
     plt.close()
+
+
+def test_generate_xticklabels():
+    """Tests that xticklabels are replaced as expected"""
+    df_labels = pd.DataFrame(
+        {"category": ["cat_A", "cat_B"], "metadata1": ["foo", "bar"], "metadata2": ["-", "+"]}
+    )
+    plt.plot(["cat_A", "cat_B"], [0, 1])
+    rushd.plot.generate_xticklabels(df_labels, "category", ["metadata1", "metadata2"])
+    new_labels = [item.get_text() for item in plt.gca().get_xticklabels()]
+    expected_labels = ["foo\n-", "bar\n+"]
+    plt.close()
+    assert new_labels == expected_labels
