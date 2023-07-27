@@ -20,6 +20,8 @@ metadata:
         - tandem: A1-H3, A10-H12
         - convergent: A4-H6
         - divergent: A7-H9
+    test_empty:
+        - wells: A1-C4
     dox:
         - 0: A1-A12
         - 0.0000820: B1-B12
@@ -49,7 +51,7 @@ def test_plot_n_outputs(tmp_path: Path, mocker: MockerFixture):
     out_path = tmp_path / "output"
     out_path.mkdir()
     rushd.plot.plot_well_metadata(tmp_path / "metadata.yaml", output_dir=out_path)
-    assert len(list(out_path.glob("*"))) == 5 * 3
+    assert len(list(out_path.glob("*"))) == 6 * 3
 
 
 def test_column_autodetection(tmp_path: Path):

@@ -123,7 +123,7 @@ def plot_mapping(
                 (col, -row),
                 0.45,
                 ec="k",
-                fc=mapping_colors[mapping[well]] if well in mapping else None,
+                fc=mapping_colors[mapping[well]] if well in mapping else "#00000000",
             )
         )
     # Create the legend
