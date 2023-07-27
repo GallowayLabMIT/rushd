@@ -222,46 +222,6 @@ def generate_xticklabels(
     -------
     None; modifies the axes in place.
 
-    Example Usage
-    -------------
-    Plot where some data is plotted with the variable 'category' on the x-axis.
-    E.g.,
-        ```
-        sns.stripplot(data=data, x='category', y='y')
-        ```
-
-    The goal is to replace the xticklabels with the metadata specified in 'df_labels'.
-        ```
-        df_labels = pd.DataFrame({
-            'category': ['cat_A', 'cat_B'],
-            'metadata1': ['foo', 'bar'],
-            'metadata2': ['-', '+']
-        })
-        ```
-    df_labels:
-        -------------------------------------
-        | category  | metadata1 | metadata2 |
-        -------------------------------------
-        | cat_A     | foo       | -         |
-        | cat_B     | bar       | +         |
-        -------------------------------------
-
-    Call the function:
-        ```
-        generate_xticklabels(df_labels, 'category', ['metadata1','metadata2'])
-        ```
-
-    Original x-axis:
-             _______________
-                |       |
-              cat_A   cat_B
-
-    New x-axis:
-             _______________
-                |       |
-    metadata1  foo     bar
-    metadata2   -       +
-
     """
     # Draw plotting canvas to generate original xticklabels
     if ax is None:

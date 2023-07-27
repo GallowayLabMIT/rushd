@@ -2,12 +2,12 @@
 Visualizing YAML well metadata
 ==============================
 
-Many of the features of `rushd` load metadata using YAML files.
+Many of the features of ``rushd`` load metadata using YAML files.
 However, writing these files can be error-prone, especially with complicated
 experimental setups.
 
-`rushd` also includes plotting functions that can generate well maps automatically for you!
-Enter `plot_well_metadata`, which has the following interface:
+``rushd`` also includes plotting functions that can generate well maps automatically for you!
+Enter ``plot_well_metadata``, which has the following interface:
 
 .. autofunction:: rushd.plot.plot_well_metadata
     :noindex:
@@ -21,7 +21,7 @@ Consider the following YAML metadata file:
     :code: yaml
 
 
-By default, `plot_well_metadata` will use a default color scheme for every column
+By default, ``plot_well_metadata`` will use a default color scheme for every column
 listed in the metadata file. For numerical columns, it will auto-detect if a linear
 or log plot is better, and use a Viridis color scheme (with the yellow part of viridis removed).
 
@@ -63,7 +63,7 @@ Modifying output color mapping
 ------------------------------
 
 You can override the default color set in multiple ways. First, you can specify the style
-of a column to be `'category'`, `'linear'`, or `'log`' to override autodetection:
+of a column to be ``'category'``, ``'linear'``, or ``'log'`` to override autodetection:
 
 .. include:: ../_build_code/plot_well_metadata.py
     :code: python
@@ -91,7 +91,7 @@ You can also specify an explicit colormap that specifies a color for each entry:
 Plotting non-96 wells
 ---------------------
 
-By using the `plate_size` parameter, you can plot smaller plates, like a 6 well plate:
+By using the ``plate_size`` parameter, you can plot smaller plates, like a 6 well plate:
 
 .. include:: ../_static/example_6well_plot_metadata.yaml
     :code: yaml

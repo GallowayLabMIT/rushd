@@ -26,6 +26,11 @@ if __name__ == "__main__":
         cwd=docs_path / "_build_code",
     )
 
+    subprocess.run(
+        [python_exe, docs_path / "_build_code" / "generate_xticklabels.py"],
+        cwd=docs_path / "_build_code",
+    )
+
     autodoc_args = [
         python_exe,
         "-m",
