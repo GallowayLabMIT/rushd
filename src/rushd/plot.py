@@ -9,8 +9,6 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-import warnings
-
 import matplotlib
 import matplotlib.figure
 import matplotlib.pyplot as plt
@@ -187,7 +185,7 @@ def plot_well_metadata(
 def generate_xticklabels(
     df_labels: pd.DataFrame,
     ax_col,
-    label_cols: list,
+    label_cols: List,
     *,
     ax: Optional[matplotlib.axes.Axes] = None,
     align_ticklabels: Optional[
@@ -284,7 +282,7 @@ def generate_xticklabels(
         new_xticklabel = "\n".join([str(dict_labels[i]) for i in label_cols])
         ax_labels.append(new_xticklabel)
 
-    ax.set_xticklabels(ax_labels, multialignment=align_ticklabels)
+    ax.set_xticks(ax.get_xticks(), ax_labels, multialignment=align_ticklabels)
 
     # Get Artists for first axes labels
     xlabel_bbox = ax.get_xticklabels()[0]
@@ -305,11 +303,4 @@ def generate_xticklabels(
         va="center",
         multialignment=align_annotation,
         fontsize=font_size,
-    )
-
-    # Ignore UserWarning from Matplotlib
-    warnings.filterwarnings(
-        "ignore",
-        message="FixedFormatter should only be used together with FixedLocator",
-        category=UserWarning,
     )
