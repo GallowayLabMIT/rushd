@@ -54,6 +54,7 @@ setuptools.setup(
             "pytest-mock",
             "pre-commit",
             "ruff",
+            "seaborn",
             "build",
             "twine",
             "sphinx",
