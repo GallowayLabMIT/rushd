@@ -180,6 +180,7 @@ def test_linespacing():
     )
     plt.close()
 
+
 def test_debug_and_margin():
     """Tests that the inch-margin and debug mode works"""
     fig = plt.figure(figsize=(20.0, 20.0))
