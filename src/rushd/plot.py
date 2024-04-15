@@ -235,32 +235,40 @@ def generate_xticklabels(
     # Loop over xticklabels and set new values
     ax_labels = []
     for item in ax.get_xticklabels():
-        dict_labels = dict_labels_by_xticklabel[item.get_text()]
+        if item.get_text() in dict_labels_by_xticklabel:
+            
+            dict_labels = dict_labels_by_xticklabel[item.get_text()]
 
-        # For each specified metadata key (label_cols), get the metadata value
-        #  and concatenate all values into separate lines of a single string
-        new_xticklabel = "\n".join([str(dict_labels[i]) for i in label_cols])
-        ax_labels.append(new_xticklabel)
+            # For each specified metadata key (label_cols), get the metadata value
+            #  and concatenate all values into separate lines of a single string
+            new_xticklabel = "\n".join([str(dict_labels[i]) for i in label_cols])
+            ax_labels.append(new_xticklabel)
+        
+        # If the original label is not in the provided dictionary, leave as is
+        else: ax_labels.append(item.get_text())
 
     ax.set_xticks(ax.get_xticks(), ax_labels, multialignment=align_ticklabels)
 
-    # Get Artists for first axes labels
-    xlabel_bbox = ax.get_xticklabels()[0]
-    ylabel_bbox = ax.get_yticklabels()[0]
+    # Add annotation with metadata keys, only if the plot has yticklabels
+    if ax.get_yticklabels():
 
-    font_size = plt.rcParams["xtick.labelsize"]
+        # Get Artists for first axes labels
+        xlabel_bbox = ax.get_xticklabels()[0]
+        ylabel_bbox = ax.get_yticklabels()[0]
 
-    # Annotate plot with metadata keys
-    #   x value: align the right of the annotation bbox (ha='right')
-    #       with the right (x=1) of the ylabel bbox (xcoord=ylabel_bbox)
-    #   y value: align the vertical center of the annotation bbox (va='center')
-    #       with the vertical center (y=0.5) of the xlabel bbox (ycoord=xlabel_bbox)
-    ax.annotate(
-        text="\n".join(label_cols),
-        xy=(1, 0.5),
-        xycoords=(ylabel_bbox, xlabel_bbox),
-        ha="right",
-        va="center",
-        multialignment=align_annotation,
-        fontsize=font_size,
-    )
+        font_size = plt.rcParams["xtick.labelsize"]
+
+        # Annotate plot with metadata keys
+        #   x value: align the right of the annotation bbox (ha='right')
+        #       with the right (x=1) of the ylabel bbox (xcoord=ylabel_bbox)
+        #   y value: align the vertical center of the annotation bbox (va='center')
+        #       with the vertical center (y=0.5) of the xlabel bbox (ycoord=xlabel_bbox)
+        ax.annotate(
+            text="\n".join(label_cols),
+            xy=(1, 0.5),
+            xycoords=(ylabel_bbox, xlabel_bbox),
+            ha="right",
+            va="center",
+            multialignment=align_annotation,
+            fontsize=font_size,
+        )

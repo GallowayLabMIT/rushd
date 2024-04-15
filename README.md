@@ -40,7 +40,8 @@ with the extra requirements for tests.
 $ python -m venv env
 $ .\env\Scripts\activate    (on Windows)
 $ source env/bin/activate   (on Mac/Linux)
-$ pip install -e .[dev]
+$ pip install -e .[dev]     (on most shells)
+$ pip install -e '.[dev]'   (on zsh)
 ```
 After this 'local install', you can use and import `rushd` freely without
 having to re-install after each update.

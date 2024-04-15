@@ -148,3 +148,18 @@ def test_generate_xticklabels():
     expected_labels = ["foo\n-", "bar\n+"]
     plt.close()
     assert new_labels == expected_labels
+
+def test_xticklabels_subplots():
+    """Tests that plots with missing yticklabels don't throw an error"""
+    df_labels = pd.DataFrame(
+        {"category": ["cat_A", "cat_B"], "metadata1": ["foo", "bar"], "metadata2": ["-", "+"]}
+    )
+    fig, axes = plt.subplots(1, 2, sharey=True)
+    new_labels = []
+    for ax in axes:
+        ax.plot(["cat_A", "cat_B"], [0, 1])
+        rushd.plot.generate_xticklabels(df_labels, "category", ["metadata1", "metadata2"], ax=ax)
+        new_labels.append([item.get_text() for item in ax.get_xticklabels()])
+    expected_labels = [["foo\n-", "bar\n+"], ["foo\n-", "bar\n+"]]
+    plt.close()
+    assert new_labels == expected_labels
