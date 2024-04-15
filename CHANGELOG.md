@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `rd.flow.load_csv_with_metadata` and
   `rd.flow.load_groups_with_metadata` can now load a subset of columns.
 - The `datadir.txt` can include paths that use `~` to represent the home directory.
+- `rd.plot.generate_xticklabels` does not include metadata key labels in plots without yticklabels
+- `rd.plot.generate_xticklabels` no longer throws an error when xticklabels don't match the dictionary passed (instead leaves labels as-is)
+- `rd.plot.generate_xticklabels` now enables user-specified line spacing
 
 ## [0.4.2] - 2023-07-27
 ### Added
