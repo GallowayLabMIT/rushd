@@ -324,6 +324,33 @@ def test_no_files(tmp_path: Path):
         _ = flow.load_csv_with_metadata(str(tmp_path), yaml_path)
 
 
+def test_subcolumn_loading(tmp_path: Path):
+    """
+    Tests that column subsets can be loaded from CSV files.
+    """
+    with open(str(tmp_path / "test.yaml"), "w") as f:
+        f.write(
+            """
+        metadata:
+            condition:
+            - cond1: A1,G12
+        """
+        )
+    with open(str(tmp_path / "export_A1_singlets.csv"), "w") as f:
+        f.write("""channel1,channel2\n1,2""")
+    with open(str(tmp_path / "export_G12_singlets.csv"), "w") as f:
+        f.write("""channel1,channel2\n10,20""")
+    yaml_path = str(tmp_path) + "/test.yaml"
+    df = flow.load_csv_with_metadata(str(tmp_path), yaml_path)
+    # Make sure both are present first
+    assert "channel1" in df.columns
+    assert "channel2" in df.columns
+    # Reload specifying columns
+    df = flow.load_csv_with_metadata(str(tmp_path), yaml_path, columns=["channel1"])
+    assert "channel1" in df.columns
+    assert "channel2" not in df.columns
+
+
 def test_group_valid(tmp_path: Path):
     """
     Tests that groups of files can be loaded (no base path)

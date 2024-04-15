@@ -79,7 +79,11 @@ def load_well_metadata(yaml_path: Union[str, Path]) -> Dict[Any, Any]:
 
 
 def load_csv_with_metadata(
-    data_path: Union[str, Path], yaml_path: Union[str, Path], filename_regex: Optional[str] = None
+    data_path: Union[str, Path],
+    yaml_path: Union[str, Path],
+    filename_regex: Optional[str] = None,
+    *,
+    columns: Optional[List[str]] = None,
 ) -> pd.DataFrame:
     """
     Load .csv data into DataFrame with associated metadata.
@@ -100,6 +104,10 @@ def load_csv_with_metadata(
         Must contain the capturing group 'well' for the sample well IDs.
         If not included, the filenames are assumed to follow this format (default
         export format from FlowJo): 'export_[well]_[population].csv'
+    columns: Optional list of strings
+        If specified, only the specified columns are loaded out of the CSV files.
+        This can drastically reduce the amount of memory required to load
+        flow data.
 
     Returns
     -------
@@ -130,7 +138,7 @@ def load_csv_with_metadata(
             continue
 
         # Load data
-        df = pd.read_csv(file)
+        df = pd.read_csv(file, usecols=columns)
 
         # Add metadata to DataFrame
         well = match.group("well")
@@ -159,6 +167,8 @@ def load_groups_with_metadata(
     groups_df: pd.DataFrame,
     base_path: Optional[Union[str, Path]] = "",
     filename_regex: Optional[str] = None,
+    *,
+    columns: Optional[List[str]] = None,
 ) -> pd.DataFrame:
     """
     Load .csv data into DataFrame with associated metadata by group.
@@ -186,6 +196,10 @@ def load_groups_with_metadata(
         'filename_regex' argument).
         If not included, the filenames are assumed to follow this format (default
         export format from FlowJo): 'export_[well]_[population].csv'
+    columns: Optional list of strings
+        If specified, only the specified columns are loaded out of the CSV files.
+        This can drastically reduce the amount of memory required to load
+        flow data.
 
     Returns
     -------
@@ -209,7 +223,7 @@ def load_groups_with_metadata(
         yaml_path = base_path / Path(group["yaml_path"])
         if "filename_regex" in groups_df.columns:
             filename_regex = group["filename_regex"]
-        group_data = load_csv_with_metadata(data_path, yaml_path, filename_regex)
+        group_data = load_csv_with_metadata(data_path, yaml_path, filename_regex, columns=columns)
 
         # Add associated metadata (not paths)
         for k, v in group.items():
