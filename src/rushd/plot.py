@@ -194,6 +194,7 @@ def generate_xticklabels(
     align_annotation: Optional[
         Union[Literal["left"], Literal["center"], Literal["right"]]
     ] = "right",
+    linespacing: Optional[float] = 1.2,
 ):
     """
     Create table-like x-axis tick labels based on provided metadata.
@@ -217,6 +218,9 @@ def generate_xticklabels(
         replace the xticklabels. These appear to the bottom left of the plot, with the bounding
         box right-aligned with the right of the yticklabels and aligned vertically center with
         the vertical center of the xticklabels.
+    linespacing: float
+        Spacing between rows of the new xticklabels, as a multiple of the font size. Keeps
+        matplotlib default (1.2) if not specified.
 
     Returns
     -------
@@ -248,7 +252,9 @@ def generate_xticklabels(
         else:
             ax_labels.append(item.get_text())
 
-    ax.set_xticks(ax.get_xticks(), ax_labels, multialignment=align_ticklabels)
+    ax.set_xticks(
+        ax.get_xticks(), ax_labels, multialignment=align_ticklabels, linespacing=linespacing
+    )
 
     # Add annotation with metadata keys, only if the plot has yticklabels
     if ax.get_yticklabels():
@@ -272,4 +278,5 @@ def generate_xticklabels(
             va="center",
             multialignment=align_annotation,
             fontsize=font_size,
+            linespacing=linespacing,
         )

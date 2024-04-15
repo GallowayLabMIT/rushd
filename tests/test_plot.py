@@ -164,3 +164,15 @@ def test_xticklabels_subplots():
     expected_labels = [["foo\n-", "bar\n+"], ["foo\n-", "bar\n+"]]
     plt.close()
     assert new_labels == expected_labels
+
+
+def test_linespacing():
+    """Tests that custom line spacing values pass without error"""
+    df_labels = pd.DataFrame(
+        {"category": ["cat_A", "cat_B"], "metadata1": ["foo", "bar"], "metadata2": ["-", "+"]}
+    )
+    plt.plot(["cat_A", "cat_B"], [0, 1])
+    rushd.plot.generate_xticklabels(
+        df_labels, "category", ["metadata1", "metadata2"], linespacing=2
+    )
+    plt.close()
