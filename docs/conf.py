@@ -22,11 +22,11 @@ sys.path.insert(0, os.path.abspath("../src/"))
 # -- Project information -----------------------------------------------------
 
 project = "rushd"
-copyright = "2022, Christopher Johnstone, Kasey Love, Conrad Oakes"
+copyright = "2024, Christopher Johnstone, Kasey Love, Conrad Oakes"
 author = "Christopher Johnstone, Kasey Love, Conrad Oakes"
 
 # The full version, including alpha/beta/rc tags
-release = "0.2.0"
+release = "0.5.0"
 
 
 # -- General configuration ---------------------------------------------------
