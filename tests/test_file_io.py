@@ -12,6 +12,17 @@ import rushd.io
 import yaml
 
 
+def test_datadir_home_dir(tmp_path: Path):
+    """Tests that home directory (tilde) expansion works"""
+    (tmp_path / "root").mkdir()
+
+    with (tmp_path / "root" / "datadir.txt").open("w") as datadir_txt:
+        datadir_txt.write("~")
+    os.chdir(tmp_path / "root")
+    reload(rushd.io)
+    assert rushd.datadir == Path("~").expanduser()
+
+
 def test_datadir_rootdir(tmp_path: Path):
     """
     Tests datadir/rootdir discovery, for

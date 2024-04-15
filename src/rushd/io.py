@@ -83,7 +83,7 @@ def _load_root_datadir(
     if datadir_txt is None:
         return (None, None)
     rootdir = datadir_txt.parent
-    datadir = Path(datadir_txt.read_text().strip("\n"))
+    datadir = Path(datadir_txt.read_text().strip("\n")).expanduser()
     return (rootdir if rootdir.is_dir() else None, datadir if datadir.is_dir() else None)
 
 
