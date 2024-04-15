@@ -137,8 +137,13 @@ def load_csv_with_metadata(
         if match is None:
             continue
 
-        # Load data
-        df = pd.read_csv(file, usecols=columns)
+        # Load the first row so we get the column names
+        df_onerow = pd.read_csv(file, nrows=1)
+        # Load data: we allow extra columns in our column list, so subset it
+        valid_cols = (
+            list(set(columns).intersection(set(df_onerow.columns))) if columns is not None else None
+        )
+        df = pd.read_csv(file, usecols=valid_cols)
 
         # Add metadata to DataFrame
         well = match.group("well")

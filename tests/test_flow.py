@@ -351,6 +351,28 @@ def test_subcolumn_loading(tmp_path: Path):
     assert "channel2" not in df.columns
 
 
+def test_extra_columns(tmp_path: Path):
+    """
+    Tests that extra unused columns can be specified when loading
+    """
+    with open(str(tmp_path / "test.yaml"), "w") as f:
+        f.write(
+            """
+        metadata:
+            condition:
+            - cond1: A1
+        """
+        )
+    with open(str(tmp_path / "export_A1_singlets.csv"), "w") as f:
+        f.write("""channel1,channel2\n1,2""")
+    yaml_path = str(tmp_path) + "/test.yaml"
+    # Reload specifying columns
+    df = flow.load_csv_with_metadata(str(tmp_path), yaml_path, columns=["channel1", "channel3"])
+    assert "channel1" in df.columns
+    assert "channel2" not in df.columns
+    assert "channel3" not in df.columns
+
+
 def test_group_valid(tmp_path: Path):
     """
     Tests that groups of files can be loaded (no base path)
