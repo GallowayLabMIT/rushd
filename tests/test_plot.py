@@ -1,7 +1,10 @@
 from pathlib import Path
 
+import matplotlib
+import matplotlib.lines
 import matplotlib.pyplot as plt
 import pandas as pd
+import pytest
 import rushd.plot
 from pytest_mock import MockerFixture
 
@@ -176,3 +179,51 @@ def test_linespacing():
         df_labels, "category", ["metadata1", "metadata2"], linespacing=2
     )
     plt.close()
+
+def test_debug_and_margin():
+    """Tests that the inch-margin and debug mode works"""
+    fig = plt.figure(figsize=(20.0, 20.0))
+    fig_gridspec = matplotlib.gridspec.GridSpec(2, 2, figure=fig)
+    subfigures = {
+        "A": fig.add_subfigure(fig_gridspec[0, 0]),
+        "B": fig.add_subfigure(fig_gridspec[0, 1]),
+        "C": fig.add_subfigure(fig_gridspec[1, 0]),
+        "D": fig.add_subfigure(fig_gridspec[1, 1]),
+    }
+    # Make some axes, offset them by pi and e
+    subfig = subfigures["A"]
+    rushd.plot.adjust_subplot_margins_inches(subfig, left=3.1415, bottom=2.71828)
+    _ = subfig.subplots(ncols=2, sharex=True, sharey=True)
+
+    subfig = subfigures["B"]
+    rushd.plot.adjust_subplot_margins_inches(subfig, right=3.1415, top=2.71828)
+    _ = subfig.subplots(ncols=2, sharex=True, sharey=True)
+
+    rushd.plot.debug_axes(fig)
+    found_left = False
+    found_bottom = False
+    found_right = False
+    found_top = False
+
+    transform = fig.transFigure + fig.dpi_scale_trans.inverted()
+    # iterate over all debug lines and see if we can see the pi/e offsets
+    for child in fig.get_children():
+        if not isinstance(child, matplotlib.lines.Line2D):
+            continue
+        line_xdata = child.get_xdata()
+        line_ydata = child.get_ydata()
+        transformed_x = transform.transform([line_xdata[0], 0])[0]
+        transformed_y = transform.transform([0, line_ydata[0]])[1]
+        print(f"({transformed_x}, {transformed_y})")
+        if transformed_x == pytest.approx(3.1415):
+            found_left = True
+        if transformed_x == pytest.approx(20.0 - 3.1415):
+            found_right = True
+        if transformed_y == pytest.approx(10.0 + 2.71828):
+            found_bottom = True
+        if transformed_y == pytest.approx(20.0 - 2.71828):
+            found_top = True
+    assert found_left
+    assert found_bottom
+    assert found_right
+    assert found_top

@@ -10,7 +10,10 @@ except ImportError:
     from typing_extensions import Literal
 
 import matplotlib
+import matplotlib.colors
 import matplotlib.figure
+import matplotlib.lines
+import matplotlib.patches
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -280,3 +283,83 @@ def generate_xticklabels(
             fontsize=font_size,
             linespacing=linespacing,
         )
+
+
+def adjust_subplot_margins_inches(
+    subfig: matplotlib.figure.SubFigure,
+    *,
+    left=0.0,
+    bottom=0.0,
+    top=0.0,
+    right=0.0,
+):
+    """
+    Adjust subplot margins to specified margins in inches.
+
+    This adjusts the extent of all subplot axes are
+    placed the specified number of inches from the edges of the subfigure.
+
+    Parameters
+    ----------
+    fig: matplotlib SubFigure
+        Subfigure to be adjusted
+    left: float
+        Left margin, in inches
+    bottom: float
+        Bottom margin, in inches
+    top: float
+        Top margin, in inches
+    right: float
+        Right margin, in inches
+
+    Returns
+    -------
+    None; modifies the subfigure in place.
+
+    """
+    to_inches = subfig.transSubfigure + subfig.dpi_scale_trans.inverted()
+    to_subfig = to_inches.inverted()
+    # Calculate subfigure offsets
+    lb_corner = to_subfig.transform(to_inches.transform([0.0, 0.0]) + [left, bottom])
+    rt_corner = to_subfig.transform(to_inches.transform([1.0, 1.0]) - [right, top])
+    subfig.subplots_adjust(
+        left=lb_corner[0], bottom=lb_corner[1], right=rt_corner[0], top=rt_corner[1]
+    )
+
+
+def debug_axes(fig: matplotlib.figure.Figure):
+    """
+    Add debug artists to a figure that shows subfigure axis alignment.
+
+    Parameters
+    ----------
+    fig: matplotlib Figure
+        Figure that contains subfigures with axes to show debug info for.
+
+    Returns
+    -------
+    None; modifies the figure in place.
+    """
+    n_subfigs = len(fig.subfigs)
+    for idx, subfig in enumerate(fig.subfigs):
+        figbox_color = matplotlib.colors.hsv_to_rgb(((idx / n_subfigs), 0.1, 1.0))
+        fig.add_artist(
+            matplotlib.patches.Rectangle(
+                (0, 0), 1, 1, fc=figbox_color, ec=None, transform=subfig.transSubfigure, zorder=10
+            )
+        )
+
+        guide_color = matplotlib.colors.hsv_to_rgb(((idx / n_subfigs), 0.6, 1.0))
+        guide_kwargs = {"transform": subfig.transFigure, "zorder": 11, "color": guide_color}
+        transform = subfig.transSubfigure + subfig.transFigure.inverted()
+
+        for ax in subfig.axes:
+            xmin, ymin, xmax, ymax = ax.get_position().extents
+            xmin = transform.transform([xmin, 0.0])[0]
+            xmax = transform.transform([xmax, 0.0])[0]
+            ymin = transform.transform([0.0, ymin])[1]
+            ymax = transform.transform([0.0, ymax])[1]
+            fig.add_artist(matplotlib.lines.Line2D((xmin, xmin), (0.0, 1.0), **guide_kwargs))
+            fig.add_artist(matplotlib.lines.Line2D((xmax, xmax), (0.0, 1.0), **guide_kwargs))
+            fig.add_artist(matplotlib.lines.Line2D((0.0, 1.0), (ymin, ymin), **guide_kwargs))
+            fig.add_artist(matplotlib.lines.Line2D((0.0, 1.0), (ymax, ymax), **guide_kwargs))
