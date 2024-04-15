@@ -149,6 +149,7 @@ def test_generate_xticklabels():
     plt.close()
     assert new_labels == expected_labels
 
+
 def test_xticklabels_subplots():
     """Tests that plots with missing yticklabels don't throw an error"""
     df_labels = pd.DataFrame(

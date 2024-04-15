@@ -236,16 +236,17 @@ def generate_xticklabels(
     ax_labels = []
     for item in ax.get_xticklabels():
         if item.get_text() in dict_labels_by_xticklabel:
-            
+
             dict_labels = dict_labels_by_xticklabel[item.get_text()]
 
             # For each specified metadata key (label_cols), get the metadata value
             #  and concatenate all values into separate lines of a single string
             new_xticklabel = "\n".join([str(dict_labels[i]) for i in label_cols])
             ax_labels.append(new_xticklabel)
-        
+
         # If the original label is not in the provided dictionary, leave as is
-        else: ax_labels.append(item.get_text())
+        else:
+            ax_labels.append(item.get_text())
 
     ax.set_xticks(ax.get_xticks(), ax_labels, multialignment=align_ticklabels)
 
