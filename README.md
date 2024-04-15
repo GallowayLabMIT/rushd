@@ -49,12 +49,19 @@ having to re-install after each update.
 ## Changelog
 See the [CHANGELOG](CHANGELOG.md) for detailed changes.
 ```
-## [0.4.2] - 2023-07-27
+## [0.5.0] - 2024-04-15
 ### Added
-- `rd.plot.generate_xticklabels` replaces a plot's existing xticklabels with specified metadata in a table-like format
-## [0.4.1] - 2023-06-27
+- Added new `rd.plot.debug_axes` which draws guide lines to help with axis alignment.
+- Added new `rd.plot.adjust_subplot_margins_inches` which allows subplot configuring
+  using inch offsets (instead of subfigure coordinate offsets)
+
 ### Modified
-- Updated the `rd.plot.plot_mapping` command to properly handle the single-numeric case.
+- `rd.flow.load_csv_with_metadata` and
+  `rd.flow.load_groups_with_metadata` can now load a subset of columns.
+- The `datadir.txt` can include paths that use `~` to represent the home directory.
+- `rd.plot.generate_xticklabels` does not include metadata key labels in plots without yticklabels
+- `rd.plot.generate_xticklabels` no longer throws an error when xticklabels don't match the dictionary passed (instead leaves labels as-is)
+- `rd.plot.generate_xticklabels` now enables user-specified line spacing
 ```
 
 ## License
