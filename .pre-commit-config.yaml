@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.1.0
+  rev: v4.6.0
   hooks:
   - id: check-added-large-files
     args: ['--maxkb=2048']
@@ -9,14 +9,14 @@ repos:
   - id: check-toml
   - id: end-of-file-fixer
   - id: trailing-whitespace
-- repo: https://github.com/psf/black
-  rev: 22.3.0
-  hooks:
-  - id: black
 - repo: https://github.com/charliermarsh/ruff-pre-commit
-  rev: 'v0.0.240'
+  rev: 'v0.6.0'
   hooks:
+    # run the linter
     - id: ruff
+      args: [ --fix ]
+    # run the formatter
+    - id: ruff-format
 # flake8-blind-except
 # flake8-bugbear
 # flake8-comprehensions
