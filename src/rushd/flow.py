@@ -4,6 +4,7 @@ Common function for analyzing flow data in Pandas Dataframes.
 Allows users to specify custom metadata applied via well mapping.
 Combines user data from multiple .csv files into a single DataFrame.
 """
+
 import re
 import warnings
 from pathlib import Path
@@ -125,7 +126,6 @@ def load_csv_with_metadata(
     data_list: List[pd.DataFrame] = []
 
     for file in data_path.glob("*.csv"):
-
         # Default filename from FlowJo export is 'export_[well]_[population].csv'
         if filename_regex is None:
             filename_regex = r"^.*export_(?P<well>[A-P]\d+)_(?P<population>.+)\.csv"
@@ -163,7 +163,7 @@ def load_csv_with_metadata(
     if len(data_list) == 0:
         raise RegexError(f"No data files match the regular expression '{filename_regex}'")
     else:
-        data = pd.concat(data_list, ignore_index=True).replace(np.NaN, pd.NA)  # type: ignore
+        data = pd.concat(data_list, ignore_index=True).replace(np.nan, pd.NA)  # type: ignore
 
     return data
 
@@ -222,7 +222,6 @@ def load_groups_with_metadata(
 
     group_list: List[pd.DataFrame] = []
     for group in groups_df.to_dict(orient="index").values():
-
         # Load data in group
         data_path = base_path / Path(group["data_path"])
         yaml_path = base_path / Path(group["yaml_path"])
@@ -238,7 +237,7 @@ def load_groups_with_metadata(
         group_list.append(group_data)
 
     # Concatenate all the data into a single DataFrame
-    data = pd.concat(group_list, ignore_index=True).replace(np.NaN, pd.NA)
+    data = pd.concat(group_list, ignore_index=True).replace(np.nan, pd.NA)
     return data
 
 
@@ -248,6 +247,8 @@ def moi(
     color_cutoff: float,
     output_path: Optional[Union[str, Path]] = None,
     summary_method: Union[Literal["mean"], Literal["median"]] = "median",
+    *,
+    scale_factor: float = 1.0,
 ) -> pd.DataFrame:
     """
     Calculate moi information from flowjo data with appropriate metadata.
@@ -272,6 +273,8 @@ def moi(
         The path to the output folder. If None, instead prints all plots to screen. Defaults to None
     summary_method: str (optional)
         Whether to return the calculated titer as the mean or median of the replicates.
+    scale_factor: float (optional)
+        Whether to scale down the Poisson fit by the given scale factor maximum.
 
     Returns
     -------
@@ -319,7 +322,7 @@ def moi(
         sum_df["fraction_inf"] = sum_df["virus_cell_count"] / sum_df["flowed_cell_count"]
 
         def poisson_model(virus_vol, tui_ratio_per_vol):
-            return 1 - np.exp(-tui_ratio_per_vol * virus_vol)
+            return scale_factor * (1 - np.exp(-tui_ratio_per_vol * virus_vol))
 
         # create the final dataframe
         final_titers = (
@@ -367,7 +370,9 @@ def moi(
                 plot_df = current_df[(current_df["replicate"] == rep)]
                 plot_df = plot_df.sort_values("virus_amount")
                 popt, _ = curve_fit(poisson_model, plot_df["virus_amount"], plot_df["fraction_inf"])
-                plt.scatter(popt[0] * plot_df["virus_amount"], plot_df["fraction_inf"])
+                plt.scatter(
+                    scale_factor * popt[0] * plot_df["virus_amount"], plot_df["fraction_inf"]
+                )
             plt.xscale("log")
             plt.yscale("log")
             plt.xlabel("Log MOI")
