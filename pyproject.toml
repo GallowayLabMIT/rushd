@@ -6,11 +6,12 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [tool.ruff]
-ignore = []
 target-version = "py37"
 line-length = 100
 
 [tool.ruff.lint]
+ignore = []
+
 select = [
     "B",
     "C",

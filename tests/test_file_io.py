@@ -7,9 +7,10 @@ from importlib import reload
 from pathlib import Path
 
 import pytest
+import yaml
+
 import rushd
 import rushd.io
-import yaml
 
 
 def test_datadir_home_dir(tmp_path: Path):

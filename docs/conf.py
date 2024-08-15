@@ -5,6 +5,7 @@ This file only contains a selection of the most common options. For a full
 list see the documentation:
 https://www.sphinx-doc.org/en/master/usage/configuration.html
 """
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -82,7 +83,7 @@ html_static_path = ["_static"]
 # https://tech.michaelaltfield.net/2020/07/23/sphinx-rtd-github-pages-2/
 
 try:
-    html_context
+    html_context  # noqa: B018
 except NameError:
     html_context = {}
 html_context["display_lower_left"] = True

@@ -5,8 +5,9 @@ import matplotlib.lines
 import matplotlib.pyplot as plt
 import pandas as pd
 import pytest
-import rushd.plot
 from pytest_mock import MockerFixture
+
+import rushd.plot
 
 TEST_METADATA = """
 metadata:

@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import pytest
 from pytest_mock import MockerFixture
+
 from rushd.flow import MOIinputError, moi
 
 
