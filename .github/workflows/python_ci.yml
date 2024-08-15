@@ -33,7 +33,7 @@ jobs:
           pytest --cov=rushd --cov-report=xml --continue-on-collection-errors
       continue-on-error: true
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v2.1.0
+      uses: codecov/codecov-action@v4
       env:
           PYTHON: ${{ matrix.python-version }}
       with:
@@ -41,6 +41,7 @@ jobs:
           flags: unittests
           env_vars: PYTHON
           name: github_actions
+          token: ${{ secrets.CODECOV_TOKEN }}
     - name: Run test-suite in fail mode
       run: pytest --continue-on-collection-errors
     - name: Run pre-commit
