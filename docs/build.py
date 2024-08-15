@@ -1,4 +1,5 @@
 """Helper build script that calls apidoc and then sphinx."""
+
 import argparse
 import shutil
 import subprocess

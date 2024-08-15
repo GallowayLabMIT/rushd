@@ -1,4 +1,5 @@
 """Various helper plotting functions that make data analysis easier."""
+
 import itertools
 import pathlib
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -243,7 +244,6 @@ def generate_xticklabels(
     ax_labels = []
     for item in ax.get_xticklabels():
         if item.get_text() in dict_labels_by_xticklabel:
-
             dict_labels = dict_labels_by_xticklabel[item.get_text()]
 
             # For each specified metadata key (label_cols), get the metadata value
@@ -261,7 +261,6 @@ def generate_xticklabels(
 
     # Add annotation with metadata keys, only if the plot has yticklabels
     if ax.get_yticklabels():
-
         # Get Artists for first axes labels
         xlabel_bbox = ax.get_xticklabels()[0]
         ylabel_bbox = ax.get_yticklabels()[0]

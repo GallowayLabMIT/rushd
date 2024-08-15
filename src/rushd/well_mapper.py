@@ -95,6 +95,7 @@ will return a well map of the form:
 Both the non-normalized (e.g. no leading zeros, `A1`) and normalized
 (e.g. with leading zeros, `A01`) forms are returned for mapping.
 """
+
 import itertools
 import re
 from typing import Any, Dict, List, Set, Tuple, Union
@@ -126,9 +127,7 @@ def well_mapping(
 
     # Char To Int mapping and Int To Char mapping
     cti_mapping = {v: k for k, v in enumerate(list("ABCDEFGHIJKLMNOP"))}
-    itc_mapping = dict(
-        enumerate(list("ABCDEFGHIJKLMNOP"))
-    )  # pylint: disable=unnecessary-comprehension
+    itc_mapping = dict(enumerate(list("ABCDEFGHIJKLMNOP")))  # pylint: disable=unnecessary-comprehension
 
     output_mapping: Dict[str, Any] = {}
     for mapping_dict in plate_spec:

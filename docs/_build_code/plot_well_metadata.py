@@ -2,6 +2,7 @@
 from pathlib import Path
 import rushd as rd
 
+
 # Monkeypatch nonsense to make the included code easy to read
 def passthrough(func):
     def inner(*args, **kwargs):
