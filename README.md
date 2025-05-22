@@ -76,24 +76,48 @@ or executed during all tests, is calculated and uploaded to
 seeing if you missed any edge cases that need tests added.
 
 
+### Publishing a release
+Following the steps described above, the full process for publishing a release is:
+
+1. Test
+
+    - Write new tests as needed
+    - Run tests  to confirm changes pass
+
+2. Pre-commit
+
+    - Stage changes in git
+    - Run `pre-commit` (requires developer mode)
+    - Resolve any errors/warnings from `pre-commit` (e.g., run `ruff --fix`)
+    - Stage any new fixes and re-run `pre-commit`
+
+3. Commit changes
+
+    - Commit and sync changes
+    - Confirm project builds on github with no errors (see 'Actions' tab)
+    - Confirm adequate coverage via `codecov` (click link on github)
+
+4. Document changes
+
+    - Edit `CHANGELOG.md` and `README.md` to reflect changes, then commit
+    - Tag the release using `git tag -a vX.X.X` (updating `X`s) with a short changelog summary as the tag message
+    - Push changes `git push --tags`
+
+5. Build the release
+
+    - Build using `python -m build `
+    - Add a release to the [github page](https://github.com/GallowayLabMIT/rushd/releases) by copy-pasting the changelog
+    - Add the `.whl` and `.tar.gz` files (from the build folder) to the github release
+    - Upload the package to PyPI using `twine upload dist/*`
+
 
 ## Changelog
 See the [CHANGELOG](CHANGELOG.md) for detailed changes.
 ```
-## [0.5.0] - 2024-04-15
-### Added
-- Added new `rd.plot.debug_axes` which draws guide lines to help with axis alignment.
-- Added new `rd.plot.adjust_subplot_margins_inches` which allows subplot configuring
-  using inch offsets (instead of subfigure coordinate offsets)
-
+## [0.5.1] - 2025-02-01
 ### Modified
-- `rd.flow.load_csv_with_metadata` and
-  `rd.flow.load_groups_with_metadata` can now load a subset of columns.
-- The `datadir.txt` can include paths that use `~` to represent the home directory.
-- `rd.plot.generate_xticklabels` does not include metadata key labels in plots without yticklabels
-- `rd.plot.generate_xticklabels` no longer throws an error when xticklabels don't match the dictionary passed (instead leaves labels as-is)
-- `rd.plot.generate_xticklabels` now enables user-specified line spacing
-```
+- Switched to using `np.nan` instead of `np.NaN` to be compatible with Numpy 2.0
+````
 
 ## License
 This is licensed by the MIT license. Use freely!
