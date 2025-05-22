@@ -114,9 +114,10 @@ Following the steps described above, the full process for publishing a release i
 ## Changelog
 See the [CHANGELOG](CHANGELOG.md) for detailed changes.
 ```
-## [0.5.1] - 2025-02-01
+## [0.5.1] - 2025-05-22
 ### Modified
 - Switched to using `np.nan` instead of `np.NaN` to be compatible with Numpy 2.0
+- Removed support for Python 3.7 and added support for 3.13
 ````
 
 ## License
