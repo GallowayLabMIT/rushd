@@ -41,6 +41,10 @@ class GroupsError(RuntimeError):
     """Error raised when there is an issue with the data groups DataFrame."""
 
 
+class ColumnError(RuntimeError):
+    """Error raised when the data is missing a column specifying well IDs."""
+
+
 class MOIinputError(RuntimeError):
     """Error raised when there is an issue with the provided dataframe."""
 
@@ -239,6 +243,99 @@ def load_groups_with_metadata(
     # Concatenate all the data into a single DataFrame
     data = pd.concat(group_list, ignore_index=True).replace(np.nan, pd.NA)
     return data
+
+
+def load_single_csv_with_metadata(
+    data_path: Union[str, Path],
+    yaml_path: Union[str, Path],
+    *,
+    well_column: Optional[str] = None,
+    columns: Optional[List[str]] = None,
+    csv_kwargs: Optional[Dict[str, Any]] = {},
+) -> pd.DataFrame:
+    """
+    Load .csv data into DataFrame with associated metadata.
+
+    Generates a pandas DataFrame from a single .csv file located at the given path,
+    adding columns for metadata encoded by a given .yaml file. Metadata is associated
+    with the data based on well IDs encoded in one of the data columns.
+
+    Parameters
+    ----------
+    data_path: str or Path
+        Path to directory containing data files (.csv)
+    yaml_path: str or Path
+        Path to .yaml file to use for associating metadata with well IDs.
+        All metadata must be contained under the header 'metadata'.
+    columns: Optional list of strings
+        If specified, only the specified columns are loaded out of the CSV files.
+        This can drastically reduce the amount of memory required to load
+        flow data.
+
+    Returns
+    -------
+    A single pandas DataFrame containing all data with associated metadata.
+    """
+    if not isinstance(data_path, Path):
+        data_path = Path(data_path)
+
+    try:
+        metadata_map = load_well_metadata(yaml_path)
+    except FileNotFoundError as err:
+        raise YamlError("Specified metadata YAML file does not exist!") from err
+
+    # Load data from a single .txt file
+    file = data_path
+
+    # Load the first row so we get the column names
+    df_onerow = pd.read_csv(file, nrows=1, **csv_kwargs)
+    # Load data: we allow extra columns in our column list, so subset it
+    valid_cols = (
+        list(set(columns+[well_column]).intersection(set(df_onerow.columns))) if columns is not None else None
+    )
+    data = pd.read_csv(file, usecols=valid_cols, **csv_kwargs)
+
+    if well_column is not None:
+        
+        if well_column not in data.columns:
+            raise(ColumnError(f"The file at 'data_path' does not contain the column '{well_column}'"))
+        
+        data.rename(columns={well_column: 'well'}, inplace=True)
+
+    # Add metadata to DataFrame
+    metadata = pd.DataFrame.from_dict(metadata_map).reset_index(names='well')
+    data = data.merge(metadata, how='left', on='well').replace(np.nan, pd.NA) 
+
+    return data
+
+def load_qpcr_with_metadata(
+    data_path: Union[str, Path],
+    yaml_path: Union[str, Path],
+) -> pd.DataFrame:
+    """
+    Load qPCR data into DataFrame with associated metadata.
+
+    Wrapper for 'load_single_csv_with_metadata' using default file format for qPCR data.
+
+    Generates a pandas DataFrame from a single .csv file located at the given path,
+    adding columns for metadata encoded by a given .yaml file. Metadata is associated
+    with the data based on well IDs encoded in one of the data columns.
+
+    Parameters
+    ----------
+    data_path: str or Path
+        Path to directory containing data files (.csv)
+    yaml_path: str or Path
+        Path to .yaml file to use for associating metadata with well IDs.
+        All metadata must be contained under the header 'metadata'.
+
+    Returns
+    -------
+    A single pandas DataFrame containing all data (Cp values) with metadata associated with each well.
+    """
+
+    return load_single_csv_with_metadata(data_path, yaml_path, well_column='Pos', columns=['Cp'],
+                                         csv_kwargs=dict(sep='\t', header=1))
 
 
 def moi(
