@@ -89,6 +89,7 @@ def load_csv_with_metadata(
     filename_regex: Optional[str] = None,
     *,
     columns: Optional[List[str]] = None,
+    csv_kwargs: Optional[Dict[str, Any]] = {},
 ) -> pd.DataFrame:
     """
     Load .csv data into DataFrame with associated metadata.
@@ -113,6 +114,9 @@ def load_csv_with_metadata(
         If specified, only the specified columns are loaded out of the CSV files.
         This can drastically reduce the amount of memory required to load
         flow data.
+    csv_kwargs: Optional dict
+        Additional kwargs to pass to pd.read_csv. For instance, to skip rows or
+        to specify alternate delimiters.
 
     Returns
     -------
@@ -142,12 +146,12 @@ def load_csv_with_metadata(
             continue
 
         # Load the first row so we get the column names
-        df_onerow = pd.read_csv(file, nrows=1)
+        df_onerow = pd.read_csv(file, nrows=1, **csv_kwargs)
         # Load data: we allow extra columns in our column list, so subset it
         valid_cols = (
             list(set(columns).intersection(set(df_onerow.columns))) if columns is not None else None
         )
-        df = pd.read_csv(file, usecols=valid_cols)
+        df = pd.read_csv(file, usecols=valid_cols, **csv_kwargs)
 
         # Add metadata to DataFrame
         well = match.group("well")
@@ -178,6 +182,7 @@ def load_groups_with_metadata(
     filename_regex: Optional[str] = None,
     *,
     columns: Optional[List[str]] = None,
+    csv_kwargs: Optional[Dict[str, Any]] = {},
 ) -> pd.DataFrame:
     """
     Load .csv data into DataFrame with associated metadata by group.
@@ -209,6 +214,9 @@ def load_groups_with_metadata(
         If specified, only the specified columns are loaded out of the CSV files.
         This can drastically reduce the amount of memory required to load
         flow data.
+    csv_kwargs: Optional dict
+        Additional kwargs to pass to pd.read_csv. For instance, to skip rows or
+        to specify alternate delimiters.
 
     Returns
     -------
@@ -231,7 +239,7 @@ def load_groups_with_metadata(
         yaml_path = base_path / Path(group["yaml_path"])
         if "filename_regex" in groups_df.columns:
             filename_regex = group["filename_regex"]
-        group_data = load_csv_with_metadata(data_path, yaml_path, filename_regex, columns=columns)
+        group_data = load_csv_with_metadata(data_path, yaml_path, filename_regex, columns=columns, csv_kwargs=csv_kwargs)
 
         # Add associated metadata (not paths)
         for k, v in group.items():
@@ -271,6 +279,9 @@ def load_single_csv_with_metadata(
         If specified, only the specified columns are loaded out of the CSV files.
         This can drastically reduce the amount of memory required to load
         flow data.
+    csv_kwargs: Optional dict
+        Additional kwargs to pass to pd.read_csv. For instance, to skip rows or
+        to specify alternate delimiters.
 
     Returns
     -------
@@ -308,14 +319,16 @@ def load_single_csv_with_metadata(
 
     return data
 
-def load_qpcr_with_metadata(
+
+def load_qpcr(
     data_path: Union[str, Path],
     yaml_path: Union[str, Path],
 ) -> pd.DataFrame:
     """
     Load qPCR data into DataFrame with associated metadata.
 
-    Wrapper for 'load_single_csv_with_metadata' using default file format for qPCR data.
+    Wrapper for 'load_single_csv_with_metadata' using default file format for qPCR data
+    ('cp_table.txt' exported from Roche LightCycler 480II).
 
     Generates a pandas DataFrame from a single .csv file located at the given path,
     adding columns for metadata encoded by a given .yaml file. Metadata is associated
@@ -324,7 +337,7 @@ def load_qpcr_with_metadata(
     Parameters
     ----------
     data_path: str or Path
-        Path to directory containing data files (.csv)
+        Path to single data file, in any file format accepted by pd.read_csv (e.g., .csv, .txt)
     yaml_path: str or Path
         Path to .yaml file to use for associating metadata with well IDs.
         All metadata must be contained under the header 'metadata'.
@@ -333,9 +346,135 @@ def load_qpcr_with_metadata(
     -------
     A single pandas DataFrame containing all data (Cp values) with metadata associated with each well.
     """
+    return load_single_csv_with_metadata(
+        data_path,
+        yaml_path,
+        well_column='Pos',
+        columns=['Cp'],
+        csv_kwargs=dict(sep='\t', header=1)
+        )
 
-    return load_single_csv_with_metadata(data_path, yaml_path, well_column='Pos', columns=['Cp'],
-                                         csv_kwargs=dict(sep='\t', header=1))
+
+def load_ddpcr(
+    data_path: Union[str, Path],
+    yaml_path: Union[str, Path],
+    *,
+    channel_list: Optional[List[str]] = ['FAM','HEX'],
+) -> pd.DataFrame:
+    """
+    Load ddPCR data into DataFrame with associated metadata.
+
+    Wrapper for 'load_csv_with_metadata' using default file format for ddPCR data.
+
+    Generates a pandas DataFrame from a set of .csv files located at the given path,
+    adding columns for metadata encoded by a given .yaml file. Metadata is associated
+    with the data based on well IDs encoded in the data filenames.
+
+    Parameters
+    ----------
+    data_path: str or Path
+        Path to directory containing data files (.csv)
+    yaml_path: str or Path
+        Path to .yaml file to use for associating metadata with well IDs.
+        All metadata must be contained under the header 'metadata'.
+    channel_list: Optional, list of str
+        Renames channels (Ch1Amplitude, Ch2Amplitude) to the specified 
+        fluorophores in order.
+        The BioRad QX100/QX200 machines have FAM in Ch1 and HEX (or VIC, but
+        we don't use this) in Ch2, so this is the default.
+        To leave the column names as-is, pass None.
+
+    Returns
+    -------
+    A single pandas DataFrame containing all data with associated metadata.
+    """
+    data = load_csv_with_metadata(
+        data_path, 
+        yaml_path, 
+        r"^.*_(?P<well>[A-P]\d+)_Amplitude.csv",
+        columns=['Ch1Amplitude','Ch2Amplitude'],
+        csv_kwargs=dict(skiprows=4),
+        )
+    
+    if channel_list is not None:
+        data.rename(columns={f'Ch{i+1}Amplitude': v for i,v in enumerate(channel_list)}, inplace=True)
+
+    return data
+
+
+def load_tubes(
+    data_path: Union[str, Path],
+    filename_regex: Optional[str] = None,
+    *,
+    columns: Optional[List[str]] = None,
+    csv_kwargs: Optional[Dict[str, Any]] = {},
+) -> pd.DataFrame:
+    """
+    Load .csv data into DataFrame without additional metadata.
+
+    Generates a pandas DataFrame from a set of .csv files located at the given path,
+    adding columns for metadata encoded only in the data filenames.
+
+    Parameters
+    ----------
+    data_path: str or Path
+        Path to directory containing data files (.csv)
+    filename_regex: str or raw str (optional)
+        Regular expression to use to extract metadata from data filenames.
+        Any named capturing groups will be added as metadata.
+        If not included, the filenames are assumed to follow this format (default
+        export format from FlowJo): 'export_[condition]_[population].csv'
+    columns: Optional list of strings
+        If specified, only the specified columns are loaded out of the CSV files.
+        This can drastically reduce the amount of memory required to load
+        flow data.
+    csv_kwargs: Optional dict
+        Additional kwargs to pass to pd.read_csv. For instance, to skip rows or
+        to specify alternate delimiters.
+
+    Returns
+    -------
+    A single pandas DataFrame containing all data with associated metadata.
+    """
+    if not isinstance(data_path, Path):
+        data_path = Path(data_path)
+
+    # Load data from .csv files
+    data_list: List[pd.DataFrame] = []
+
+    for file in data_path.glob("*.csv"):
+        # Default filename from FlowJo export is 'export_[well]_[population].csv'
+        if filename_regex is None:
+            filename_regex = r"^.*export_(?P<condition>[A-P]\d+)_(?P<population>.+)\.csv"
+
+        regex = re.compile(filename_regex)
+        match = regex.match(file.name)
+        if match is None:
+            continue
+
+        # Load the first row so we get the column names
+        df_onerow = pd.read_csv(file, nrows=1, **csv_kwargs)
+        # Load data: we allow extra columns in our column list, so subset it
+        valid_cols = (
+            list(set(columns).intersection(set(df_onerow.columns))) if columns is not None else None
+        )
+        df = pd.read_csv(file, usecols=valid_cols, **csv_kwargs)
+
+        # Add metadata to DataFrame
+        index = 0
+        for k in regex.groupindex.keys():
+            df.insert(index, k, match.group(k))
+            index += 1
+
+        data_list.append(df)
+
+    # Concatenate all the data into a single DataFrame
+    if len(data_list) == 0:
+        raise RegexError(f"No data files match the regular expression '{filename_regex}'")
+    else:
+        data = pd.concat(data_list, ignore_index=True).replace(np.nan, pd.NA)  # type: ignore
+
+    return data
 
 
 def moi(
