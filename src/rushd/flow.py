@@ -16,9 +16,13 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
+import json
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import py7zr
+import shutil
+import tempfile
 import yaml
 from scipy.optimize import curve_fit
 
@@ -43,6 +47,10 @@ class GroupsError(RuntimeError):
 
 class ColumnError(RuntimeError):
     """Error raised when the data is missing a column specifying well IDs."""
+
+
+class DataPathError(RuntimeError):
+    """Error raised when the path to the data is not specified correctly."""
 
 
 class MOIinputError(RuntimeError):
@@ -320,89 +328,7 @@ def load_single_csv_with_metadata(
     return data
 
 
-def load_qpcr(
-    data_path: Union[str, Path],
-    yaml_path: Union[str, Path],
-) -> pd.DataFrame:
-    """
-    Load qPCR data into DataFrame with associated metadata.
-
-    Wrapper for 'load_single_csv_with_metadata' using default file format for qPCR data
-    ('cp_table.txt' exported from Roche LightCycler 480II).
-
-    Generates a pandas DataFrame from a single .csv file located at the given path,
-    adding columns for metadata encoded by a given .yaml file. Metadata is associated
-    with the data based on well IDs encoded in one of the data columns.
-
-    Parameters
-    ----------
-    data_path: str or Path
-        Path to single data file, in any file format accepted by pd.read_csv (e.g., .csv, .txt)
-    yaml_path: str or Path
-        Path to .yaml file to use for associating metadata with well IDs.
-        All metadata must be contained under the header 'metadata'.
-
-    Returns
-    -------
-    A single pandas DataFrame containing all data (Cp values) with metadata associated with each well.
-    """
-    return load_single_csv_with_metadata(
-        data_path,
-        yaml_path,
-        well_column='Pos',
-        columns=['Cp'],
-        csv_kwargs=dict(sep='\t', header=1)
-        )
-
-
-def load_ddpcr(
-    data_path: Union[str, Path],
-    yaml_path: Union[str, Path],
-    *,
-    channel_list: Optional[List[str]] = ['FAM','HEX'],
-) -> pd.DataFrame:
-    """
-    Load ddPCR data into DataFrame with associated metadata.
-
-    Wrapper for 'load_csv_with_metadata' using default file format for ddPCR data.
-
-    Generates a pandas DataFrame from a set of .csv files located at the given path,
-    adding columns for metadata encoded by a given .yaml file. Metadata is associated
-    with the data based on well IDs encoded in the data filenames.
-
-    Parameters
-    ----------
-    data_path: str or Path
-        Path to directory containing data files (.csv)
-    yaml_path: str or Path
-        Path to .yaml file to use for associating metadata with well IDs.
-        All metadata must be contained under the header 'metadata'.
-    channel_list: Optional, list of str
-        Renames channels (Ch1Amplitude, Ch2Amplitude) to the specified 
-        fluorophores in order.
-        The BioRad QX100/QX200 machines have FAM in Ch1 and HEX (or VIC, but
-        we don't use this) in Ch2, so this is the default.
-        To leave the column names as-is, pass None.
-
-    Returns
-    -------
-    A single pandas DataFrame containing all data with associated metadata.
-    """
-    data = load_csv_with_metadata(
-        data_path, 
-        yaml_path, 
-        r"^.*_(?P<well>[A-P]\d+)_Amplitude.csv",
-        columns=['Ch1Amplitude','Ch2Amplitude'],
-        csv_kwargs=dict(skiprows=4),
-        )
-    
-    if channel_list is not None:
-        data.rename(columns={f'Ch{i+1}Amplitude': v for i,v in enumerate(channel_list)}, inplace=True)
-
-    return data
-
-
-def load_tubes(
+def load_csv(
     data_path: Union[str, Path],
     filename_regex: Optional[str] = None,
     *,
@@ -460,7 +386,7 @@ def load_tubes(
         )
         df = pd.read_csv(file, usecols=valid_cols, **csv_kwargs)
 
-        # Add metadata to DataFrame
+        # Add metadata to DataFrame from filename
         index = 0
         for k in regex.groupindex.keys():
             df.insert(index, k, match.group(k))
@@ -477,6 +403,114 @@ def load_tubes(
     return data
 
 
+def load_qpcr(
+    data_path: Union[str, Path],
+    yaml_path: Union[str, Path],
+) -> pd.DataFrame:
+    """
+    Load qPCR data into DataFrame with associated metadata.
+
+    Wrapper for 'load_single_csv_with_metadata' using default file format for qPCR data
+    ('cp_table.txt' exported from Roche LightCycler 480II).
+
+    Generates a pandas DataFrame from a single .csv file located at the given path,
+    adding columns for metadata encoded by a given .yaml file. Metadata is associated
+    with the data based on well IDs encoded in one of the data columns.
+
+    Parameters
+    ----------
+    data_path: str or Path
+        Path to single data file, in any file format accepted by pd.read_csv (e.g., .csv, .txt)
+    yaml_path: str or Path
+        Path to .yaml file to use for associating metadata with well IDs.
+        All metadata must be contained under the header 'metadata'.
+
+    Returns
+    -------
+    A single pandas DataFrame containing all data (Cp values) with metadata associated with each well.
+    """
+    return load_single_csv_with_metadata(
+        data_path,
+        yaml_path,
+        well_column='Pos',
+        columns=['Cp'],
+        csv_kwargs=dict(sep='\t', header=1)
+        )
+
+
+def load_ddpcr(
+    data_path: Union[str, Path],
+    yaml_path: Union[str, Path],
+) -> pd.DataFrame:
+    """
+    Load ddPCR data into DataFrame with associated metadata.
+
+    Generates a pandas DataFrame from a .ddpcr file, which is the
+    file type for experiments on the BioRad QX100/QX200 machines.
+    Adds columns for metadata encoded by a given .yaml file. 
+    Metadata is associated with the data based on well IDs extracted
+    from the experiment data.
+
+    Parameters
+    ----------
+    data_path: str or Path
+        Path to .ddpcr file
+    yaml_path: str or Path
+        Path to .yaml file to use for associating metadata with well IDs.
+        All metadata must be contained under the header 'metadata'.
+
+    Returns
+    -------
+    A single pandas DataFrame containing all data with associated metadata.
+    """
+    if not isinstance(data_path, Path):
+        data_path = Path(data_path)
+
+    if data_path.suffix is not '.ddpcr':
+        raise DataPathError("'data_path' must be a .ddpcr file.")
+
+    try:
+        metadata_map = load_well_metadata(yaml_path)
+    except FileNotFoundError as err:
+        raise YamlError("Specified metadata YAML file does not exist!") from err
+
+    # Unzip .ddpcr file
+    tmp_data_path = Path(tempfile.mkdtemp())
+    with py7zr.SevenZipFile(data_path, 'r', password='1b53402e-503a-4303-bf86-71af1f3178dd') as experiment:
+        experiment.extractall(path=tmp_data_path)
+
+    # Load data for each well
+    data_list = []
+    for f in (tmp_data_path/'PeakData').glob("*.ddpeakjson"):
+        with open(f, 'r') as file:
+            d = json.load(file)
+
+            # Ignore wells for which no data was collected
+            if not d["DataAcquisitionInfo"]['WasAcquired']: continue
+
+            # Extract raw data (channel amplitude) and channel names
+            channel_map = {c['Channel']-1: c['Dye'] for c in d["DataAcquisitionInfo"]['ChannelMap']}
+            df = pd.DataFrame(np.transpose(d['PeakInfo']['Amplitudes'])).rename(columns=channel_map)
+
+            # Add metadata to DataFrame
+            well = re.compile(r"^.*[\\/](?P<well>[A-P]\d+)\.ddpeakjson").match(file.name).group("well")
+            index = 0
+            for k, v in metadata_map.items():
+                # Replace custom metadata keys with <NA> if not present
+                df.insert(index, k, v[well] if well in v else [pd.NA] * len(df))
+                index += 1
+
+            data_list.append(df)
+
+    # Delete unzipped files
+    shutil.rmtree(tmp_data_path)
+
+    data = pd.concat(data_list, ignore_index=True)
+    
+    return data
+
+
+# Rewrite as 'calculate_titer'
 def moi(
     data_frame: pd.DataFrame,
     color_column_name: str,
