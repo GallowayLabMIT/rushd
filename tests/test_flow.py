@@ -275,8 +275,6 @@ def test_valid_custom_regex(tmp_path: Path):
     df_manual = pd.DataFrame(
         data, columns=["condition", "well", "dox", "population", "channel1", "channel2"]
     )
-    print(df)
-    print(df_manual)
     assert df.equals(df_manual)
 
 
@@ -428,8 +426,6 @@ def test_group_valid(tmp_path: Path):
     df_manual = pd.DataFrame(
         data, columns=["condition", "well", "population", "channel1", "channel2", "extra_metadata"]
     )
-    print(df)
-    print(df_manual)
     df.sort_values(by=["extra_metadata", "well"], inplace=True, ignore_index=True)
     df_manual.sort_values(by=["extra_metadata", "well"], inplace=True, ignore_index=True)
     assert df.equals(df_manual)
@@ -491,8 +487,6 @@ def test_group_valid_base_path(tmp_path: Path):
     )
     df.sort_values(by=["extra_metadata", "well"], inplace=True, ignore_index=True)
     df_manual.sort_values(by=["extra_metadata", "well"], inplace=True, ignore_index=True)
-    print(df)
-    print(df_manual)
     assert df.equals(df_manual)
 
 
@@ -585,9 +579,8 @@ def test_group_custom_regex(tmp_path: Path):
     df.sort_index(axis=1, inplace=True)
     df_manual.sort_values(by=["extra_metadata", "well"], inplace=True, ignore_index=True)
     df_manual.sort_index(axis=1, inplace=True)
-    print(df["plate"])
-    print(df_manual["plate"])
     pd.testing.assert_frame_equal(df_manual, df)
+
 
 def test_single_csv(tmp_path: Path):
     """
@@ -613,6 +606,7 @@ def test_single_csv(tmp_path: Path):
     )
     assert df.equals(df_manual)
 
+
 def test_single_csv_kwargs(tmp_path: Path):
     """
     Tests that a single file can be read using custom kwargs
@@ -637,6 +631,7 @@ def test_single_csv_kwargs(tmp_path: Path):
     )
     assert df.equals(df_manual)
 
+
 def test_single_csv_well_column(tmp_path: Path):
     """
     Tests that a single file can be read using custom well column
@@ -653,11 +648,10 @@ def test_single_csv_well_column(tmp_path: Path):
         f.write("""my_well,channel1,channel2\nA1,1,2""")
     yaml_path = str(tmp_path) + "/test.yaml"
     df = flow.load_single_csv_with_metadata(str(tmp_path)+ "/data.csv", yaml_path, well_column='my_well')
-    df.sort_values(by="well", inplace=True, ignore_index=True)
 
-    data = [["A1", 1, 2, "cond1"]]
+    data = [["A1", 1, 2, "A1", "cond1"]]
     df_manual = pd.DataFrame(
-        data, columns=["well", "channel1", "channel2", "condition"]
+        data, columns=["my_well", "channel1", "channel2", "well", "condition"]
     )
     assert df.equals(df_manual)
     # Reload specifying columns
@@ -666,7 +660,8 @@ def test_single_csv_well_column(tmp_path: Path):
     assert "channel1" in df.columns
     assert "channel2" not in df.columns
 
-def test_single_csv_well_column_error(tmp_path: Path):
+
+def test_single_csv_invalid_well_column(tmp_path: Path):
     """
     Tests that a custom well column that is missing from the data correctly raises an error
     """
@@ -683,12 +678,11 @@ def test_single_csv_well_column_error(tmp_path: Path):
     yaml_path = str(tmp_path) + "/test.yaml"
     
     with pytest.raises(flow.ColumnError):
-        _ = flow.load_single_csv_with_metadata(str(tmp_path)+ "/data.csv", yaml_path, well_column='other_well')
+        _ = flow.load_single_csv_with_metadata(str(tmp_path) + "/data.csv", yaml_path, well_column='other_well')
 
-def test_qpcr_loading(tmp_path: Path):
-    """
-    Tests that a file with the qPCR default output can be loaded
-    """
+
+def test_single_csv_invalid_path(tmp_path: Path):
+    os.mkdir(tmp_path/'my_dir')
     with open(str(tmp_path / "test.yaml"), "w") as f:
         f.write(
             """
@@ -697,41 +691,46 @@ def test_qpcr_loading(tmp_path: Path):
             - cond1: A1
         """
         )
-    with open(str(tmp_path / "data.txt"), "w") as f:
-        f.write("""Nonsense first line\nPos\tCp\textra channel\nA1\t1\t2""")
-    yaml_path = str(tmp_path) + "/test.yaml"
-    df = flow.load_qpcr_with_metadata(str(tmp_path)+ "/data.txt", yaml_path)
-    df.sort_values(by="well", inplace=True, ignore_index=True)
 
-    data = [["A1", 1, "cond1"]]
+    with pytest.raises(flow.DataPathError):
+        _ = flow.load_single_csv_with_metadata(str(tmp_path) + "/my_dir", str(tmp_path) + "/test.yaml")
+
+
+def test_csv_no_metadata(tmp_path: Path):
+    """
+    Tests that files can be loaded without additional metadata
+    """
+    with open(str(tmp_path / "export_A1_singlets.csv"), "w") as f:
+        f.write("""channel1,channel2\n1,2""")
+    with open(str(tmp_path / "export_G12_singlets.csv"), "w") as f:
+        f.write("""channel1,channel2\n10,20""")
+    df = flow.load_csv(str(tmp_path))
+
+    data = [["A1", "singlets", 1, 2], ["G12", "singlets", 10, 20]]
     df_manual = pd.DataFrame(
-        data, columns=["well", "Cp", "condition"]
+        data, columns=["condition", "population", "channel1", "channel2"]
     )
     assert df.equals(df_manual)
 
-def test_qpcr_loading_real_data(tmp_path: Path):
-    """
-    Tests that a file with the qPCR default output can be loaded,
-    copy-pasting from actual qPCR output file
-    """
-    with open(str(tmp_path / "test.yaml"), "w") as f:
-        f.write(
-            """
-        metadata:
-            condition:
-            - cond1: A1
-        """
-        )
-    with open(str(tmp_path / "data.txt"), "w") as f:
-        f.write("""Experiment: 2025.08.07_galloway-gaprun-lib-quant_KL  Selected Filter: SYBR Green I / HRM Dye (465-510)
-                Include	Color	Pos	Name	Cp	Concentration	Standard	Status
-                True	255	A1	Sample 1	27.23		0	""")
-    yaml_path = str(tmp_path) + "/test.yaml"
-    df = flow.load_qpcr_with_metadata(str(tmp_path)+ "/data.txt", yaml_path)
-    df.sort_values(by="well", inplace=True, ignore_index=True)
 
-    data = [["A1", 27.23, "cond1"]]
+def test_csv_valid_custom_regex(tmp_path: Path):
+    """
+    Tests that files can be loaded using valid custom file name
+    regular expressions, and that the metadata is included in the
+    output dataframe
+    """
+    with open(str(tmp_path / "export_BFP_100_singlets.csv"), "w") as f:
+        f.write("""channel1,channel2\n1,2""")
+    with open(str(tmp_path / "export_GFP_1000_singlets.csv"), "w") as f:
+        f.write("""channel1,channel2\n10,20""")
+
+    regex = r"^.*export_(?P<construct>.+)_(?P<dox>[0-9]+)_(?P<population>.+)\.csv"
+    df = flow.load_csv(str(tmp_path), regex)
+    df.sort_values(by="construct", inplace=True, ignore_index=True)
+
+    data = [["BFP", "100", "singlets", 1, 2], ["GFP", "1000", "singlets", 10, 20]]
     df_manual = pd.DataFrame(
-        data, columns=["well", "Cp", "condition"]
+        data, columns=["construct", "dox", "population", "channel1", "channel2"]
     )
     assert df.equals(df_manual)
+

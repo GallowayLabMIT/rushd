@@ -16,13 +16,9 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-import json
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import py7zr
-import shutil
-import tempfile
 import yaml
 from scipy.optimize import curve_fit
 
@@ -265,7 +261,7 @@ def load_single_csv_with_metadata(
     data_path: Union[str, Path],
     yaml_path: Union[str, Path],
     *,
-    well_column: Optional[str] = None,
+    well_column: Optional[str] = 'well',
     columns: Optional[List[str]] = None,
     csv_kwargs: Optional[Dict[str, Any]] = {},
 ) -> pd.DataFrame:
@@ -303,7 +299,9 @@ def load_single_csv_with_metadata(
     except FileNotFoundError as err:
         raise YamlError("Specified metadata YAML file does not exist!") from err
 
-    # Load data from a single .txt file
+    # Check that a single file (not a directory) has been passed
+    if data_path.is_dir():
+        raise DataPathError("'data_path' must be a single file. To load multiple files, use 'load_csv_with_metadata'")
     file = data_path
 
     # Load the first row so we get the column names
@@ -313,17 +311,13 @@ def load_single_csv_with_metadata(
         list(set(columns+[well_column]).intersection(set(df_onerow.columns))) if columns is not None else None
     )
     data = pd.read_csv(file, usecols=valid_cols, **csv_kwargs)
-
-    if well_column is not None:
         
-        if well_column not in data.columns:
-            raise(ColumnError(f"The file at 'data_path' does not contain the column '{well_column}'"))
-        
-        data.rename(columns={well_column: 'well'}, inplace=True)
+    if well_column not in data.columns:
+        raise(ColumnError(f"The file at 'data_path' does not contain the column '{well_column}'"))
 
     # Add metadata to DataFrame
     metadata = pd.DataFrame.from_dict(metadata_map).reset_index(names='well')
-    data = data.merge(metadata, how='left', on='well').replace(np.nan, pd.NA) 
+    data = data.merge(metadata, how='left', left_on=well_column, right_on='well').replace(np.nan, pd.NA)
 
     return data
 
@@ -339,7 +333,7 @@ def load_csv(
     Load .csv data into DataFrame without additional metadata.
 
     Generates a pandas DataFrame from a set of .csv files located at the given path,
-    adding columns for metadata encoded only in the data filenames.
+    adding columns for metadata encoded in the data filenames.
 
     Parameters
     ----------
@@ -360,7 +354,7 @@ def load_csv(
 
     Returns
     -------
-    A single pandas DataFrame containing all data with associated metadata.
+    A single pandas DataFrame containing all data with associated filename metadata.
     """
     if not isinstance(data_path, Path):
         data_path = Path(data_path)
@@ -369,7 +363,7 @@ def load_csv(
     data_list: List[pd.DataFrame] = []
 
     for file in data_path.glob("*.csv"):
-        # Default filename from FlowJo export is 'export_[well]_[population].csv'
+        # Default filename from FlowJo export is 'export_[sample name]_[population].csv'
         if filename_regex is None:
             filename_regex = r"^.*export_(?P<condition>[A-P]\d+)_(?P<population>.+)\.csv"
 
@@ -400,113 +394,6 @@ def load_csv(
     else:
         data = pd.concat(data_list, ignore_index=True).replace(np.nan, pd.NA)  # type: ignore
 
-    return data
-
-
-def load_qpcr(
-    data_path: Union[str, Path],
-    yaml_path: Union[str, Path],
-) -> pd.DataFrame:
-    """
-    Load qPCR data into DataFrame with associated metadata.
-
-    Wrapper for 'load_single_csv_with_metadata' using default file format for qPCR data
-    ('cp_table.txt' exported from Roche LightCycler 480II).
-
-    Generates a pandas DataFrame from a single .csv file located at the given path,
-    adding columns for metadata encoded by a given .yaml file. Metadata is associated
-    with the data based on well IDs encoded in one of the data columns.
-
-    Parameters
-    ----------
-    data_path: str or Path
-        Path to single data file, in any file format accepted by pd.read_csv (e.g., .csv, .txt)
-    yaml_path: str or Path
-        Path to .yaml file to use for associating metadata with well IDs.
-        All metadata must be contained under the header 'metadata'.
-
-    Returns
-    -------
-    A single pandas DataFrame containing all data (Cp values) with metadata associated with each well.
-    """
-    return load_single_csv_with_metadata(
-        data_path,
-        yaml_path,
-        well_column='Pos',
-        columns=['Cp'],
-        csv_kwargs=dict(sep='\t', header=1)
-        )
-
-
-def load_ddpcr(
-    data_path: Union[str, Path],
-    yaml_path: Union[str, Path],
-) -> pd.DataFrame:
-    """
-    Load ddPCR data into DataFrame with associated metadata.
-
-    Generates a pandas DataFrame from a .ddpcr file, which is the
-    file type for experiments on the BioRad QX100/QX200 machines.
-    Adds columns for metadata encoded by a given .yaml file. 
-    Metadata is associated with the data based on well IDs extracted
-    from the experiment data.
-
-    Parameters
-    ----------
-    data_path: str or Path
-        Path to .ddpcr file
-    yaml_path: str or Path
-        Path to .yaml file to use for associating metadata with well IDs.
-        All metadata must be contained under the header 'metadata'.
-
-    Returns
-    -------
-    A single pandas DataFrame containing all data with associated metadata.
-    """
-    if not isinstance(data_path, Path):
-        data_path = Path(data_path)
-
-    if data_path.suffix is not '.ddpcr':
-        raise DataPathError("'data_path' must be a .ddpcr file.")
-
-    try:
-        metadata_map = load_well_metadata(yaml_path)
-    except FileNotFoundError as err:
-        raise YamlError("Specified metadata YAML file does not exist!") from err
-
-    # Unzip .ddpcr file
-    tmp_data_path = Path(tempfile.mkdtemp())
-    with py7zr.SevenZipFile(data_path, 'r', password='1b53402e-503a-4303-bf86-71af1f3178dd') as experiment:
-        experiment.extractall(path=tmp_data_path)
-
-    # Load data for each well
-    data_list = []
-    for f in (tmp_data_path/'PeakData').glob("*.ddpeakjson"):
-        with open(f, 'r') as file:
-            d = json.load(file)
-
-            # Ignore wells for which no data was collected
-            if not d["DataAcquisitionInfo"]['WasAcquired']: continue
-
-            # Extract raw data (channel amplitude) and channel names
-            channel_map = {c['Channel']-1: c['Dye'] for c in d["DataAcquisitionInfo"]['ChannelMap']}
-            df = pd.DataFrame(np.transpose(d['PeakInfo']['Amplitudes'])).rename(columns=channel_map)
-
-            # Add metadata to DataFrame
-            well = re.compile(r"^.*[\\/](?P<well>[A-P]\d+)\.ddpeakjson").match(file.name).group("well")
-            index = 0
-            for k, v in metadata_map.items():
-                # Replace custom metadata keys with <NA> if not present
-                df.insert(index, k, v[well] if well in v else [pd.NA] * len(df))
-                index += 1
-
-            data_list.append(df)
-
-    # Delete unzipped files
-    shutil.rmtree(tmp_data_path)
-
-    data = pd.concat(data_list, ignore_index=True)
-    
     return data
 
 
