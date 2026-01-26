@@ -1,5 +1,5 @@
 """
-Common function for analyzing flow data in Pandas Dataframes.
+Common functions for analyzing flow data in Pandas Dataframes.
 
 Allows users to specify custom metadata applied via well mapping.
 Combines user data from multiple .csv files into a single DataFrame.
@@ -114,12 +114,12 @@ def load_csv_with_metadata(
         Must contain the capturing group 'well' for the sample well IDs.
         If not included, the filenames are assumed to follow this format (default
         export format from FlowJo): 'export_[well]_[population].csv'
-    columns: Optional list of strings
-        If specified, only the specified columns are loaded out of the CSV files.
+    columns: list of strings (optional)
+        If specified, only these columns are loaded out of the CSV files.
         This can drastically reduce the amount of memory required to load
         flow data.
-    csv_kwargs: Optional dict
-        Additional kwargs to pass to pd.read_csv. For instance, to skip rows or
+    csv_kwargs: dict (optional)
+        Additional kwargs to pass to pandas 'read_csv'. For instance, to skip rows or
         to specify alternate delimiters.
 
     Returns
@@ -214,12 +214,12 @@ def load_groups_with_metadata(
         'filename_regex' argument).
         If not included, the filenames are assumed to follow this format (default
         export format from FlowJo): 'export_[well]_[population].csv'
-    columns: Optional list of strings
-        If specified, only the specified columns are loaded out of the CSV files.
+    columns: list of strings (optional)
+        If specified, only these columns are loaded out of the CSV files.
         This can drastically reduce the amount of memory required to load
         flow data.
-    csv_kwargs: Optional dict
-        Additional kwargs to pass to pd.read_csv. For instance, to skip rows or
+    csv_kwargs: dict (optional)
+        Additional kwargs to pass to pandas 'read_csv'. For instance, to skip rows or
         to specify alternate delimiters.
 
     Returns
@@ -257,71 +257,6 @@ def load_groups_with_metadata(
     return data
 
 
-def load_single_csv_with_metadata(
-    data_path: Union[str, Path],
-    yaml_path: Union[str, Path],
-    *,
-    well_column: Optional[str] = 'well',
-    columns: Optional[List[str]] = None,
-    csv_kwargs: Optional[Dict[str, Any]] = {},
-) -> pd.DataFrame:
-    """
-    Load .csv data into DataFrame with associated metadata.
-
-    Generates a pandas DataFrame from a single .csv file located at the given path,
-    adding columns for metadata encoded by a given .yaml file. Metadata is associated
-    with the data based on well IDs encoded in one of the data columns.
-
-    Parameters
-    ----------
-    data_path: str or Path
-        Path to directory containing data files (.csv)
-    yaml_path: str or Path
-        Path to .yaml file to use for associating metadata with well IDs.
-        All metadata must be contained under the header 'metadata'.
-    columns: Optional list of strings
-        If specified, only the specified columns are loaded out of the CSV files.
-        This can drastically reduce the amount of memory required to load
-        flow data.
-    csv_kwargs: Optional dict
-        Additional kwargs to pass to pd.read_csv. For instance, to skip rows or
-        to specify alternate delimiters.
-
-    Returns
-    -------
-    A single pandas DataFrame containing all data with associated metadata.
-    """
-    if not isinstance(data_path, Path):
-        data_path = Path(data_path)
-
-    try:
-        metadata_map = load_well_metadata(yaml_path)
-    except FileNotFoundError as err:
-        raise YamlError("Specified metadata YAML file does not exist!") from err
-
-    # Check that a single file (not a directory) has been passed
-    if data_path.is_dir():
-        raise DataPathError("'data_path' must be a single file. To load multiple files, use 'load_csv_with_metadata'")
-    file = data_path
-
-    # Load the first row so we get the column names
-    df_onerow = pd.read_csv(file, nrows=1, **csv_kwargs)
-    # Load data: we allow extra columns in our column list, so subset it
-    valid_cols = (
-        list(set(columns+[well_column]).intersection(set(df_onerow.columns))) if columns is not None else None
-    )
-    data = pd.read_csv(file, usecols=valid_cols, **csv_kwargs)
-        
-    if well_column not in data.columns:
-        raise(ColumnError(f"The file at 'data_path' does not contain the column '{well_column}'"))
-
-    # Add metadata to DataFrame
-    metadata = pd.DataFrame.from_dict(metadata_map).reset_index(names='well')
-    data = data.merge(metadata, how='left', left_on=well_column, right_on='well').replace([float('nan'),np.nan], pd.NA)
-
-    return data
-
-
 def load_csv(
     data_path: Union[str, Path],
     filename_regex: Optional[str] = None,
@@ -344,12 +279,12 @@ def load_csv(
         Any named capturing groups will be added as metadata.
         If not included, the filenames are assumed to follow this format (default
         export format from FlowJo): 'export_[condition]_[population].csv'
-    columns: Optional list of strings
-        If specified, only the specified columns are loaded out of the CSV files.
+    columns: list of strings (optional)
+        If specified, only these columns are loaded out of the CSV files.
         This can drastically reduce the amount of memory required to load
         flow data.
-    csv_kwargs: Optional dict
-        Additional kwargs to pass to pd.read_csv. For instance, to skip rows or
+    csv_kwargs: dict (optional)
+        Additional kwargs to pass to pandas 'read_csv'. For instance, to skip rows or
         to specify alternate delimiters.
 
     Returns
