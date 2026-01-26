@@ -15,6 +15,8 @@ def test_invalid_yaml_path(tmp_path: Path):
         _ = flow.load_csv_with_metadata("", tmp_path / "nonexistent.yaml")
     with pytest.raises(flow.YamlError):
         _ = flow.load_csv_with_metadata("", "wells")
+    with pytest.raises(flow.YamlError):
+        _ = flow.load_single_csv_with_metadata("", tmp_path / "nonexistent.yaml")
 
 
 def test_invalid_yaml_formatting(tmp_path: Path):
@@ -648,6 +650,7 @@ def test_single_csv_well_column(tmp_path: Path):
         f.write("""my_well,channel1,channel2\nA1,1,2""")
     yaml_path = str(tmp_path) + "/test.yaml"
     df = flow.load_single_csv_with_metadata(str(tmp_path)+ "/data.csv", yaml_path, well_column='my_well')
+    df.sort_values(by="my_well", inplace=True, ignore_index=True)
 
     data = [["A1", 1, 2, "A1", "cond1"]]
     df_manual = pd.DataFrame(
@@ -698,13 +701,17 @@ def test_single_csv_invalid_path(tmp_path: Path):
 
 def test_csv_no_metadata(tmp_path: Path):
     """
-    Tests that files can be loaded without additional metadata
+    Tests that files can be loaded without additional metadata,
+    and includes one file that doesn't match the regex to ignore
     """
     with open(str(tmp_path / "export_A1_singlets.csv"), "w") as f:
         f.write("""channel1,channel2\n1,2""")
     with open(str(tmp_path / "export_G12_singlets.csv"), "w") as f:
         f.write("""channel1,channel2\n10,20""")
+    with open(str(tmp_path / "ignore_me.csv"), "w") as f:
+        f.write("""channel1,channel2\n0,0""")
     df = flow.load_csv(str(tmp_path))
+    df.sort_values(by="condition", inplace=True, ignore_index=True)
 
     data = [["A1", "singlets", 1, 2], ["G12", "singlets", 10, 20]]
     df_manual = pd.DataFrame(
@@ -734,3 +741,16 @@ def test_csv_valid_custom_regex(tmp_path: Path):
     )
     assert df.equals(df_manual)
 
+
+def test_csv_no_metadata_invalid_custom_regex(tmp_path: Path):
+    """
+    Tests that correct error is thrown when no files match the custom regex
+    """
+    with open(str(tmp_path / "export_BFP_100_singlets.csv"), "w") as f:
+        f.write("""channel1,channel2\n1,2""")
+    with open(str(tmp_path / "export_GFP_1000_singlets.csv"), "w") as f:
+        f.write("""channel1,channel2\n10,20""")
+
+    regex = r"^.*export_(?P<construct>.+)_(?P<dox>.+)_(?P<day>.+)_(?P<population>.+)\.csv"
+    with pytest.raises(flow.RegexError):
+        _ = flow.load_csv(str(tmp_path), regex)
