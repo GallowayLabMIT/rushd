@@ -175,7 +175,7 @@ def load_csv_with_metadata(
     if len(data_list) == 0:
         raise RegexError(f"No data files match the regular expression '{filename_regex}'")
     else:
-        data = pd.concat(data_list, ignore_index=True).replace(np.nan, pd.NA)  # type: ignore
+        data = pd.concat(data_list, ignore_index=True).replace([float('nan'),np.nan], pd.NA)  # type: ignore
 
     return data
 
@@ -253,7 +253,7 @@ def load_groups_with_metadata(
         group_list.append(group_data)
 
     # Concatenate all the data into a single DataFrame
-    data = pd.concat(group_list, ignore_index=True).replace(np.nan, pd.NA)
+    data = pd.concat(group_list, ignore_index=True).replace([float('nan'),np.nan], pd.NA)
     return data
 
 
@@ -317,7 +317,7 @@ def load_single_csv_with_metadata(
 
     # Add metadata to DataFrame
     metadata = pd.DataFrame.from_dict(metadata_map).reset_index(names='well')
-    data = data.merge(metadata, how='left', left_on=well_column, right_on='well').replace(np.nan, pd.NA)
+    data = data.merge(metadata, how='left', left_on=well_column, right_on='well').replace([float('nan'),np.nan], pd.NA)
 
     return data
 
@@ -392,7 +392,7 @@ def load_csv(
     if len(data_list) == 0:
         raise RegexError(f"No data files match the regular expression '{filename_regex}'")
     else:
-        data = pd.concat(data_list, ignore_index=True).replace(np.nan, pd.NA)  # type: ignore
+        data = pd.concat(data_list, ignore_index=True).replace([float('nan'),np.nan], pd.NA)  # type: ignore
 
     return data
 
