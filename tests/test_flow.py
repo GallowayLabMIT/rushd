@@ -217,12 +217,12 @@ def test_na_for_unspecified_columns(tmp_path: Path):
 
     # can't directly check for NA, use the .isna commands
     # assert there are NA's where we expect
-    assert pd.isna(df[df.well == 'A1']['second_condition']).all()
-    assert pd.isna(df[df.well == 'A2']['condition']).all()
+    assert pd.isna(df[df.well == "A1"]["second_condition"]).all()
+    assert pd.isna(df[df.well == "A2"]["condition"]).all()
 
     # and that there aren't NA's where there shouldn't be
-    assert pd.notna(df[df.well == 'A1']['condition']).all()
-    assert pd.notna(df[df.well == 'A2']['second_condition']).all()
+    assert pd.notna(df[df.well == "A1"]["condition"]).all()
+    assert pd.notna(df[df.well == "A2"]["second_condition"]).all()
 
 
 def test_passed_list_metadata(tmp_path: Path):

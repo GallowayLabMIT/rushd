@@ -5,22 +5,11 @@ Allows users to specify custom metadata applied via well mapping.
 """
 
 import re
-import warnings
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-# Support Python 3.7 by importing Literal from typing_extensions
-try:
-    from typing import Literal  # type: ignore
-except ImportError:
-    from typing_extensions import Literal
-
-import matplotlib
 import numpy as np
 import pandas as pd
-import yaml
-import scipy.stats
-from scipy.optimize import curve_fit
 
 from . import flow
 
@@ -28,17 +17,22 @@ from . import flow
 class YamlError(RuntimeError):
     """Error raised when there is an issue with the provided .yaml file."""
 
+
 class ColumnError(RuntimeError):
     """Error raised when the data is missing a required column."""
+
 
 class DataPathError(RuntimeError):
     """Error raised when the path to the data is not specified correctly."""
 
+
 class GroupsError(RuntimeError):
     """Error raised when there is an issue with the data groups DataFrame."""
 
+
 class RegexError(RuntimeError):
     """Error raised when there is an issue with the file name regular expression."""
+
 
 class InputError(RuntimeError):
     """Error raised when there is an issue with an argument type."""
@@ -48,7 +42,7 @@ def load_single_csv_with_metadata(
     data_path: Union[str, Path],
     yaml_path: Union[str, Path],
     *,
-    well_column: Optional[str] = 'well',
+    well_column: Optional[str] = "well",
     columns: Optional[List[str]] = None,
     csv_kwargs: Optional[Dict[str, Any]] = {},
     is_default: Optional[bool] = False,
@@ -97,29 +91,35 @@ def load_single_csv_with_metadata(
 
     # Check that a single file (not a directory) has been passed
     if data_path.is_dir():
-        raise DataPathError("'data_path' must be a single file. To load multiple files, use 'load_csv_with_metadata'")
+        raise DataPathError(
+            "'data_path' must be a single file. To load multiple files, use 'load_csv_with_metadata'"
+        )
     file = data_path
 
-    # Overwrite args with those relevant for 
+    # Overwrite args with those relevant for
     if is_default:
-        well_column = 'Pos'
-        columns = ['Cp']
-        csv_kwargs = dict(sep='\t', header=1)
+        well_column = "Pos"
+        columns = ["Cp"]
+        csv_kwargs = dict(sep="\t", header=1)
 
     # Load the first row so we get the column names
     df_onerow = pd.read_csv(file, nrows=1, **csv_kwargs)
     # Load data: we allow extra columns in our column list, so subset it
     valid_cols = (
-        list(set(columns+[well_column]).intersection(set(df_onerow.columns))) if columns is not None else None
+        list(set(columns + [well_column]).intersection(set(df_onerow.columns)))
+        if columns is not None
+        else None
     )
     data = pd.read_csv(file, usecols=valid_cols, **csv_kwargs)
-        
+
     if well_column not in data.columns:
-        raise(ColumnError(f"The file at 'data_path' does not contain the column '{well_column}'"))
+        raise (ColumnError(f"The file at 'data_path' does not contain the column '{well_column}'"))
 
     # Add metadata to DataFrame
-    metadata = pd.DataFrame.from_dict(metadata_map).reset_index(names='well')
-    data = data.merge(metadata, how='left', left_on=well_column, right_on='well').replace([float('nan'),np.nan], pd.NA)
+    metadata = pd.DataFrame.from_dict(metadata_map).reset_index(names="well")
+    data = data.merge(metadata, how="left", left_on=well_column, right_on="well").replace(
+        [float("nan"), np.nan], pd.NA
+    )
 
     return data
 
@@ -129,7 +129,7 @@ def load_plates_with_metadata(
     base_path: Optional[Union[str, Path]] = "",
     filename_regex: Optional[str] = None,
     *,
-    well_column: Optional[str] = 'well',
+    well_column: Optional[str] = "well",
     columns: Optional[List[str]] = None,
     csv_kwargs: Optional[Dict[str, Any]] = {},
     is_default: Optional[bool] = False,
@@ -190,20 +190,22 @@ def load_plates_with_metadata(
         yaml_path = base_path / Path(group["yaml_path"])
         if "filename_regex" in groups_df.columns:
             filename_regex = group["filename_regex"]
-        
+
         if filename_regex is not None:
             regex = re.compile(filename_regex)
             match = regex.match(data_path.name)
             if match is None:
-                raise RegexError(f"Filename does not match the regular expression '{filename_regex}'")
+                raise RegexError(
+                    f"Filename does not match the regular expression '{filename_regex}'"
+                )
 
         group_data = load_single_csv_with_metadata(
-            data_path, 
-            yaml_path, 
-            well_column=well_column, 
-            columns=columns, 
-            csv_kwargs=csv_kwargs, 
-            is_default=is_default
+            data_path,
+            yaml_path,
+            well_column=well_column,
+            columns=columns,
+            csv_kwargs=csv_kwargs,
+            is_default=is_default,
         )
 
         # Add associated metadata (not paths)
@@ -221,7 +223,5 @@ def load_plates_with_metadata(
         group_list.append(group_data)
 
     # Concatenate all the data into a single DataFrame
-    data = pd.concat(group_list, ignore_index=True).replace([float('nan'),np.nan], pd.NA)
+    data = pd.concat(group_list, ignore_index=True).replace([float("nan"), np.nan], pd.NA)
     return data
-
-

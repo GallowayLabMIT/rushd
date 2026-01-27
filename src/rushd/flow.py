@@ -175,7 +175,7 @@ def load_csv_with_metadata(
     if len(data_list) == 0:
         raise RegexError(f"No data files match the regular expression '{filename_regex}'")
     else:
-        data = pd.concat(data_list, ignore_index=True).replace([float('nan'),np.nan], pd.NA)  # type: ignore
+        data = pd.concat(data_list, ignore_index=True).replace([float("nan"), np.nan], pd.NA)  # type: ignore
 
     return data
 
@@ -243,7 +243,9 @@ def load_groups_with_metadata(
         yaml_path = base_path / Path(group["yaml_path"])
         if "filename_regex" in groups_df.columns:
             filename_regex = group["filename_regex"]
-        group_data = load_csv_with_metadata(data_path, yaml_path, filename_regex, columns=columns, csv_kwargs=csv_kwargs)
+        group_data = load_csv_with_metadata(
+            data_path, yaml_path, filename_regex, columns=columns, csv_kwargs=csv_kwargs
+        )
 
         # Add associated metadata (not paths)
         for k, v in group.items():
@@ -253,7 +255,7 @@ def load_groups_with_metadata(
         group_list.append(group_data)
 
     # Concatenate all the data into a single DataFrame
-    data = pd.concat(group_list, ignore_index=True).replace([float('nan'),np.nan], pd.NA)
+    data = pd.concat(group_list, ignore_index=True).replace([float("nan"), np.nan], pd.NA)
     return data
 
 
@@ -327,7 +329,7 @@ def load_csv(
     if len(data_list) == 0:
         raise RegexError(f"No data files match the regular expression '{filename_regex}'")
     else:
-        data = pd.concat(data_list, ignore_index=True).replace([float('nan'),np.nan], pd.NA)  # type: ignore
+        data = pd.concat(data_list, ignore_index=True).replace([float("nan"), np.nan], pd.NA)  # type: ignore
 
     return data
 
