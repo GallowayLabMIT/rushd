@@ -100,6 +100,7 @@ Following the steps described above, the full process for publishing a release i
 4. Document changes
 
     - Edit `CHANGELOG.md` and `README.md` to reflect changes, then commit
+    - Edit the version in `setup.py`
     - Tag the release using `git tag -a vX.X.X` (updating `X`s) with a short changelog summary as the tag message
     - Push changes `git push --tags`
 
@@ -107,8 +108,9 @@ Following the steps described above, the full process for publishing a release i
 
     - Build using `python -m build `
     - Add a release to the [github page](https://github.com/GallowayLabMIT/rushd/releases) by copy-pasting the changelog
-    - Add the `.whl` and `.tar.gz` files (from the build folder) to the github release
-    - Upload the package to PyPI using `twine upload dist/*`
+    - Add the `.whl` and `.tar.gz` files (from the `dist` folder, delete old versions) to the github release
+    - Upload the package to PyPI using `twine upload dist/*`. Note that this requires a PyPI API token from a project collaborator,
+      one of which is the Galloway Lab account (see password database for login).
 
 
 ## Changelog
