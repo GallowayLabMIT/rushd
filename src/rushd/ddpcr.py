@@ -29,7 +29,6 @@ from . import well_mapper, flow
 class YamlError(RuntimeError):
     """Error raised when there is an issue with the provided .yaml file."""
 
-
 class DataPathError(RuntimeError):
     """Error raised when the path to the data is not specified correctly."""
 
@@ -90,7 +89,7 @@ def load_ddpcr_metadata(unzipped_path: Path) -> Dict[Any, Any]:
 
 def load_ddpcr(
     data_path: Union[str, Path],
-    yaml_path: Union[str, Path],
+    yaml_path: Optional[Union[str, Path]] = None,
     *,
     extract_metadata: Optional[bool] = True,
 ) -> pd.DataFrame:
@@ -106,11 +105,11 @@ def load_ddpcr(
     Parameters
     ----------
     data_path: str or Path
-        Path to .ddpcr file
-    yaml_path: str or Path
+        Path to .ddpcr file.
+    yaml_path: str or Path (optional)
         Path to .yaml file to use for associating metadata with well IDs.
         All metadata must be contained under the header 'metadata'.
-    extract_metadata: Optional bool, default True
+    extract_metadata: bool, default True
         Whether to extract metadata from the .ddpcr file. If True,
         adds a subset of the metadata associated with each well in the 
         BioRad software, namely sample names (numbered 'Sample description' fields,
@@ -177,3 +176,53 @@ def load_ddpcr(
     shutil.rmtree(tmp_data_path)
     
     return data
+
+
+def calculate_copy_number(
+    df: pd.DataFrame,
+    exp_channel: str,
+    ref_channel: str,
+    gates: Dict[str, float],
+    *,
+    ref_copy_num: float = 2.0,
+) -> pd.DataFrame:
+    """
+    Calculates copy number of an experimental target relative to a
+    reference target.
+
+    Adds a column to the DataFrame with this computed value.
+    Math is based on ... TODO
+
+    Parameters
+    ----------
+    df: pandas DataFrame
+        Data on which to calculate. Must contain columns corresponding 
+        to the experimental and reference channels.
+    exp_channel: str
+        Column in df containing measurements for the experimental target.
+    ref_channel: str
+        Column in df containing measurements for the reference target.
+    gates: dict of (str: float) pairs
+        Gates specifying threshold for positive droplets, one for each
+        experimental and reference channel.
+    ref_copy_num: float, default 2.0
+        Known copy number of the reference gene. If not specified, defaults
+        to 2.0 (diploid).
+
+    Returns
+    -------
+    The original DataFrame with a new column 'copy_num' containing the computed
+    values.
+    """
+    # TODO: throw error if channels not in df
+    # TODO: check if there are no (negative) droplets before calculating
+    data_exp = df[exp_channel]
+    data_ref = df[ref_channel]
+
+    # Compute copies per droplet: -ln(num_negative / num_total)
+    copies_exp = -np.log((data_exp < gates[exp_channel]).sum() / len(data_exp))
+    copies_ref = -np.log((data_ref < gates[ref_channel]).sum() / len(data_ref))
+
+    # Normalize copies to the reference gene
+    df['copy_num'] = copies_exp / copies_ref * ref_copy_num
+    return df

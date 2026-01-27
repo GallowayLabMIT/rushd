@@ -15,10 +15,11 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-import matplotlib.pyplot as plt
+import matplotlib
 import numpy as np
 import pandas as pd
 import yaml
+import scipy.stats
 from scipy.optimize import curve_fit
 
 from . import flow
@@ -28,7 +29,7 @@ class YamlError(RuntimeError):
     """Error raised when there is an issue with the provided .yaml file."""
 
 class ColumnError(RuntimeError):
-    """Error raised when the data is missing a column specifying well IDs."""
+    """Error raised when the data is missing a required column."""
 
 class DataPathError(RuntimeError):
     """Error raised when the path to the data is not specified correctly."""
@@ -38,6 +39,9 @@ class GroupsError(RuntimeError):
 
 class RegexError(RuntimeError):
     """Error raised when there is an issue with the file name regular expression."""
+
+class InputError(RuntimeError):
+    """Error raised when there is an issue with an argument type."""
 
 
 def load_single_csv_with_metadata(
@@ -219,3 +223,164 @@ def load_plates_with_metadata(
     # Concatenate all the data into a single DataFrame
     data = pd.concat(group_list, ignore_index=True).replace([float('nan'),np.nan], pd.NA)
     return data
+
+
+def calculate_standard(
+    df: pd.DataFrame,
+    amt_col: str,
+    cp_col: str,
+    ax: Optional[matplotlib.axes] = None
+) -> List[scipy.stats._stats_py.LinregressResult, float]:
+    """
+    Calculate a standard curve for qPCR data.
+
+    For the given data, treats the values in 'amt_col' as 
+    input amounts and values in 'cp_col' as the corresponding
+    cycle counts (Cp, aka Ct) from the qPCR output. Computes a linear 
+    regression on log10(amount) vs Cp, and returns this fit as well
+    as the efficiency.
+
+    If axes are passed, plots the linear fit on the data, annotating 
+    the R^2 value and efficiency.
+
+    Parameters
+    ----------
+    df: pandas DataFrame
+        Data to use to fit.
+    amt_col: str
+        Name of column containing input amounts.
+    cp_col: str
+        Name of the column containing Cp values.
+    ax: matplotlib.axes (optional)
+        Axes on which to plot the data and fit.
+
+    Returns
+    -------
+    A tuple of the fit (output of a call to scipy.stats.linregress)
+    and the calculated efficiency (float).
+    """
+    if amt_col not in df.columns:
+        raise ColumnError(f"Data is missing the 'amt_col' column {amt_col}")
+    if cp_col not in df.columns:
+        raise ColumnError(f"Data is missing the 'cp_col' column {cp_col}")
+    
+    # Remove zero values and log10-transform input amounts
+    df_subset = df[df[amt_col]>0].copy()
+    df_subset['log10_'+amt_col] = df_subset[amt_col].astype(float).apply(np.log10)
+
+    # Fit data
+    x = df_subset['log10_'+amt_col]
+    y = df_subset[cp_col].astype(float)
+    fit = scipy.stats.linregress(x, y)
+    efficiency = (10**(-1/fit.slope) - 1)*100 # percentage
+    
+    # Plot result
+    if ax is not None:
+        ax.scatter(df[amt_col], df[cp_col], label='data', ec='white', lw=0.75)
+        xs = np.logspace(min(df_subset['log10_'+amt_col]), max(df_subset['log10_'+amt_col]), 1000)
+        ys = fit.slope * np.log10(xs) + fit.intercept
+        ax.plot(xs, ys, color='crimson', label='linear\nregression')
+        ax.set_xscale('symlog', linthresh=min(df_subset[amt_col]))
+        pad = 0.01
+        ax.legend(loc='upper right', bbox_to_anchor=(1-pad, 1-pad))
+        ax.annotate(f'$R^2$: {abs(fit.rvalue):0.3f}', (0+pad*2, 0.1), xycoords='axes fraction',
+                    ha='left', va='bottom', size='medium')
+        ax.annotate(f'Efficiency: {efficiency:0.1f}%', (0+pad*2, 0+pad*2), xycoords='axes fraction',
+                    ha='left', va='bottom', size='medium')
+    
+    return fit, efficiency
+
+
+def calculate_input_amount(
+    y: float, # TODO: list of float
+    fit: Union[scipy.stats._stats_py.LinregressResult, List[float]],
+) -> float:
+    """
+    Given a cycle count (Cp, aka Ct value) and a linear regression fit, 
+    compute the amount of input.
+
+    Note that the linear regression fit is expected to have been performed
+    on the log10-transform of the input amounts. Units of the returned value
+    match those of the non-transformed input amount data.
+
+    Parameters
+    ----------
+    y: float
+        Cycle count (Cp, aka Ct value).
+    fit: scipy LinregressResult object or list of two floats
+        Linear fit to use. Accepts either the output of a call
+        to scipy.stats.linregress or a list of the fit values
+        [slope, intercept].
+
+    Returns
+    -------
+    A float of the calculated amount.
+    """
+    if type(fit) is scipy.stats._stats_py.LinregressResult:
+        return 10**((float(y)-fit.intercept)/fit.slope)
+    if len(fit) < 2:
+        raise InputError("'fit' is expected to be a list containing [slope, intercept]. Alternatively, pass a scipy LinregressResult object.")
+    return 10**((float(y)-fit[1])/fit[0])
+
+# TODO: add 'type' arg for dsDNA, ssDNA, ssRNA
+def convert_moles_to_mass(
+    moles: Union[float, List[float]],
+    length: Union[float, List[float]]
+) -> Union[float, List[float]]:
+    """
+    For a given amount of DNA in moles, use its length
+    to calculate its mass.
+
+    Formula from NEB: 
+    g = mol x (bp x 615.94 g/mol/bp + 36.04 g/mol)
+     - mass of dsDNA (g) = moles dsDNA x (molecular weight of dsDNA (g/mol))
+     - molecular weight of dsDNA = (number of base pairs of dsDNA x average molecular weight of a base pair) + 36.04 g/mol
+     - average molecular weight of a base pair = 615.94 g/mol, excluding the water molecule removed during polymerization 
+       and assuming deprotonated phosphate hydroxyls
+     - the additional 36.04 g/mol accounts for the 2 -OH and 2 -H added back to the ends
+     - bases are assumed to be unmodified
+
+    Parameters
+    ----------
+    moles: float or list of float
+        Amount of dsDNA in moles.
+    length: float or list of float
+        Number of base pairs of the dsDNA (or average length of a heterogeneous sample).
+    
+    Returns
+    -------
+    A float or list of floats of the calculated mass in grams.
+    """
+    return np.array(moles) * (np.array(length) * 615.96 + 36.04)
+
+
+# TODO: add 'type' arg for dsDNA, ssDNA, ssRNA
+def convert_mass_to_moles(
+    mass: Union[float, List[float]],
+    length: Union[float, List[float]]
+) -> Union[float, List[float]]:
+    """
+    For a given amount of DNA in moles, use its length
+    to calculate its mass.
+
+    Formula from NEB: 
+    mol = g / (bp x 615.94 g/mol/bp + 36.04 g/mol)
+     - moles dsDNA = mass of dsDNA (g) / (molecular weight of dsDNA (g/mol))
+     - molecular weight of dsDNA = (number of base pairs of dsDNA x average molecular weight of a base pair) + 36.04 g/mol
+     - average molecular weight of a base pair = 615.94 g/mol, excluding the water molecule removed during polymerization 
+       and assuming deprotonated phosphate hydroxyls
+     - the additional 36.04 g/mol accounts for the 2 -OH and 2 -H added back to the ends
+     - bases are assumed to be unmodified
+
+    Parameters
+    ----------
+    mass: float or list of float
+        Mass of dsDNA in grams.
+    length: float or list of float
+        Number of base pairs of the dsDNA (or average length of a heterogeneous sample).
+    
+    Returns
+    -------
+    A float or list of floats of the calculated amount in moles.
+    """
+    return np.array(mass) / (np.array(length) * 615.96 + 36.04)
