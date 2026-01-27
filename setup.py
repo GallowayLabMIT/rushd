@@ -44,6 +44,7 @@ setuptools.setup(
         "matplotlib",
         "scipy",
         'typing-extensions;python_version<"3.8"',
+        "py7zr",
     ],
     extras_require={
         "dev": [

@@ -46,7 +46,7 @@ def test_single_csv_kwargs(tmp_path: Path):
         f.write("""well\tchannel1\tchannel2\nA1\t1\t2""")
     yaml_path = str(tmp_path) + "/test.yaml"
     df = qpcr.load_single_csv_with_metadata(
-        str(tmp_path) + "/data.txt", yaml_path, csv_kwargs={"delimiter": ","}
+        str(tmp_path) + "/data.txt", yaml_path, csv_kwargs={"delimiter": "\t"}
     )
     df.sort_values(by="well", inplace=True, ignore_index=True)
 
