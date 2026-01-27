@@ -1,0 +1,15 @@
+metadata:
+  cell_line:
+    - cTA010: A3-A4, F3-F4
+    - cTA012: B3-B4, G3-G4
+    - cTA013: C3-C4
+    - cTA014: D3-D4
+    - cTA015: E3-E4, H3-H4
+  sorted:
+    - False: A3-E3
+    - True: F3-H4
+  fam_target:
+    - PuroR: A3-H3
+    - mRuby2: A4-H4
+  hex_target:
+    - RPP30: A3-H4
