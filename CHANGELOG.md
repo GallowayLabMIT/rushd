@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2026-01-27
+### Added
+- Module `rd.qpcr` for loading qPCR data, i.e., .csv (and similar) files containing a column with well IDs
+  - `rd.qpcr.load_single_csv_with_metadata` for loading single files
+  - `rd.qpcr.load_plates_with_metadata` for loading multiple files, analogous to `rd.flow.load_groups_with_metadata`
+- Module `rd.ddpcr` for loading ddPCR data with metadata by extracting info from .ddpcr files
+- `rd.flow.load_csv` for loading multiple .csv files without additional .yaml metadata, using only metadata in filename
+### Modified
+- All functions that load .csv files now accept optional kwargs that are passed to pandas `read_csv`
+
 ## [0.5.1] - 2025-05-22
 ### Modified
 - Switched to using `np.nan` instead of `np.NaN` to be compatible with Numpy 2.0

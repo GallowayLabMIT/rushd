@@ -114,10 +114,15 @@ Following the steps described above, the full process for publishing a release i
 ## Changelog
 See the [CHANGELOG](CHANGELOG.md) for detailed changes.
 ```
-## [0.5.1] - 2025-05-22
+## [0.6.0] - 2026-01-27
+### Added
+- Module `rd.qpcr` for loading qPCR data, i.e., .csv (and similar) files containing a column with well IDs
+  - `rd.qpcr.load_single_csv_with_metadata` for loading single files
+  - `rd.qpcr.load_plates_with_metadata` for loading multiple files, analogous to `rd.flow.load_groups_with_metadata`
+- Module `rd.ddpcr` for loading ddPCR data with metadata by extracting info from .ddpcr files
+- `rd.flow.load_csv` for loading multiple .csv files without additional .yaml metadata, using only metadata in filename
 ### Modified
-- Switched to using `np.nan` instead of `np.NaN` to be compatible with Numpy 2.0
-- Removed support for Python 3.7 and added support for 3.13
+- All functions that load .csv files now accept optional kwargs that are passed to pandas `read_csv`
 ````
 
 ## License

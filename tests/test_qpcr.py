@@ -299,7 +299,7 @@ def test_plates_valid_base_path(tmp_path: Path):
             "extra_metadata": ["meta1", "meta2"],
         }
     )
-    df = qpcr.load_plates_with_metadata(plates, base_path=(tmp_path / "dir"))
+    df = qpcr.load_plates_with_metadata(plates, base_path=str(tmp_path / "dir"))
 
     # Check against manual output
     data = [
