@@ -3,6 +3,12 @@ Tutorials
 
 .. toctree::
    :maxdepth: 2
+   :glob:
+   
+   overview/index
+   flow/index
+   qpcr/index
+   ddpcr/index
+   plotting/index
 
-   plot_well_metadata
-   generate_xticklabels
+   */index
