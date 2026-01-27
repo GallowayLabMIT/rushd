@@ -58,7 +58,7 @@ def load_well_metadata(yaml_path: Union[str, Path]) -> Dict[Any, Any]:
 
     Parameters
     ----------
-    yaml_path: Path 
+    yaml_path: Path
         Path to the .yaml file to use for associating metadata with well IDs.
 
     Returns

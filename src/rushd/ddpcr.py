@@ -79,7 +79,7 @@ def load_ddpcr_metadata(unzipped_path: Path) -> Dict[Any, Any]:
             target_map = {
                 p["Dye"]["DyeName"] + "_target": p["TargetName"] for p in w["Panel"]["Targets"]
             }
-            metadata_from_plt[well] = condition_map | target_map
+            metadata_from_plt[well] = {**condition_map, **target_map}
 
     metadata_map = pd.DataFrame.from_dict(metadata_from_plt, orient="index").to_dict()
     return metadata_map
@@ -143,7 +143,7 @@ def load_ddpcr(
 
     # Load metadata from .ddpcr file
     if extract_metadata:
-        metadata_map = metadata_map | load_ddpcr_metadata(tmp_data_path)
+        metadata_map = {**metadata_map, **load_ddpcr_metadata(tmp_data_path)}
 
     # Load data for each well
     data_list = []
