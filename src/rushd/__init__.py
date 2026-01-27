@@ -1,4 +1,4 @@
-"""## rushd: data management for humans.
+"""``rushd``: data management for humans.
 
 Collection of helper modules for maintaining
 robust, reproducible data management.

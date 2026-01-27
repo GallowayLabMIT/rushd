@@ -134,6 +134,9 @@ def load_csv_with_metadata(
     except FileNotFoundError as err:
         raise YamlError("Specified metadata YAML file does not exist!") from err
 
+    if csv_kwargs is None:
+        csv_kwargs = {}
+
     # Load data from .csv files
     data_list: List[pd.DataFrame] = []
 
@@ -295,6 +298,9 @@ def load_csv(
     """
     if not isinstance(data_path, Path):
         data_path = Path(data_path)
+
+    if csv_kwargs is None:
+        csv_kwargs = {}
 
     # Load data from .csv files
     data_list: List[pd.DataFrame] = []

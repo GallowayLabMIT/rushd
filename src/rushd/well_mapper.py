@@ -60,14 +60,15 @@ in a YAML underlying format is:
     test: A5-A7
     test2: A5-A9
 
-which yields ``{'test': 'A5-A7', 'test2': 'A5-A9'}``
+which yields ``{'test': 'A5-A7', 'test2': 'A5-A9'}``,
+
 and
 ::
 
     - test: A5-A7
     - test2: A5-A9
 
-which yields ``[{'test': 'A5-A7'}, {'test2': 'A5-A9'}]``
+which yields ``[{'test': 'A5-A7'}, {'test2': 'A5-A9'}]``.
 
 This module reads either of these formats. It iterates over each of the well specifications,
 building up a dictionary that maps wells to conditions. If multiple well specifications overlap,
@@ -84,10 +85,10 @@ then condition names are merged in the order in which they appear, separated by 
 will return a well map of the form:
 ::
 
-    {'A1': 'MEF.untransformed', ..., 'C10: 293.experimental'}
+    {'A1': 'MEF.untransformed', ..., 'C10': '293.experimental'}
 
-Both the non-normalized (e.g. no leading zeros, ``A1``) and normalized
-(e.g. with leading zeros, ``A01``) forms are returned for mapping.
+Both the non-normalized (no leading zeros, e.g., ``A1``) and normalized
+(with leading zeros, e.g., ``A01``) forms are returned for mapping.
 """
 
 import itertools
@@ -112,7 +113,8 @@ def well_mapping(
 
     Returns
     -------
-    A dictionary that maps wells to conditions.
+    dict
+        A dictionary that maps wells to conditions.
     """
     # Save plate_spec into a list of a single dictionary if it isn't already
     # an iterable of dictionaries

@@ -97,6 +97,9 @@ def load_single_csv_with_metadata(
         )
     file = data_path
 
+    if csv_kwargs is None:
+        csv_kwargs = {}
+
     # Overwrite args with those relevant for
     if is_default:
         well_column = "Pos"
