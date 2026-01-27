@@ -1,14 +1,15 @@
 """
 A submodule implementing common IO handling mechanisms.
 
-## Rationale
+Rationale
+---------
 File and folder management is a common problem when
 handling large datasets. You often want to separate
 out large data from your code. How do you keep track
 of where your data is, especially if moving between
 different computers/clusters?
 
-`rushd.io` adds convenience functions to handle
+``rushd.io`` adds convenience functions to handle
 common cases, as well as writing metadata with
 your output files that identify input files.
 """
@@ -124,6 +125,12 @@ def git_version() -> Optional[str]:
     if there are edits that have not been saved.
     Returns None if the current working directory is
     not contained within a git repository.
+
+    Returns
+    -------
+    str or None
+        Current version control state as a string, or None if the current working directory is not
+        contained within a git repository
     """
     git_log = subprocess.run(
         ["git", "log", "-n1", "--format=format:%H"], check=False, capture_output=True
@@ -158,7 +165,8 @@ def _is_relative_to(path: Path, base_path: Path) -> bool:
 
     Returns
     -------
-    True if `path` can be written as a relative path to `base_path`, False otherwise
+    bool
+        True if `path` can be written as a relative path to `base_path`, False otherwise
     """
     try:
         _ = path.relative_to(base_path)
@@ -188,7 +196,8 @@ def infile(filename: Union[str, Path], tag: Optional[str] = None, should_hash: b
 
     Returns
     -------
-    A Path object that represents the same file as `filename`.
+    Path
+        A Path object that represents the same file as `filename`.
     """
     if not isinstance(filename, Path):
         filename = Path(filename)
@@ -225,6 +234,20 @@ def outfile(filename: Union[str, Path], tag: Optional[str] = None) -> Path:
     Any needed subdirectories will be created if the outfile is relative
     to datadir or rootdir.
 
+    Example
+    -------
+    For output file `out.txt`, writes a YAML file `out.txt.yaml`
+    that encodes the following type of metadata:
+    ::
+
+        type: tracked_outfile
+        name: out.txt
+        date: 2022-01-31
+        git_version: 13a81aa2a7b1035f6b59c2323b0a7c457eb1657e
+        dependencies:
+        - file: some_infile.csv
+            path_type: datadir_relative
+
     Parameters
     ----------
     filename: str or Path
@@ -234,22 +257,8 @@ def outfile(filename: Union[str, Path], tag: Optional[str] = None) -> Path:
 
     Returns
     -------
-    A Path object that represents the same file as `filename`.
-
-    Side-effects
-    ------------
-    For output file `out.txt`, writes a YAML file `out.txt.yaml`
-    that encodes the following type of metadata:
-
-    ```yaml
-    type: tracked_outfile
-    name: out.txt
-    date: 2022-01-31
-    git_version: 13a81aa2a7b1035f6b59c2323b0a7c457eb1657e
-    dependencies:
-      - file: some_infile.csv
-        path_type: datadir_relative
-    ```
+    Path
+        A Path object that represents the same file as `filename`.
     """
     if not isinstance(filename, Path):
         filename = Path(filename)
@@ -326,9 +335,10 @@ def cache_dataframe(cache_path: Union[Path, str]) -> Callable[..., Callable[...,
 
     Returns
     -------
-    A function that generates a dataframe with optional caching.
-    An extra keyword argument, 'invalidate' is added that invalidates
-    the cache if needed
+    Callable[..., Callable[..., pd.DataFrame]]
+        A function that generates a dataframe with optional caching.
+        An extra keyword argument, 'invalidate' is added that invalidates
+        the cache if needed
     """
     if not isinstance(cache_path, Path):
         savepath = Path(cache_path)

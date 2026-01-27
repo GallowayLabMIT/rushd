@@ -44,7 +44,7 @@ def load_single_csv_with_metadata(
     *,
     well_column: Optional[str] = "well",
     columns: Optional[List[str]] = None,
-    csv_kwargs: Optional[Dict[str, Any]] = {},
+    csv_kwargs: Optional[Dict[str, Any]] = None,
     is_default: Optional[bool] = False,
 ) -> pd.DataFrame:
     """
@@ -92,7 +92,8 @@ def load_single_csv_with_metadata(
     # Check that a single file (not a directory) has been passed
     if data_path.is_dir():
         raise DataPathError(
-            "'data_path' must be a single file. To load multiple files, use 'load_csv_with_metadata'"
+            "'data_path' must be a single file. To load multiple files, use"
+            "'load_csv_with_metadata'"
         )
     file = data_path
 
@@ -100,7 +101,7 @@ def load_single_csv_with_metadata(
     if is_default:
         well_column = "Pos"
         columns = ["Cp"]
-        csv_kwargs = dict(sep="\t", header=1)
+        csv_kwargs = {"delimiter": "\t", "header": 1}
 
     # Load the first row so we get the column names
     df_onerow = pd.read_csv(file, nrows=1, **csv_kwargs)
@@ -131,7 +132,7 @@ def load_plates_with_metadata(
     *,
     well_column: Optional[str] = "well",
     columns: Optional[List[str]] = None,
-    csv_kwargs: Optional[Dict[str, Any]] = {},
+    csv_kwargs: Optional[Dict[str, Any]] = None,
     is_default: Optional[bool] = False,
 ) -> pd.DataFrame:
     """

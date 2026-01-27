@@ -93,7 +93,7 @@ def load_csv_with_metadata(
     filename_regex: Optional[str] = None,
     *,
     columns: Optional[List[str]] = None,
-    csv_kwargs: Optional[Dict[str, Any]] = {},
+    csv_kwargs: Optional[Dict[str, Any]] = None,
 ) -> pd.DataFrame:
     """
     Load .csv data into DataFrame with associated metadata.
@@ -186,7 +186,7 @@ def load_groups_with_metadata(
     filename_regex: Optional[str] = None,
     *,
     columns: Optional[List[str]] = None,
-    csv_kwargs: Optional[Dict[str, Any]] = {},
+    csv_kwargs: Optional[Dict[str, Any]] = None,
 ) -> pd.DataFrame:
     """
     Load .csv data into DataFrame with associated metadata by group.
@@ -264,7 +264,7 @@ def load_csv(
     filename_regex: Optional[str] = None,
     *,
     columns: Optional[List[str]] = None,
-    csv_kwargs: Optional[Dict[str, Any]] = {},
+    csv_kwargs: Optional[Dict[str, Any]] = None,
 ) -> pd.DataFrame:
     """
     Load .csv data into DataFrame without additional metadata.

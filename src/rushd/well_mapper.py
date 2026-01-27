@@ -3,11 +3,12 @@
 Rationale
 ---------
 Helper module that parses plate specifications of the form:
-```yaml
-MEF-low: A1-E1
-MEF-bulk: F1-H1, A2-H2, A3-B3
-retroviral: A1-H12
-```
+::
+
+    MEF-low: A1-E1
+    MEF-bulk: F1-H1, A2-H2, A3-B3
+    retroviral: A1-H12
+
 and returns a dictionary that lets you map from well number to a
 plate specification.
 
@@ -22,19 +23,17 @@ deals with how to handle the specification.
 A *well specification* is a string containing a comma-separated list of
 *region specifiers*. A region specifier is one of two forms, a single
 well form:
+::
 
-```
     A1
     B05
-```
 
 or a rectangular region form:
+::
 
-```
     A1-A12
     B05-D8
     B05 - C02
-```
 
 As seen in these examples, the rectangular region form is distinguished
 by the presence of a hyphen between two single-well identifiers. Whitespace
@@ -46,54 +45,49 @@ as one of the region specifiers.
 
 Within a single specifier, duplicate entries are *ignored*. That is, the following
 specifiers are all equivalent:
+::
 
-```
     A5-B7
     A5,A6,A7,B5,B6,B7
     A5-B7,B6
     A5-B7,B5-B7
-```
 
 A *plate specification* is either a dictionary (if order is not important)
 or a sequence of dictionaries (if order is important). The difference between these
 in a YAML underlying format is:
+::
 
-```yaml
-test: A5-A7
-test2: A5-A9
-```
+    test: A5-A7
+    test2: A5-A9
 
-which yields `{'test': 'A5-A7', 'test2': 'A5-A9'}`
+which yields ``{'test': 'A5-A7', 'test2': 'A5-A9'}``
 and
+::
 
-```yaml
-- test: A5-A7
-- test2: A5-A9
-```
+    - test: A5-A7
+    - test2: A5-A9
 
-which yields `[{'test': 'A5-A7'}, {'test2': 'A5-A9'}]`
+which yields ``[{'test': 'A5-A7'}, {'test2': 'A5-A9'}]``
 
 This module reads either of these formats. It iterates over each of the well specifications,
 building up a dictionary that maps wells to conditions. If multiple well specifications overlap,
 then condition names are merged in the order in which they appear, separated by a separator
 (by default, a period). This allows very concise condition layouts, such as the following:
+::
 
-```yaml
-conditions:
-    MEF: A1-C12
-    293: D1-F12
-    untransformed: A1-D3
-    experimental: A4-D12
-```
+    conditions:
+        MEF: A1-C12
+        293: D1-F12
+        untransformed: A1-D3
+        experimental: A4-D12
 
 will return a well map of the form:
+::
 
-```
-{'A1': 'MEF.untransformed', ..., 'C10: 293.experimental'}
-```
+    {'A1': 'MEF.untransformed', ..., 'C10: 293.experimental'}
 
-Both the non-normalized (e.g. no leading zeros, `A1`) and normalized
-(e.g. with leading zeros, `A01`) forms are returned for mapping.
+Both the non-normalized (e.g. no leading zeros, ``A1``) and normalized
+(e.g. with leading zeros, ``A01``) forms are returned for mapping.
 """
 
 import itertools
