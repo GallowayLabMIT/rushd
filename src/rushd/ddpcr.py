@@ -45,8 +45,9 @@ def load_ddpcr_metadata(unzipped_path: Path) -> Dict[Any, Any]:
 
     Returns
     -------
-    A dictionary that contains a well mapping for metadata extracted from
-    the .ddpcr experiment.
+    dict
+        A dictionary that contains a well mapping for metadata extracted from
+        the .ddpcr experiment.
     """
     filename_regex = r"^.*[\\/](?P<well>[A-P]\d+)\.dd.*json"
 
@@ -106,8 +107,8 @@ def load_ddpcr(
     yaml_path: str or Path (optional)
         Path to .yaml file to use for associating metadata with well IDs.
         All metadata must be contained under the header 'metadata'.
-    extract_metadata: bool, default True
-        Whether to extract metadata from the .ddpcr file. If True,
+    extract_metadata: bool, default ``True``
+        Whether to extract metadata from the .ddpcr file. If ``True``,
         adds a subset of the metadata associated with each well in the
         BioRad software, namely sample names (numbered 'Sample description' fields,
         returned as numbered 'condition' keys) and targets for each channel/dye
@@ -115,7 +116,8 @@ def load_ddpcr(
 
     Returns
     -------
-    A single pandas DataFrame containing all data with associated metadata.
+    DataFrame
+        A single pandas DataFrame containing all data with associated metadata.
     """
     if not isinstance(data_path, Path):
         data_path = Path(data_path)

@@ -58,11 +58,14 @@ def load_well_metadata(yaml_path: Union[str, Path]) -> Dict[Any, Any]:
 
     Parameters
     ----------
-    yaml_path: Path to the .yaml file to use for associating metadata with well IDs.
+    yaml_path: Path 
+        Path to the .yaml file to use for associating metadata with well IDs.
 
     Returns
     -------
-    A dictionary that contains a well mapping for all metadata columns.
+    dict
+        A dictionary that contains a well mapping for all metadata columns.
+        Mapping is formatted as {key -> {well -> value}}.
     """
     if not isinstance(yaml_path, Path):
         yaml_path = Path(yaml_path)
@@ -113,18 +116,19 @@ def load_csv_with_metadata(
         Regular expression to use to extract well IDs from data filenames.
         Must contain the capturing group 'well' for the sample well IDs.
         If not included, the filenames are assumed to follow this format (default
-        export format from FlowJo): 'export_[well]_[population].csv'
+        export format from FlowJo): ``export_[well]_[population].csv``
     columns: list of strings (optional)
-        If specified, only these columns are loaded out of the CSV files.
+        If specified, only these columns are loaded out of the .csv files.
         This can drastically reduce the amount of memory required to load
         flow data.
     csv_kwargs: dict (optional)
-        Additional kwargs to pass to pandas 'read_csv'. For instance, to skip rows or
+        Additional kwargs to pass to pandas ``read_csv``. For instance, to skip rows or
         to specify alternate delimiters.
 
     Returns
     -------
-    A single pandas DataFrame containing all data with associated metadata.
+    DataFrame
+        A single pandas DataFrame containing all data with associated metadata.
     """
     if not isinstance(data_path, Path):
         data_path = Path(data_path)
@@ -205,29 +209,30 @@ def load_groups_with_metadata(
         to the group of .csv files and metadata .yaml files, respectively.
         Optionally, regular expressions for the file names can be specified for each
         group using the column 'filename_regex' (this will override the
-        'filename_regex' argument).
+        `filename_regex` argument).
     base_path: str or Path (optional)
         If specified, path that data and yaml paths in input_df are defined relative to.
     filename_regex: str or raw str (optional)
         Regular expression to use to extract well IDs from data filenames.
-        Must contain the capturing group 'well' for the sample well IDs.
+        Must contain the capturing group `well` for the sample well IDs.
         Other capturing groups in the regex will be added as metadata.
         This value applies to all groups; to specify different regexes for each group,
-        add the column 'filename_regex' to groups_df (this will override the
-        'filename_regex' argument).
+        add the column 'filename_regex' to `groups_df` (this will override the
+        `filename_regex` argument).
         If not included, the filenames are assumed to follow this format (default
-        export format from FlowJo): 'export_[well]_[population].csv'
+        export format from FlowJo): ``export_[well]_[population].csv``
     columns: list of strings (optional)
-        If specified, only these columns are loaded out of the CSV files.
+        If specified, only these columns are loaded out of the .csv files.
         This can drastically reduce the amount of memory required to load
         flow data.
     csv_kwargs: dict (optional)
-        Additional kwargs to pass to pandas 'read_csv'. For instance, to skip rows or
+        Additional kwargs to pass to pandas ``read_csv``. For instance, to skip rows or
         to specify alternate delimiters.
 
     Returns
     -------
-    A single pandas DataFrame containing data from all groups with associated metadata.
+    DataFrame
+        A single pandas DataFrame containing data from all groups with associated metadata.
     """
     if "data_path" not in groups_df.columns:
         raise GroupsError("'groups_df' must contain column 'data_path'")
@@ -283,18 +288,19 @@ def load_csv(
         Regular expression to use to extract metadata from data filenames.
         Any named capturing groups will be added as metadata.
         If not included, the filenames are assumed to follow this format (default
-        export format from FlowJo): 'export_[condition]_[population].csv'
+        export format from FlowJo): ``export_[condition]_[population].csv``
     columns: list of strings (optional)
-        If specified, only these columns are loaded out of the CSV files.
+        If specified, only these columns are loaded out of the .csv files.
         This can drastically reduce the amount of memory required to load
         flow data.
     csv_kwargs: dict (optional)
-        Additional kwargs to pass to pandas 'read_csv'. For instance, to skip rows or
+        Additional kwargs to pass to pandas ``read_csv``. For instance, to skip rows or
         to specify alternate delimiters.
 
     Returns
     -------
-    A single pandas DataFrame containing all data with associated filename metadata.
+    DataFrame
+        A single pandas DataFrame containing all data with associated filename metadata.
     """
     if not isinstance(data_path, Path):
         data_path = Path(data_path)
@@ -358,12 +364,12 @@ def moi(
     ----------
     data_frame: pd.DataFrame
         The pandas DataFrame to analyze. It must have the following columns:
-            condition: the conditions/types of virus being analyzed
-            replicate: the replicate of the data (can have all data as the same replicate)
-            starting_cell_count: the number of cells in the well at the time of infection
-            scaling: the dilution factor of each row
-            max_virus: the maximum virus added to that column
-                scaling times max_virus should result in the volume of virus stock added to a well
+            - condition: the conditions/types of virus being analyzed
+            - replicate: the replicate of the data (can have all data as the same replicate)
+            - starting_cell_count: the number of cells in the well at the time of infection
+            - scaling: the dilution factor of each row
+            - max_virus: the maximum virus added to that column
+              scaling times max_virus should result in the volume of virus stock added to a well
     color_column_name: str
         The name of the column on which to gate infection.
     color_cutoff: float
@@ -377,7 +383,8 @@ def moi(
 
     Returns
     -------
-    A single pandas DataFrame containing the titer of each condition in TU per uL.
+    DataFrame
+        A single pandas DataFrame containing the titer of each condition in TU per uL.
     """
     df = data_frame.copy()
     if color_column_name not in df.columns:

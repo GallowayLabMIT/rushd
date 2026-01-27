@@ -54,7 +54,7 @@ def load_single_csv_with_metadata(
     adding columns for metadata encoded by a given .yaml file. Metadata is associated
     with the data based on well IDs encoded in one of the data columns.
 
-    Note that this uses pandas 'read_csv', so it is compatible with .tsv and .txt files
+    Note that this uses pandas ``read_csv``, so it is compatible with .tsv and .txt files
     with the appropriate kwargs.
 
     Parameters
@@ -71,15 +71,16 @@ def load_single_csv_with_metadata(
         This can drastically reduce the amount of memory required to load
         flow data.
     csv_kwargs: dict (optional)
-        Additional kwargs to pass to pandas 'read_csv'. For instance, to skip rows or
+        Additional kwargs to pass to pandas ``read_csv``. For instance, to skip rows or
         to specify alternate delimiters.
-    is_default: bool, default False
-        If True, will override 'well_column', 'columns', and 'csv_kwargs' with
+    is_default: bool, default ``False``
+        If ``True``, will override `well_column`, `columns`, and `csv_kwargs` with
         defaults for plates with the format exported from Roche LightCycler 480II.
 
     Returns
     -------
-    A single pandas DataFrame containing all data with associated metadata.
+    DataFrame
+        A single pandas DataFrame containing all data with associated metadata.
     """
     if not isinstance(data_path, Path):
         data_path = Path(data_path)
@@ -129,7 +130,7 @@ def load_single_csv_with_metadata(
 
 
 def load_plates_with_metadata(
-    groups_df: pd.DataFrame,
+    input_df: pd.DataFrame,
     base_path: Optional[Union[str, Path]] = "",
     filename_regex: Optional[str] = None,
     *,
@@ -145,20 +146,20 @@ def load_plates_with_metadata(
 
     Parameters
     ----------
-    groups_df: Pandas DataFrame
+    input_df: Pandas DataFrame
         Each row of the DataFrame is evaluated as a separate plate. Columns must
         include 'data_path' and 'yaml_path', specifying absolute or relative paths
         to the .csv files and metadata .yaml files, respectively.
         Optionally, regular expressions for the file names can be specified for each
         file using the column 'filename_regex' (this will override the
-        'filename_regex' argument).
+        `filename_regex` argument).
     base_path: str or Path (optional)
-        If specified, path that data and yaml paths in input_df are defined relative to.
+        If specified, path that the data and yaml paths in `input_df` are defined relative to.
     filename_regex: str or raw str (optional)
         Regular expression to use to extract metadata from data filenames.
         This value applies to all groups; to specify different regexes for each group,
-        add the column 'filename_regex' to groups_df (this will override the
-        'filename_regex' argument).
+        add the column 'filename_regex' to `input_df` (this will override the
+        `filename_regex` argument).
         If not included, filename information will not be added as metadata.
     well_column: str, default 'well'
         Name of the column containing well IDs.
@@ -167,20 +168,21 @@ def load_plates_with_metadata(
         This can drastically reduce the amount of memory required to load
         flow data.
     csv_kwargs: dict (optional)
-        Additional kwargs to pass to pandas 'read_csv'. For instance, to skip rows or
+        Additional kwargs to pass to pandas ``read_csv``. For instance, to skip rows or
         to specify alternate delimiters.
-    is_default: bool, default False
-        If True, will override 'well_column', 'columns', and 'csv_kwargs' with
+    is_default: bool, default ``False``
+        If ``True``, will override `well_column`, `columns`, and `csv_kwargs` with
         defaults for plates with the format exported from Roche LightCycler 480II.
 
     Returns
     -------
-    A single pandas DataFrame containing data from all plates with associated metadata.
+    DataFrame
+        A single pandas DataFrame containing data from all plates with associated metadata.
     """
-    if "data_path" not in groups_df.columns:
-        raise GroupsError("'groups_df' must contain column 'data_path'")
-    if "yaml_path" not in groups_df.columns:
-        raise GroupsError("'groups_df' must contain column 'yaml_path'")
+    if "data_path" not in input_df.columns:
+        raise GroupsError("'input_df' must contain column 'data_path'")
+    if "yaml_path" not in input_df.columns:
+        raise GroupsError("'input_df' must contain column 'yaml_path'")
 
     if base_path and not isinstance(base_path, Path):
         base_path = Path(base_path)
@@ -188,11 +190,11 @@ def load_plates_with_metadata(
         base_path = ""
 
     group_list: List[pd.DataFrame] = []
-    for group in groups_df.to_dict(orient="index").values():
+    for group in input_df.to_dict(orient="index").values():
         # Load data in group
         data_path = base_path / Path(group["data_path"])
         yaml_path = base_path / Path(group["yaml_path"])
-        if "filename_regex" in groups_df.columns:
+        if "filename_regex" in input_df.columns:
             filename_regex = group["filename_regex"]
 
         if filename_regex is not None:
