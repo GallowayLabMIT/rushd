@@ -332,13 +332,6 @@ def load_csv(
     return data
 
 
-# draw & optionally assign gates based on quantile (df, channels, quantile(s), multi_gate) -> (df, gates)
-#   assign '[channel]_positive', assign multi-gate '[channel1]_[channel2]_gated'
-# assign gates only (df, gates, multi_gate) -> (df)
-# calculate stats (df, by, channels, stat_list) -> (df_stats)
-
-
-# Rewrite as 'calculate_titer'
 def moi(
     data_frame: pd.DataFrame,
     color_column_name: str,
