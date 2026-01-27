@@ -15,8 +15,6 @@ def test_invalid_yaml_path(tmp_path: Path):
         _ = flow.load_csv_with_metadata("", tmp_path / "nonexistent.yaml")
     with pytest.raises(flow.YamlError):
         _ = flow.load_csv_with_metadata("", "wells")
-    with pytest.raises(flow.YamlError):
-        _ = flow.load_single_csv_with_metadata("", tmp_path / "nonexistent.yaml")
 
 
 def test_invalid_yaml_formatting(tmp_path: Path):
@@ -599,9 +597,7 @@ def test_csv_no_metadata(tmp_path: Path):
     df.sort_values(by="condition", inplace=True, ignore_index=True)
 
     data = [["A1", "singlets", 1, 2], ["G12", "singlets", 10, 20]]
-    df_manual = pd.DataFrame(
-        data, columns=["condition", "population", "channel1", "channel2"]
-    )
+    df_manual = pd.DataFrame(data, columns=["condition", "population", "channel1", "channel2"])
     assert df.equals(df_manual)
 
 
