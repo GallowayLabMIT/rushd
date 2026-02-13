@@ -116,15 +116,9 @@ Following the steps described above, the full process for publishing a release i
 ## Changelog
 See the [CHANGELOG](CHANGELOG.md) for detailed changes.
 ```
-## [0.6.0] - 2026-01-27
-### Added
-- Module `rd.qpcr` for loading qPCR data, i.e., .csv (and similar) files containing a column with well IDs
-  - `rd.qpcr.load_single_csv_with_metadata` for loading single files
-  - `rd.qpcr.load_plates_with_metadata` for loading multiple files, analogous to `rd.flow.load_groups_with_metadata`
-- Module `rd.ddpcr` for loading ddPCR data with metadata by extracting info from .ddpcr files
-- `rd.flow.load_csv` for loading multiple .csv files without additional .yaml metadata, using only metadata in filename
+## [0.6.1] - 2026-02-13
 ### Modified
-- All functions that load .csv files now accept optional kwargs that are passed to pandas `read_csv`
+- Collected new modules for export. Now `qpcr` and `ddpcr` modules can be used.
 ````
 
 ## License
