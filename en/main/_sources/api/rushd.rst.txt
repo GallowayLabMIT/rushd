@@ -1,0 +1,61 @@
+rushd package
+=============
+
+Submodules
+----------
+
+rushd.ddpcr module
+------------------
+
+.. automodule:: rushd.ddpcr
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rushd.flow module
+-----------------
+
+.. automodule:: rushd.flow
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rushd.io module
+---------------
+
+.. automodule:: rushd.io
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rushd.plot module
+-----------------
+
+.. automodule:: rushd.plot
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rushd.qpcr module
+-----------------
+
+.. automodule:: rushd.qpcr
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rushd.well\_mapper module
+-------------------------
+
+.. automodule:: rushd.well_mapper
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: rushd
+   :members:
+   :undoc-members:
+   :show-inheritance:
