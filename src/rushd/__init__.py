@@ -4,10 +4,10 @@ Collection of helper modules for maintaining
 robust, reproducible data management.
 """
 
-from . import flow, io, plot  # noqa
+from . import flow, io, plot, qpcr, ddpcr  # noqa
 from .io import infile, outfile  # noqa
 
-submodules = ["io", "flow", "plot"]
+submodules = ["io", "flow", "plot", "qpcr", "ddpcr"]
 
 re_exports = [
     "infile",
