@@ -2,13 +2,7 @@
 
 import itertools
 import pathlib
-from typing import Any, Dict, List, Optional, Tuple, Union
-
-# Support Python 3.7 by importing Literal from typing_extensions
-try:
-    from typing import Literal  # type: ignore
-except ImportError:
-    from typing_extensions import Literal
+from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 
 import matplotlib
 import matplotlib.colors

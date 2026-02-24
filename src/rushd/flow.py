@@ -8,13 +8,7 @@ Combines user data from multiple .csv files into a single DataFrame.
 import re
 import warnings
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
-
-# Support Python 3.7 by importing Literal from typing_extensions
-try:
-    from typing import Literal  # type: ignore
-except ImportError:
-    from typing_extensions import Literal
+from typing import Any, Dict, List, Literal, Optional, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
