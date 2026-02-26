@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] - 2026-02-26
+### Modified
+- The following flow functions can now take zip files, not just folders.
+  This speeds up data loading especially on networked filesystems.
+  - `rd.flow.load_csv`
+  - `rd.flow.load_csv_with_metadata`
+  - `rd.flow.load_groups_with_metadata`
+
 ## [0.6.1] - 2026-02-13
 ### Modified
 - Collected new modules for export. Now `qpcr` and `ddpcr` modules can be used.

@@ -634,6 +634,7 @@ def test_csv_valid_custom_regex_zip_file(tmp_path: Path):
     with zipfile.ZipFile(tmp_path / "test.zip", "w") as zip:
         zip.writestr("export_BFP_100_singlets.csv", "channel1,channel2\n1,2")
         zip.writestr("export_GFP_1000_singlets.csv", "channel1,channel2\n10,20")
+        zip.writestr("some_invalid_file.csv", "channel1,channel2\n100,200")
 
     with zipfile.ZipFile(tmp_path / "test_subdir.zip", "w") as zip:
         zip.writestr("export/export_BFP_100_singlets.csv", "channel1,channel2\n1,2")
@@ -744,6 +745,7 @@ def test_data_metadata_zip(tmp_path: Path):
         )
         zip.writestr("export/export_A1_singlets.csv", "channel1,channel2\n1,2")
         zip.writestr("export/export_G12_singlets.csv", "channel1,channel2\n10,20")
+        zip.writestr("export/some_invalid_file.csv", "channel1,channel2\n100,200")
 
     df = flow.load_csv_with_metadata(
         (tmp_path / "data.zip", "export"), (tmp_path / "data.zip", "metadata.yaml")

@@ -116,9 +116,13 @@ Following the steps described above, the full process for publishing a release i
 ## Changelog
 See the [CHANGELOG](CHANGELOG.md) for detailed changes.
 ```
-## [0.6.1] - 2026-02-13
+## [0.7.0] - 2026-02-26
 ### Modified
-- Collected new modules for export. Now `qpcr` and `ddpcr` modules can be used.
+- The following flow functions can now take zip files, not just folders.
+  This speeds up data loading especially on networked filesystems.
+  - `rd.flow.load_csv`
+  - `rd.flow.load_csv_with_metadata`
+  - `rd.flow.load_groups_with_metadata`
 ````
 
 ## License
