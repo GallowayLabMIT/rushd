@@ -7,8 +7,10 @@ Combines user data from multiple .csv files into a single DataFrame.
 
 import re
 import warnings
+from io import SEEK_SET, TextIOWrapper
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import Any, Dict, List, Literal, Optional, Tuple, Union
+from zipfile import ZipFile
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -17,6 +19,8 @@ import yaml
 from scipy.optimize import curve_fit
 
 from . import well_mapper
+
+OptionalZipPath = Union[str, Path, Tuple[Union[str, Path], str]]
 
 
 class MetadataWarning(UserWarning):
@@ -47,12 +51,46 @@ class MOIinputError(RuntimeError):
     """Error raised when there is an issue with the provided dataframe."""
 
 
-def load_well_metadata(yaml_path: Union[str, Path]) -> Dict[Any, Any]:
-    """Load a YAML file and convert it into a well mapping.
+def _load_metadata_from_stream(stream: TextIOWrapper) -> Dict[Any, Any]:
+    """
+    Load YAML metadata from a stream-like object.
 
     Parameters
     ----------
-    yaml_path: Path
+    stream: a stream-like object to open as a YAML file
+
+    Returns
+    -------
+    dict
+        A dictionary that contains a well mapping for all metadata columns.
+        Mapping is formatted as {key -> {well -> value}}.
+    """
+    metadata = yaml.safe_load(stream)
+    if (type(metadata) is not dict) or ("metadata" not in metadata):
+        raise YamlError(
+            "Incorrectly formatted .yaml file."
+            " All metadata must be stored under the header 'metadata'"
+        )
+    for k, v in metadata["metadata"].items():
+        if isinstance(v, dict):
+            warnings.warn(
+                f'Metadata column "{k}" is a YAML dictionary, not a list!'
+                " Make sure your entries under this key start with dashes."
+                " Passing a dictionary does not allow duplicate keys and"
+                " is sort-order-dependent.",
+                MetadataWarning,
+                stacklevel=2,
+            )
+    return {k: well_mapper.well_mapping(v) for k, v in metadata["metadata"].items()}
+
+
+def load_well_metadata(yaml_path: OptionalZipPath) -> Dict[Any, Any]:
+    """
+    Load a YAML file and convert it into a well mapping.
+
+    Parameters
+    ----------
+    yaml_path: str, Path, or a tuple of a str/Path zip file and a filename within
         Path to the .yaml file to use for associating metadata with well IDs.
 
     Returns
@@ -61,32 +99,82 @@ def load_well_metadata(yaml_path: Union[str, Path]) -> Dict[Any, Any]:
         A dictionary that contains a well mapping for all metadata columns.
         Mapping is formatted as {key -> {well -> value}}.
     """
+    # load as entry in zip
+    if isinstance(yaml_path, tuple):
+        with ZipFile(yaml_path[0], "r") as zipfile:
+            with TextIOWrapper(zipfile.open(yaml_path[1]), encoding="utf-8") as yaml_file:
+                return _load_metadata_from_stream(yaml_file)
+
+    # not a zip: load file directly
     if not isinstance(yaml_path, Path):
         yaml_path = Path(yaml_path)
 
     with yaml_path.open() as yaml_file:
-        metadata = yaml.safe_load(yaml_file)
-        if (type(metadata) is not dict) or ("metadata" not in metadata):
-            raise YamlError(
-                "Incorrectly formatted .yaml file."
-                " All metadata must be stored under the header 'metadata'"
-            )
-        for k, v in metadata["metadata"].items():
-            if isinstance(v, dict):
-                warnings.warn(
-                    f'Metadata column "{k}" is a YAML dictionary, not a list!'
-                    " Make sure your entries under this key start with dashes."
-                    " Passing a dictionary does not allow duplicate keys and"
-                    " is sort-order-dependent.",
-                    MetadataWarning,
-                    stacklevel=2,
-                )
-    return {k: well_mapper.well_mapping(v) for k, v in metadata["metadata"].items()}
+        return _load_metadata_from_stream(yaml_file)
+
+
+def _load_csv_from_stream(
+    stream: TextIOWrapper,
+    *,
+    regex: re.Pattern,
+    match: re.Match,
+    csv_kwargs: Dict[str, Any],
+    metadata_map: Optional[Dict[Any, Any]] = None,
+    columns: Optional[List[str]] = None,
+) -> pd.DataFrame:
+    """
+    Load a CSV file from a stream and extra given metadata.
+
+    Parameters
+    ----------
+    stream: TextIOWrapper
+        A (rewindable) stream that stores CSV content
+    regex: re.Pattern
+        The regex used to generate the match
+    match: re.Match
+        The regex match object to use
+    csv_kwargs: dict
+        Additional kwargs to pass to pandas ``read_csv``. For instance, to skip rows or
+        to specify alternate delimiters.
+    metadata_map: dict
+        The dictionary mapping
+    columns: list of strings (optional)
+        If specified, only these columns are loaded out of the .csv files.
+        This can drastically reduce the amount of memory required to load
+        flow data.
+
+    """
+    # Load the first row so we get the column names, then reset stream position
+    stream_loc = stream.tell()
+    df_onerow = pd.read_csv(stream, nrows=1, **csv_kwargs)
+    stream.seek(stream_loc, SEEK_SET)
+
+    # Load data: we allow extra columns in our column list, so subset it
+    valid_cols = (
+        list(set(columns).intersection(set(df_onerow.columns))) if columns is not None else None
+    )
+    df = pd.read_csv(stream, usecols=valid_cols, **csv_kwargs)
+
+    # Add metadata to DataFrame
+    index = 0
+    # add YAML-extracted metadata
+    if metadata_map is not None:
+        well = match.group("well")
+        for k, v in metadata_map.items():
+            # Replace custom metadata keys with <NA> if not present
+            df.insert(index, k, v[well] if well in v else [pd.NA] * len(df))
+            index += 1
+
+    # add filename metadata
+    for k in regex.groupindex.keys():
+        df.insert(index, k, match.group(k))
+        index += 1
+    return df
 
 
 def load_csv_with_metadata(
-    data_path: Union[str, Path],
-    yaml_path: Union[str, Path],
+    data_path: OptionalZipPath,
+    yaml_path: OptionalZipPath,
     filename_regex: Optional[str] = None,
     *,
     columns: Optional[List[str]] = None,
@@ -101,9 +189,11 @@ def load_csv_with_metadata(
 
     Parameters
     ----------
-    data_path: str or Path
-        Path to directory containing data files (.csv)
-    yaml_path: str or Path
+    data_path: location of the .csv files
+        Either a directory containing .csv files,
+        a zip file containing .csv files,
+        or a path within a zip file containing .csv files.
+    yaml_path: either a path to a .yaml file or a path within a zip file to a .yaml
         Path to .yaml file to use for associating metadata with well IDs.
         All metadata must be contained under the header 'metadata'.
     filename_regex: str or raw str (optional)
@@ -124,8 +214,11 @@ def load_csv_with_metadata(
     DataFrame
         A single pandas DataFrame containing all data with associated metadata.
     """
-    if not isinstance(data_path, Path):
-        data_path = Path(data_path)
+    # normalize to Path objects
+    if isinstance(data_path, tuple):
+        normed_data_path: Union[Path, Tuple[Path, str]] = (Path(data_path[0]), data_path[1])
+    else:
+        normed_data_path: Union[Path, Tuple[Path, str]] = Path(data_path)
 
     try:
         metadata_map = load_well_metadata(yaml_path)
@@ -138,39 +231,60 @@ def load_csv_with_metadata(
     # Load data from .csv files
     data_list: List[pd.DataFrame] = []
 
-    for file in data_path.glob("*.csv"):
-        # Default filename from FlowJo export is 'export_[well]_[population].csv'
-        if filename_regex is None:
-            filename_regex = r"^.*export_(?P<well>[A-P]\d+)_(?P<population>.+)\.csv"
+    # Default filename from FlowJo export is 'export_[well]_[population].csv'
+    if filename_regex is None:
+        filename_regex = r"^.*export_(?P<well>[A-P]\d+)_(?P<population>.+)\.csv"
 
-        regex = re.compile(filename_regex)
-        if "well" not in regex.groupindex:
-            raise RegexError("Regular expression does not contain capturing group 'well'")
-        match = regex.match(file.name)
-        if match is None:
-            continue
+    regex = re.compile(filename_regex)
+    if "well" not in regex.groupindex:
+        raise RegexError("Regular expression does not contain capturing group 'well'")
 
-        # Load the first row so we get the column names
-        df_onerow = pd.read_csv(file, nrows=1, **csv_kwargs)
-        # Load data: we allow extra columns in our column list, so subset it
-        valid_cols = (
-            list(set(columns).intersection(set(df_onerow.columns))) if columns is not None else None
-        )
-        df = pd.read_csv(file, usecols=valid_cols, **csv_kwargs)
+    if not isinstance(normed_data_path, tuple) and normed_data_path.is_dir():
+        for file in normed_data_path.glob("*.csv"):
+            match = regex.match(file.name)
+            if match is None:
+                continue
 
-        # Add metadata to DataFrame
-        well = match.group("well")
-        index = 0
-        for k, v in metadata_map.items():
-            # Replace custom metadata keys with <NA> if not present
-            df.insert(index, k, v[well] if well in v else [pd.NA] * len(df))
-            index += 1
+            with file.open("r") as csv_stream:
+                df = _load_csv_from_stream(
+                    csv_stream,
+                    regex=regex,
+                    match=match,
+                    csv_kwargs=csv_kwargs,
+                    metadata_map=metadata_map,
+                    columns=columns,
+                )
+            data_list.append(df)
+    else:
+        # we need to open a zip file
+        if isinstance(normed_data_path, tuple):
+            zip_path = normed_data_path[0]
+            rel_to = Path(normed_data_path[1])
+        else:
+            zip_path = normed_data_path
+            rel_to = Path(".")
+        # iterate over zip members, only selecting those that match the filename and are relative to
+        # the correct directory
+        with ZipFile(zip_path) as data_zip:
+            for file in data_zip.infolist():
+                filename = Path(file.filename)
+                if filename.is_relative_to(rel_to):
+                    match = regex.match(filename.name)
+                    if match is None:
+                        continue
 
-        for k in regex.groupindex.keys():
-            df.insert(index, k, match.group(k))
-            index += 1
-
-        data_list.append(df)
+                    with TextIOWrapper(
+                        data_zip.open(file.filename), encoding="utf-8"
+                    ) as csv_stream:
+                        df = _load_csv_from_stream(
+                            csv_stream,
+                            regex=regex,
+                            match=match,
+                            csv_kwargs=csv_kwargs,
+                            metadata_map=metadata_map,
+                            columns=columns,
+                        )
+                    data_list.append(df)
 
     # Concatenate all the data into a single DataFrame
     if len(data_list) == 0:
@@ -240,9 +354,18 @@ def load_groups_with_metadata(
 
     group_list: List[pd.DataFrame] = []
     for group in groups_df.to_dict(orient="index").values():
+        group_data_path: OptionalZipPath = group["data_path"]
+        group_yaml_path: OptionalZipPath = group["yaml_path"]
         # Load data in group
-        data_path = base_path / Path(group["data_path"])
-        yaml_path = base_path / Path(group["yaml_path"])
+        if isinstance(group_data_path, tuple):
+            data_path = (base_path / Path(group_data_path[0]), group_data_path[1])
+        else:
+            data_path = base_path / Path(group_data_path)
+        if isinstance(group_yaml_path, tuple):
+            yaml_path = (base_path / Path(group_yaml_path[0]), group_yaml_path[1])
+        else:
+            yaml_path = base_path / Path(group_yaml_path)
+
         if "filename_regex" in groups_df.columns:
             filename_regex = group["filename_regex"]
         group_data = load_csv_with_metadata(
@@ -262,7 +385,7 @@ def load_groups_with_metadata(
 
 
 def load_csv(
-    data_path: Union[str, Path],
+    data_path: OptionalZipPath,
     filename_regex: Optional[str] = None,
     *,
     columns: Optional[List[str]] = None,
@@ -276,7 +399,7 @@ def load_csv(
 
     Parameters
     ----------
-    data_path: str or Path
+    data_path: str or Path or a tuple with a str/Path to a zip file and a str folder inside
         Path to directory containing data files (.csv)
     filename_regex: str or raw str (optional)
         Regular expression to use to extract metadata from data filenames.
@@ -296,8 +419,11 @@ def load_csv(
     DataFrame
         A single pandas DataFrame containing all data with associated filename metadata.
     """
-    if not isinstance(data_path, Path):
-        data_path = Path(data_path)
+    # normalize to Path objects
+    if isinstance(data_path, tuple):
+        normed_data_path: Union[Path, Tuple[Path, str]] = (Path(data_path[0]), data_path[1])
+    else:
+        normed_data_path: Union[Path, Tuple[Path, str]] = Path(data_path)
 
     if csv_kwargs is None:
         csv_kwargs = {}
@@ -305,31 +431,56 @@ def load_csv(
     # Load data from .csv files
     data_list: List[pd.DataFrame] = []
 
-    for file in data_path.glob("*.csv"):
-        # Default filename from FlowJo export is 'export_[sample name]_[population].csv'
-        if filename_regex is None:
-            filename_regex = r"^.*export_(?P<condition>[A-P]\d+)_(?P<population>.+)\.csv"
+    # Default filename from FlowJo export is 'export_[sample name]_[population].csv'
+    if filename_regex is None:
+        filename_regex = r"^.*export_(?P<condition>[A-P]\d+)_(?P<population>.+)\.csv"
 
-        regex = re.compile(filename_regex)
-        match = regex.match(file.name)
-        if match is None:
-            continue
+    regex = re.compile(filename_regex)
 
-        # Load the first row so we get the column names
-        df_onerow = pd.read_csv(file, nrows=1, **csv_kwargs)
-        # Load data: we allow extra columns in our column list, so subset it
-        valid_cols = (
-            list(set(columns).intersection(set(df_onerow.columns))) if columns is not None else None
-        )
-        df = pd.read_csv(file, usecols=valid_cols, **csv_kwargs)
+    if not isinstance(normed_data_path, tuple) and normed_data_path.is_dir():
+        for file in normed_data_path.glob("*.csv"):
+            match = regex.match(file.name)
+            if match is None:
+                continue
 
-        # Add metadata to DataFrame from filename
-        index = 0
-        for k in regex.groupindex.keys():
-            df.insert(index, k, match.group(k))
-            index += 1
+            with file.open("r") as csv_stream:
+                df = _load_csv_from_stream(
+                    csv_stream,
+                    regex=regex,
+                    match=match,
+                    csv_kwargs=csv_kwargs,
+                    columns=columns,
+                )
+            data_list.append(df)
+    else:
+        # we need to open a zip file
+        if isinstance(normed_data_path, tuple):
+            zip_path = normed_data_path[0]
+            rel_to = Path(normed_data_path[1])
+        else:
+            zip_path = normed_data_path
+            rel_to = Path(".")
+        # iterate over zip members, only selecting those that match the filename and are relative to
+        # the correct directory
+        with ZipFile(zip_path) as data_zip:
+            for file in data_zip.infolist():
+                filename = Path(file.filename)
+                if filename.is_relative_to(rel_to):
+                    match = regex.match(filename.name)
+                    if match is None:
+                        continue
 
-        data_list.append(df)
+                    with TextIOWrapper(
+                        data_zip.open(file.filename), encoding="utf-8"
+                    ) as csv_stream:
+                        df = _load_csv_from_stream(
+                            csv_stream,
+                            regex=regex,
+                            match=match,
+                            csv_kwargs=csv_kwargs,
+                            columns=columns,
+                        )
+                    data_list.append(df)
 
     # Concatenate all the data into a single DataFrame
     if len(data_list) == 0:

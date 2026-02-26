@@ -1,4 +1,5 @@
 import os
+import zipfile
 from pathlib import Path
 
 import pandas as pd
@@ -625,6 +626,34 @@ def test_csv_valid_custom_regex(tmp_path: Path):
     assert df.equals(df_manual)
 
 
+def test_csv_valid_custom_regex_zip_file(tmp_path: Path):
+    """
+    Tests that files can be loaded using valid custom file name
+    regular expressions from a zipfile.
+    """
+    with zipfile.ZipFile(tmp_path / "test.zip", "w") as zip:
+        zip.writestr("export_BFP_100_singlets.csv", "channel1,channel2\n1,2")
+        zip.writestr("export_GFP_1000_singlets.csv", "channel1,channel2\n10,20")
+
+    with zipfile.ZipFile(tmp_path / "test_subdir.zip", "w") as zip:
+        zip.mkdir("export")
+        zip.writestr("export/export_BFP_100_singlets.csv", "channel1,channel2\n1,2")
+        zip.writestr("export/export_GFP_1000_singlets.csv", "channel1,channel2\n10,20")
+
+    regex = r"^.*export_(?P<construct>.+)_(?P<dox>[0-9]+)_(?P<population>.+)\.csv"
+    df = flow.load_csv(tmp_path / "test.zip", regex)
+    df.sort_values(by="construct", inplace=True, ignore_index=True)
+
+    df_subdir = flow.load_csv((tmp_path / "test_subdir.zip", "export"), regex)
+    df_subdir.sort_values(by="construct", inplace=True, ignore_index=True)
+
+    data = [["BFP", "100", "singlets", 1, 2], ["GFP", "1000", "singlets", 10, 20]]
+    df_manual = pd.DataFrame(
+        data, columns=["construct", "dox", "population", "channel1", "channel2"]
+    )
+    assert df.equals(df_manual) and df_subdir.equals(df_manual)
+
+
 def test_csv_no_metadata_invalid_custom_regex(tmp_path: Path):
     """
     Tests that correct error is thrown when no files match the custom regex
@@ -637,3 +666,158 @@ def test_csv_no_metadata_invalid_custom_regex(tmp_path: Path):
     regex = r"^.*export_(?P<construct>.+)_(?P<dox>.+)_(?P<day>.+)_(?P<population>.+)\.csv"
     with pytest.raises(flow.RegexError):
         _ = flow.load_csv(str(tmp_path), regex)
+
+
+def test_zip_file_metadata(tmp_path: Path):
+    """
+    Tests that you can pass a YAML path inside a zip file, with the zip file being
+    passed both as a string and as a path
+    """
+    with zipfile.ZipFile(tmp_path / "test.zip", "w") as zip:
+        zip.writestr(
+            "test.yaml",
+            """
+        metadata:
+            condition:
+            - cond1: A1,G12
+        """,
+        )
+    with open(str(tmp_path / "export_A1_singlets.csv"), "w") as f:
+        f.write("""channel1,channel2\n1,2""")
+    with open(str(tmp_path / "export_G12_singlets.csv"), "w") as f:
+        f.write("""channel1,channel2\n10,20""")
+
+    zip_path = tmp_path / "test.zip"
+    df_str = flow.load_csv_with_metadata(tmp_path, (str(zip_path), "test.yaml"))
+    df_str.sort_values(by="well", inplace=True, ignore_index=True)
+
+    df_path = flow.load_csv_with_metadata(tmp_path, (zip_path, "test.yaml"))
+    df_path.sort_values(by="well", inplace=True, ignore_index=True)
+
+    data = [["cond1", "A1", "singlets", 1, 2], ["cond1", "G12", "singlets", 10, 20]]
+    df_manual = pd.DataFrame(
+        data, columns=["condition", "well", "population", "channel1", "channel2"]
+    )
+    assert df_str.equals(df_manual) and df_path.equals(df_manual)
+
+
+def test_nosubdir_data_zip(tmp_path: Path):
+    """
+    Tests that a direct zip file of CSVs can be read directly, in both string/path form
+    """
+    with open(str(tmp_path / "test.yaml"), "w") as f:
+        f.write(
+            """
+        metadata:
+            condition:
+            - cond1: A1,G12
+        """
+        )
+    with zipfile.ZipFile(tmp_path / "data.zip", "w") as zip:
+        zip.writestr("export_A1_singlets.csv", "channel1,channel2\n1,2")
+        zip.writestr("export_G12_singlets.csv", "channel1,channel2\n10,20")
+
+    df_str = flow.load_csv_with_metadata(str(tmp_path / "data.zip"), tmp_path / "test.yaml")
+    df_str.sort_values(by="well", inplace=True, ignore_index=True)
+
+    df_path = flow.load_csv_with_metadata(tmp_path / "data.zip", tmp_path / "test.yaml")
+    df_path.sort_values(by="well", inplace=True, ignore_index=True)
+
+    data = [["cond1", "A1", "singlets", 1, 2], ["cond1", "G12", "singlets", 10, 20]]
+    df_manual = pd.DataFrame(
+        data, columns=["condition", "well", "population", "channel1", "channel2"]
+    )
+    assert df_str.equals(df_manual) and df_path.equals(df_manual)
+
+
+def test_data_metadata_zip(tmp_path: Path):
+    """
+    Tests that a file direct zip file of CSVs can be read directly, in both string/path form
+    """
+    with zipfile.ZipFile(tmp_path / "data.zip", "w") as zip:
+        zip.writestr(
+            "metadata.yaml",
+            """
+        metadata:
+            condition:
+            - cond1: A1,G12
+        """,
+        )
+        zip.mkdir("export")
+        zip.writestr("export/export_A1_singlets.csv", "channel1,channel2\n1,2")
+        zip.writestr("export/export_G12_singlets.csv", "channel1,channel2\n10,20")
+
+    df = flow.load_csv_with_metadata(
+        (tmp_path / "data.zip", "export"), (tmp_path / "data.zip", "metadata.yaml")
+    )
+    df.sort_values(by="well", inplace=True, ignore_index=True)
+
+    data = [["cond1", "A1", "singlets", 1, 2], ["cond1", "G12", "singlets", 10, 20]]
+    df_manual = pd.DataFrame(
+        data, columns=["condition", "well", "population", "channel1", "channel2"]
+    )
+    assert df.equals(df_manual)
+
+
+def test_zip_group_valid(tmp_path: Path):
+    """
+    Tests that groups of files can be loaded (no base path)
+    """
+    # Create data
+    zips = ["plate1.zip", "plate2.zip"]
+    for zip_fname in zips:
+        with zipfile.ZipFile(tmp_path / zip_fname, "w") as zip:
+            zip.writestr(
+                "test.yaml",
+                """
+            metadata:
+                condition:
+                - cond1: A1,G12
+            """,
+            )
+            zip.mkdir("export")
+            zip.writestr("export/export_A1_singlets.csv", "channel1,channel2\n1,2")
+            zip.writestr("export/export_G12_singlets.csv", "channel1,channel2\n10,20")
+
+    # test a combination of non-zip and zip-path entries
+    os.mkdir(tmp_path / "nonzip")
+    with open(str(tmp_path / "nonzip" / "test.yaml"), "w") as f:
+        f.write(
+            """
+        metadata:
+            condition:
+            - cond1: A1,G12
+        """
+        )
+    with open(str(tmp_path / "nonzip" / "export_A1_singlets.csv"), "w") as f:
+        f.write("""channel1,channel2\n1,2""")
+    with open(str(tmp_path / "nonzip" / "export_G12_singlets.csv"), "w") as f:
+        f.write("""channel1,channel2\n10,20""")
+
+    # Call function
+    groups = pd.DataFrame(
+        {
+            "data_path": [(Path(tmp_path / z), "export") for z in zips]
+            + [Path(tmp_path) / "nonzip"],
+            "yaml_path": [(Path(tmp_path / z), "test.yaml") for z in zips]
+            + [Path(tmp_path) / "nonzip" / "test.yaml"],
+            "extra_metadata": ["meta1", "meta2", "meta3"],
+        }
+    )
+    df = flow.load_groups_with_metadata(groups)
+
+    # Check against manual output
+    data = [
+        ["cond1", "A1", "singlets", 1, 2, "meta1"],
+        ["cond1", "G12", "singlets", 10, 20, "meta1"],
+        ["cond1", "A1", "singlets", 1, 2, "meta2"],
+        ["cond1", "G12", "singlets", 10, 20, "meta2"],
+        ["cond1", "A1", "singlets", 1, 2, "meta3"],
+        ["cond1", "G12", "singlets", 10, 20, "meta3"],
+    ]
+    df_manual = pd.DataFrame(
+        data, columns=["condition", "well", "population", "channel1", "channel2", "extra_metadata"]
+    )
+    df.sort_values(by=["extra_metadata", "well"], inplace=True, ignore_index=True)
+    df_manual.sort_values(by=["extra_metadata", "well"], inplace=True, ignore_index=True)
+    assert df.equals(df_manual)
