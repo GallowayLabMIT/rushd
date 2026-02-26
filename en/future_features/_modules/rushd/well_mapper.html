@@ -1,0 +1,424 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rushd.well_mapper &mdash; rushd 0.5.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=3fadbb4a"></script>
+      <script src="../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2c6854" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            rushd
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/index.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/overview/index.html">Overview of <code class="docutils literal notranslate"><span class="pre">rushd</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorial/overview/plot_well_metadata.html">Visualizing YAML well metadata</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../tutorial/overview/plot_well_metadata.html#automatic-plotting-of-well-metadata">Automatic plotting of well metadata</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tutorial/overview/plot_well_metadata.html#modifying-output-color-mapping">Modifying output color mapping</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tutorial/overview/plot_well_metadata.html#plotting-non-96-wells">Plotting non-96 wells</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/flow/index.html">Flow cytometry</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/qpcr/index.html">qPCR</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/ddpcr/index.html">Droplet digital PCR (ddPCR)</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/plot/index.html">Plotting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorial/plot/generate_xticklabels.html">Generating table-like x-axis tick labels</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/rushd.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.ddpcr">rushd.ddpcr module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.DataPathError"><code class="docutils literal notranslate"><span class="pre">DataPathError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.YamlError"><code class="docutils literal notranslate"><span class="pre">YamlError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.calculate_copy_number"><code class="docutils literal notranslate"><span class="pre">calculate_copy_number()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.load_ddpcr"><code class="docutils literal notranslate"><span class="pre">load_ddpcr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.load_ddpcr_metadata"><code class="docutils literal notranslate"><span class="pre">load_ddpcr_metadata()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.flow">rushd.flow module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.ColumnError"><code class="docutils literal notranslate"><span class="pre">ColumnError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.DataPathError"><code class="docutils literal notranslate"><span class="pre">DataPathError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.GroupsError"><code class="docutils literal notranslate"><span class="pre">GroupsError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.MOIinputError"><code class="docutils literal notranslate"><span class="pre">MOIinputError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.MetadataWarning"><code class="docutils literal notranslate"><span class="pre">MetadataWarning</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.RegexError"><code class="docutils literal notranslate"><span class="pre">RegexError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.YamlError"><code class="docutils literal notranslate"><span class="pre">YamlError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_csv"><code class="docutils literal notranslate"><span class="pre">load_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_csv_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_csv_with_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_groups_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_groups_with_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_well_metadata"><code class="docutils literal notranslate"><span class="pre">load_well_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.moi"><code class="docutils literal notranslate"><span class="pre">moi()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.io">rushd.io module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.NoDatadirError"><code class="docutils literal notranslate"><span class="pre">NoDatadirError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.cache_dataframe"><code class="docutils literal notranslate"><span class="pre">cache_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.git_version"><code class="docutils literal notranslate"><span class="pre">git_version()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.infile"><code class="docutils literal notranslate"><span class="pre">infile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.outfile"><code class="docutils literal notranslate"><span class="pre">outfile()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.plot">rushd.plot module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.adjust_subplot_margins_inches"><code class="docutils literal notranslate"><span class="pre">adjust_subplot_margins_inches()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.debug_axes"><code class="docutils literal notranslate"><span class="pre">debug_axes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.generate_xticklabels"><code class="docutils literal notranslate"><span class="pre">generate_xticklabels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.plot_mapping"><code class="docutils literal notranslate"><span class="pre">plot_mapping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.plot_well_metadata"><code class="docutils literal notranslate"><span class="pre">plot_well_metadata()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#rushd-qpcr-module">rushd.qpcr module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.well_mapper">rushd.well_mapper module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rationale">Rationale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#specification">Specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.well_mapper.well_mapping"><code class="docutils literal notranslate"><span class="pre">well_mapping()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.infile"><code class="docutils literal notranslate"><span class="pre">infile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.outfile"><code class="docutils literal notranslate"><span class="pre">outfile()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2c6854" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">rushd</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">rushd.well_mapper</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rushd.well_mapper</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Converts user-specified plate specifications into well maps.</span>
+
+<span class="sd">Rationale</span>
+<span class="sd">---------</span>
+<span class="sd">Helper module that parses plate specifications of the form:</span>
+<span class="sd">```yaml</span>
+<span class="sd">MEF-low: A1-E1</span>
+<span class="sd">MEF-bulk: F1-H1, A2-H2, A3-B3</span>
+<span class="sd">retroviral: A1-H12</span>
+<span class="sd">```</span>
+<span class="sd">and returns a dictionary that lets you map from well number to a</span>
+<span class="sd">plate specification.</span>
+
+<span class="sd">This format allows for robust and concise description of plate maps.</span>
+
+<span class="sd">Specification</span>
+<span class="sd">-------------</span>
+<span class="sd">While these plate maps can be concisely defined inside YAML or JSON</span>
+<span class="sd">files, this specification does not define an underlying format; it only</span>
+<span class="sd">deals with how to handle the specification.</span>
+
+<span class="sd">A *well specification* is a string containing a comma-separated list of</span>
+<span class="sd">*region specifiers*. A region specifier is one of two forms, a single</span>
+<span class="sd">well form:</span>
+
+<span class="sd">```</span>
+<span class="sd">    A1</span>
+<span class="sd">    B05</span>
+<span class="sd">```</span>
+
+<span class="sd">or a rectangular region form:</span>
+
+<span class="sd">```</span>
+<span class="sd">    A1-A12</span>
+<span class="sd">    B05-D8</span>
+<span class="sd">    B05 - C02</span>
+<span class="sd">```</span>
+
+<span class="sd">As seen in these examples, the rectangular region form is distinguished</span>
+<span class="sd">by the presence of a hyphen between two single-well identifiers. Whitespace</span>
+<span class="sd">and leading zeros are allowed.</span>
+
+<span class="sd">A well specification is first *normalized* by the software, where all whitespace</span>
+<span class="sd">characters are removed. The resulting string is split by commas, and further parsed</span>
+<span class="sd">as one of the region specifiers.</span>
+
+<span class="sd">Within a single specifier, duplicate entries are *ignored*. That is, the following</span>
+<span class="sd">specifiers are all equivalent:</span>
+
+<span class="sd">```</span>
+<span class="sd">    A5-B7</span>
+<span class="sd">    A5,A6,A7,B5,B6,B7</span>
+<span class="sd">    A5-B7,B6</span>
+<span class="sd">    A5-B7,B5-B7</span>
+<span class="sd">```</span>
+
+<span class="sd">A *plate specification* is either a dictionary (if order is not important)</span>
+<span class="sd">or a sequence of dictionaries (if order is important). The difference between these</span>
+<span class="sd">in a YAML underlying format is:</span>
+
+<span class="sd">```yaml</span>
+<span class="sd">test: A5-A7</span>
+<span class="sd">test2: A5-A9</span>
+<span class="sd">```</span>
+
+<span class="sd">which yields `{&#39;test&#39;: &#39;A5-A7&#39;, &#39;test2&#39;: &#39;A5-A9&#39;}`</span>
+<span class="sd">and</span>
+
+<span class="sd">```yaml</span>
+<span class="sd">- test: A5-A7</span>
+<span class="sd">- test2: A5-A9</span>
+<span class="sd">```</span>
+
+<span class="sd">which yields `[{&#39;test&#39;: &#39;A5-A7&#39;}, {&#39;test2&#39;: &#39;A5-A9&#39;}]`</span>
+
+<span class="sd">This module reads either of these formats. It iterates over each of the well specifications,</span>
+<span class="sd">building up a dictionary that maps wells to conditions. If multiple well specifications overlap,</span>
+<span class="sd">then condition names are merged in the order in which they appear, separated by a separator</span>
+<span class="sd">(by default, a period). This allows very concise condition layouts, such as the following:</span>
+
+<span class="sd">```yaml</span>
+<span class="sd">conditions:</span>
+<span class="sd">    MEF: A1-C12</span>
+<span class="sd">    293: D1-F12</span>
+<span class="sd">    untransformed: A1-D3</span>
+<span class="sd">    experimental: A4-D12</span>
+<span class="sd">```</span>
+
+<span class="sd">will return a well map of the form:</span>
+
+<span class="sd">```</span>
+<span class="sd">{&#39;A1&#39;: &#39;MEF.untransformed&#39;, ..., &#39;C10: 293.experimental&#39;}</span>
+<span class="sd">```</span>
+
+<span class="sd">Both the non-normalized (e.g. no leading zeros, `A1`) and normalized</span>
+<span class="sd">(e.g. with leading zeros, `A01`) forms are returned for mapping.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+
+<div class="viewcode-block" id="well_mapping"><a class="viewcode-back" href="../../api/rushd.html#rushd.well_mapper.well_mapping">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">well_mapping</span><span class="p">(</span>
+    <span class="n">plate_spec</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]],</span>
+    <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a well mapping given a plate specification.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    plate_spec: dict or iterable</span>
+<span class="sd">        Either a single dictionary containing well specifications,</span>
+<span class="sd">        or an iterable (list, tuple, etc) that returns dictionaries</span>
+<span class="sd">        or well specifications as items.</span>
+<span class="sd">    separator: str</span>
+<span class="sd">        The separator to use for overlapping plate specifications</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    A dictionary that maps wells to conditions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Save plate_spec into a list of a single dictionary if it isn&#39;t already</span>
+    <span class="c1"># an iterable of dictionaries</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">plate_spec</span><span class="p">,</span> <span class="n">Dict</span><span class="p">):</span>
+        <span class="n">plate_spec</span> <span class="o">=</span> <span class="p">[</span><span class="n">plate_spec</span><span class="p">]</span>
+
+    <span class="c1"># Char To Int mapping and Int To Char mapping</span>
+    <span class="n">cti_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="s2">&quot;ABCDEFGHIJKLMNOP&quot;</span><span class="p">))}</span>
+    <span class="n">itc_mapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="s2">&quot;ABCDEFGHIJKLMNOP&quot;</span><span class="p">)))</span>  <span class="c1"># pylint: disable=unnecessary-comprehension</span>
+
+    <span class="n">output_mapping</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">mapping_dict</span> <span class="ow">in</span> <span class="n">plate_spec</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">mapping_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Empty mapping spec is not allowed!&quot;</span><span class="p">)</span>
+            <span class="c1"># Remove all whitespace</span>
+            <span class="c1"># Allow trailing commas</span>
+            <span class="n">tokenized</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">val</span><span class="o">.</span><span class="n">split</span><span class="p">())</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+
+            <span class="n">wells</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokenized</span><span class="p">:</span>
+                <span class="n">single_result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^([A-P]\d+)$&quot;</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
+                <span class="n">dual_result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^([A-P]\d+)-([A-P]\d+)$&quot;</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">single_result</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">dual_result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid mapping spec: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">, problem spec: </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">single_result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># Add a single well to the well mapping. Add both the normalized and</span>
+                    <span class="c1"># non-normalized versions</span>
+                    <span class="n">wells</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">single_result</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}{</span><span class="nb">int</span><span class="p">(</span><span class="n">single_result</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">:])</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">wells</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">single_result</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}{</span><span class="nb">int</span><span class="p">(</span><span class="n">single_result</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">:])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">dual_result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># Iterate over all wells</span>
+                    <span class="n">corners</span> <span class="o">=</span> <span class="p">[</span>
+                        <span class="p">(</span>
+                            <span class="n">cti_mapping</span><span class="p">[</span><span class="n">dual_result</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">i</span><span class="p">)[</span><span class="mi">0</span><span class="p">]],</span>
+                            <span class="nb">int</span><span class="p">(</span><span class="n">dual_result</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">i</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]),</span>
+                        <span class="p">)</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+                    <span class="p">]</span>
+                    <span class="k">for</span> <span class="n">well</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span>
+                        <span class="nb">range</span><span class="p">(</span>
+                            <span class="nb">min</span><span class="p">(</span><span class="n">corners</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">corners</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span>
+                            <span class="nb">max</span><span class="p">(</span><span class="n">corners</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">corners</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                        <span class="p">),</span>
+                        <span class="nb">range</span><span class="p">(</span>
+                            <span class="nb">min</span><span class="p">(</span><span class="n">corners</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">corners</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]),</span>
+                            <span class="nb">max</span><span class="p">(</span><span class="n">corners</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">corners</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                        <span class="p">),</span>
+                    <span class="p">):</span>
+                        <span class="c1"># Add the non-normalized and normalized (leading zeros)</span>
+                        <span class="c1"># versions. Adding an existing entry is a no-op, so no</span>
+                        <span class="c1"># harm done.</span>
+                        <span class="n">wells</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">itc_mapping</span><span class="p">[</span><span class="n">well</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="si">}{</span><span class="n">well</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="n">wells</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">itc_mapping</span><span class="p">[</span><span class="n">well</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="si">}{</span><span class="n">well</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">parsed_well</span> <span class="ow">in</span> <span class="n">wells</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">parsed_well</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output_mapping</span><span class="p">:</span>
+                    <span class="n">output_mapping</span><span class="p">[</span><span class="n">parsed_well</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">output_mapping</span><span class="p">[</span><span class="n">parsed_well</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="nb">str</span><span class="p">(</span><span class="n">output_mapping</span><span class="p">[</span><span class="n">parsed_well</span><span class="p">])</span> <span class="o">+</span> <span class="n">separator</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_mapping</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Christopher Johnstone, Kasey Love, Conrad Oakes.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Downloads and versions</span>
+      v: future_features
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      
+      
+      <dl>
+        <dt>Versions</dt>
+        
+           <strong> 
+          <dd><a href="/rushd/en/future_features/">future_features</a></dd>
+           </strong> 
+        
+          
+          <dd><a href="/rushd/en/main/">main</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.4.0/">v0.4.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.5.0/">v0.5.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.5.1/">v0.5.1</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.6.0/">v0.6.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.6.1/">v0.6.1</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.7.0/">v0.7.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en//"></a></dd>
+          
+        
+      </dl>
+      
+      
+      
+      <hr/>
+      Hosted with <span class="fa fa-heart"></span> on GitHub Pages.
+
+    </div>
+  </div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

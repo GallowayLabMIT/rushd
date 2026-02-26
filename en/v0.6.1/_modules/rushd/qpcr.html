@@ -1,0 +1,483 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rushd.qpcr &mdash; rushd 0.5.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=3fadbb4a"></script>
+      <script src="../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2c6854" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            rushd
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/index.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/overview/index.html">Overview of <code class="docutils literal notranslate"><span class="pre">rushd</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorial/overview/plot_well_metadata.html">Visualizing YAML well metadata</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../tutorial/overview/plot_well_metadata.html#automatic-plotting-of-well-metadata">Automatic plotting of well metadata</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tutorial/overview/plot_well_metadata.html#modifying-output-color-mapping">Modifying output color mapping</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tutorial/overview/plot_well_metadata.html#plotting-non-96-wells">Plotting non-96 wells</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/flow/index.html">Flow cytometry</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/qpcr/index.html">qPCR</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/ddpcr/index.html">Droplet digital PCR (ddPCR)</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/plot/index.html">Plotting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorial/plot/generate_xticklabels.html">Generating table-like x-axis tick labels</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/rushd.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.ddpcr">rushd.ddpcr module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.DataPathError"><code class="docutils literal notranslate"><span class="pre">DataPathError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.YamlError"><code class="docutils literal notranslate"><span class="pre">YamlError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.load_ddpcr"><code class="docutils literal notranslate"><span class="pre">load_ddpcr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.load_ddpcr_metadata"><code class="docutils literal notranslate"><span class="pre">load_ddpcr_metadata()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.flow">rushd.flow module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.ColumnError"><code class="docutils literal notranslate"><span class="pre">ColumnError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.DataPathError"><code class="docutils literal notranslate"><span class="pre">DataPathError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.GroupsError"><code class="docutils literal notranslate"><span class="pre">GroupsError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.MOIinputError"><code class="docutils literal notranslate"><span class="pre">MOIinputError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.MetadataWarning"><code class="docutils literal notranslate"><span class="pre">MetadataWarning</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.RegexError"><code class="docutils literal notranslate"><span class="pre">RegexError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.YamlError"><code class="docutils literal notranslate"><span class="pre">YamlError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_csv"><code class="docutils literal notranslate"><span class="pre">load_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_csv_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_csv_with_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_groups_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_groups_with_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_well_metadata"><code class="docutils literal notranslate"><span class="pre">load_well_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.moi"><code class="docutils literal notranslate"><span class="pre">moi()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.io">rushd.io module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rationale">Rationale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.NoDatadirError"><code class="docutils literal notranslate"><span class="pre">NoDatadirError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.cache_dataframe"><code class="docutils literal notranslate"><span class="pre">cache_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.git_version"><code class="docutils literal notranslate"><span class="pre">git_version()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.infile"><code class="docutils literal notranslate"><span class="pre">infile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.outfile"><code class="docutils literal notranslate"><span class="pre">outfile()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.plot">rushd.plot module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.adjust_subplot_margins_inches"><code class="docutils literal notranslate"><span class="pre">adjust_subplot_margins_inches()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.debug_axes"><code class="docutils literal notranslate"><span class="pre">debug_axes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.generate_xticklabels"><code class="docutils literal notranslate"><span class="pre">generate_xticklabels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.plot_mapping"><code class="docutils literal notranslate"><span class="pre">plot_mapping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.plot_well_metadata"><code class="docutils literal notranslate"><span class="pre">plot_well_metadata()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.qpcr">rushd.qpcr module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.ColumnError"><code class="docutils literal notranslate"><span class="pre">ColumnError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.DataPathError"><code class="docutils literal notranslate"><span class="pre">DataPathError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.GroupsError"><code class="docutils literal notranslate"><span class="pre">GroupsError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.InputError"><code class="docutils literal notranslate"><span class="pre">InputError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.RegexError"><code class="docutils literal notranslate"><span class="pre">RegexError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.YamlError"><code class="docutils literal notranslate"><span class="pre">YamlError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.load_plates_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_plates_with_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.load_single_csv_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_single_csv_with_metadata()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.well_mapper">rushd.well_mapper module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#id1">Rationale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#specification">Specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.well_mapper.well_mapping"><code class="docutils literal notranslate"><span class="pre">well_mapping()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.infile"><code class="docutils literal notranslate"><span class="pre">infile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.outfile"><code class="docutils literal notranslate"><span class="pre">outfile()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2c6854" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">rushd</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">rushd.qpcr</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rushd.qpcr</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Common functions for analyzing qPCR data in Pandas Dataframes.</span>
+
+<span class="sd">Allows users to specify custom metadata applied via well mapping.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">flow</span>
+
+
+<div class="viewcode-block" id="YamlError"><a class="viewcode-back" href="../../api/rushd.html#rushd.qpcr.YamlError">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">YamlError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when there is an issue with the provided .yaml file.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="ColumnError"><a class="viewcode-back" href="../../api/rushd.html#rushd.qpcr.ColumnError">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ColumnError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when the data is missing a required column.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="DataPathError"><a class="viewcode-back" href="../../api/rushd.html#rushd.qpcr.DataPathError">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">DataPathError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when the path to the data is not specified correctly.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="GroupsError"><a class="viewcode-back" href="../../api/rushd.html#rushd.qpcr.GroupsError">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">GroupsError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when there is an issue with the data groups DataFrame.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="RegexError"><a class="viewcode-back" href="../../api/rushd.html#rushd.qpcr.RegexError">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">RegexError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when there is an issue with the file name regular expression.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="InputError"><a class="viewcode-back" href="../../api/rushd.html#rushd.qpcr.InputError">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">InputError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when there is an issue with an argument type.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="load_single_csv_with_metadata"><a class="viewcode-back" href="../../api/rushd.html#rushd.qpcr.load_single_csv_with_metadata">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_single_csv_with_metadata</span><span class="p">(</span>
+    <span class="n">data_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
+    <span class="n">yaml_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">well_column</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;well&quot;</span><span class="p">,</span>
+    <span class="n">columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">csv_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">is_default</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load .csv data into DataFrame with associated metadata.</span>
+
+<span class="sd">    Generates a pandas DataFrame from a single .csv file located at the given path,</span>
+<span class="sd">    adding columns for metadata encoded by a given .yaml file. Metadata is associated</span>
+<span class="sd">    with the data based on well IDs encoded in one of the data columns.</span>
+
+<span class="sd">    Note that this uses pandas ``read_csv``, so it is compatible with .tsv and .txt files</span>
+<span class="sd">    with the appropriate kwargs.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data_path: str or Path</span>
+<span class="sd">        Path to directory containing data files (.csv or similar)</span>
+<span class="sd">    yaml_path: str or Path</span>
+<span class="sd">        Path to .yaml file to use for associating metadata with well IDs.</span>
+<span class="sd">        All metadata must be contained under the header &#39;metadata&#39;.</span>
+<span class="sd">    well_column: str, default &#39;well&#39;</span>
+<span class="sd">        Name of the column containing well IDs.</span>
+<span class="sd">    columns: List of strings (optional)</span>
+<span class="sd">        If specified, only these columns are loaded out of the .csv files.</span>
+<span class="sd">        This can drastically reduce the amount of memory required to load</span>
+<span class="sd">        flow data.</span>
+<span class="sd">    csv_kwargs: dict (optional)</span>
+<span class="sd">        Additional kwargs to pass to pandas ``read_csv``. For instance, to skip rows or</span>
+<span class="sd">        to specify alternate delimiters.</span>
+<span class="sd">    is_default: bool, default ``False``</span>
+<span class="sd">        If ``True``, will override `well_column`, `columns`, and `csv_kwargs` with</span>
+<span class="sd">        defaults for plates with the format exported from Roche LightCycler 480II.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    DataFrame</span>
+<span class="sd">        A single pandas DataFrame containing all data with associated metadata.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
+        <span class="n">data_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">data_path</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">metadata_map</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">load_well_metadata</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">YamlError</span><span class="p">(</span><span class="s2">&quot;Specified metadata YAML file does not exist!&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span>
+
+    <span class="c1"># Check that a single file (not a directory) has been passed</span>
+    <span class="k">if</span> <span class="n">data_path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="n">DataPathError</span><span class="p">(</span>
+            <span class="s2">&quot;&#39;data_path&#39; must be a single file. To load multiple files, use&quot;</span>
+            <span class="s2">&quot;&#39;load_csv_with_metadata&#39;&quot;</span>
+        <span class="p">)</span>
+    <span class="n">file</span> <span class="o">=</span> <span class="n">data_path</span>
+
+    <span class="k">if</span> <span class="n">csv_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">csv_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># Overwrite args with those relevant for</span>
+    <span class="k">if</span> <span class="n">is_default</span><span class="p">:</span>
+        <span class="n">well_column</span> <span class="o">=</span> <span class="s2">&quot;Pos&quot;</span>
+        <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Cp&quot;</span><span class="p">]</span>
+        <span class="n">csv_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;delimiter&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;header&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+
+    <span class="c1"># Load the first row so we get the column names</span>
+    <span class="n">df_onerow</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">csv_kwargs</span><span class="p">)</span>
+    <span class="c1"># Load data: we allow extra columns in our column list, so subset it</span>
+    <span class="n">valid_cols</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">columns</span> <span class="o">+</span> <span class="p">[</span><span class="n">well_column</span><span class="p">])</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df_onerow</span><span class="o">.</span><span class="n">columns</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="n">columns</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">else</span> <span class="kc">None</span>
+    <span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">valid_cols</span><span class="p">,</span> <span class="o">**</span><span class="n">csv_kwargs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">well_column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="p">(</span><span class="n">ColumnError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The file at &#39;data_path&#39; does not contain the column &#39;</span><span class="si">{</span><span class="n">well_column</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">))</span>
+
+    <span class="c1"># Add metadata to DataFrame</span>
+    <span class="n">metadata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">metadata_map</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="s2">&quot;well&quot;</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="n">well_column</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;well&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+        <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">NA</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="load_plates_with_metadata"><a class="viewcode-back" href="../../api/rushd.html#rushd.qpcr.load_plates_with_metadata">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_plates_with_metadata</span><span class="p">(</span>
+    <span class="n">input_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">base_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">filename_regex</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">well_column</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;well&quot;</span><span class="p">,</span>
+    <span class="n">columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">csv_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">is_default</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load data from multiple plates into a DataFrame with associated metadata.</span>
+
+<span class="sd">    Each plate is a .csv file with well IDs encoded in one of the data columns.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_df: Pandas DataFrame</span>
+<span class="sd">        Each row of the DataFrame is evaluated as a separate plate. Columns must</span>
+<span class="sd">        include &#39;data_path&#39; and &#39;yaml_path&#39;, specifying absolute or relative paths</span>
+<span class="sd">        to the .csv files and metadata .yaml files, respectively.</span>
+<span class="sd">        Optionally, regular expressions for the file names can be specified for each</span>
+<span class="sd">        file using the column &#39;filename_regex&#39; (this will override the</span>
+<span class="sd">        `filename_regex` argument).</span>
+<span class="sd">    base_path: str or Path (optional)</span>
+<span class="sd">        If specified, path that the data and yaml paths in `input_df` are defined relative to.</span>
+<span class="sd">    filename_regex: str or raw str (optional)</span>
+<span class="sd">        Regular expression to use to extract metadata from data filenames.</span>
+<span class="sd">        This value applies to all groups; to specify different regexes for each group,</span>
+<span class="sd">        add the column &#39;filename_regex&#39; to `input_df` (this will override the</span>
+<span class="sd">        `filename_regex` argument).</span>
+<span class="sd">        If not included, filename information will not be added as metadata.</span>
+<span class="sd">    well_column: str, default &#39;well&#39;</span>
+<span class="sd">        Name of the column containing well IDs.</span>
+<span class="sd">    columns: List of strings (optional)</span>
+<span class="sd">        If specified, only these columns are loaded out of the .csv files.</span>
+<span class="sd">        This can drastically reduce the amount of memory required to load</span>
+<span class="sd">        flow data.</span>
+<span class="sd">    csv_kwargs: dict (optional)</span>
+<span class="sd">        Additional kwargs to pass to pandas ``read_csv``. For instance, to skip rows or</span>
+<span class="sd">        to specify alternate delimiters.</span>
+<span class="sd">    is_default: bool, default ``False``</span>
+<span class="sd">        If ``True``, will override `well_column`, `columns`, and `csv_kwargs` with</span>
+<span class="sd">        defaults for plates with the format exported from Roche LightCycler 480II.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    DataFrame</span>
+<span class="sd">        A single pandas DataFrame containing data from all plates with associated metadata.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;data_path&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">input_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">GroupsError</span><span class="p">(</span><span class="s2">&quot;&#39;input_df&#39; must contain column &#39;data_path&#39;&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;yaml_path&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">input_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">GroupsError</span><span class="p">(</span><span class="s2">&quot;&#39;input_df&#39; must contain column &#39;yaml_path&#39;&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">base_path</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
+        <span class="n">base_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">base_path</span><span class="p">:</span>
+        <span class="n">base_path</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="n">group_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">input_df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="c1"># Load data in group</span>
+        <span class="n">data_path</span> <span class="o">=</span> <span class="n">base_path</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;data_path&quot;</span><span class="p">])</span>
+        <span class="n">yaml_path</span> <span class="o">=</span> <span class="n">base_path</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;yaml_path&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s2">&quot;filename_regex&quot;</span> <span class="ow">in</span> <span class="n">input_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">filename_regex</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="s2">&quot;filename_regex&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">filename_regex</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">filename_regex</span><span class="p">)</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">data_path</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">RegexError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Filename does not match the regular expression &#39;</span><span class="si">{</span><span class="n">filename_regex</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                <span class="p">)</span>
+
+        <span class="n">group_data</span> <span class="o">=</span> <span class="n">load_single_csv_with_metadata</span><span class="p">(</span>
+            <span class="n">data_path</span><span class="p">,</span>
+            <span class="n">yaml_path</span><span class="p">,</span>
+            <span class="n">well_column</span><span class="o">=</span><span class="n">well_column</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span>
+            <span class="n">csv_kwargs</span><span class="o">=</span><span class="n">csv_kwargs</span><span class="p">,</span>
+            <span class="n">is_default</span><span class="o">=</span><span class="n">is_default</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Add associated metadata (not paths)</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">k</span> <span class="o">==</span> <span class="s2">&quot;data_path&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">k</span> <span class="o">==</span> <span class="s2">&quot;yaml_path&quot;</span><span class="p">):</span>
+                <span class="n">group_data</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+                <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">filename_regex</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">regex</span><span class="o">.</span><span class="n">groupindex</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">group_data</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+                <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">group_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group_data</span><span class="p">)</span>
+
+    <span class="c1"># Concatenate all the data into a single DataFrame</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">group_list</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">NA</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Christopher Johnstone, Kasey Love, Conrad Oakes.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Downloads and versions</span>
+      v: v0.6.1
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      
+      
+      <dl>
+        <dt>Versions</dt>
+        
+          
+          <dd><a href="/rushd/en/future_features/">future_features</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/main/">main</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.4.0/">v0.4.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.5.0/">v0.5.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.5.1/">v0.5.1</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.6.0/">v0.6.0</a></dd>
+          
+        
+           <strong> 
+          <dd><a href="/rushd/en/v0.6.1/">v0.6.1</a></dd>
+           </strong> 
+        
+          
+          <dd><a href="/rushd/en/v0.7.0/">v0.7.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en//"></a></dd>
+          
+        
+      </dl>
+      
+      
+      
+      <hr/>
+      Hosted with <span class="fa fa-heart"></span> on GitHub Pages.
+
+    </div>
+  </div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

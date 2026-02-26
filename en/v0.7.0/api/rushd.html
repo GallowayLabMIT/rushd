@@ -1,0 +1,1073 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rushd package &mdash; rushd 0.5.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=3fadbb4a"></script>
+      <script src="../_static/doctools.js?v=888ff710"></script>
+      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Generating table-like x-axis tick labels" href="../tutorial/plot/generate_xticklabels.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2c6854" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            rushd
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/overview/index.html">Overview of <code class="docutils literal notranslate"><span class="pre">rushd</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/overview/plot_well_metadata.html">Visualizing YAML well metadata</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../tutorial/overview/plot_well_metadata.html#automatic-plotting-of-well-metadata">Automatic plotting of well metadata</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../tutorial/overview/plot_well_metadata.html#modifying-output-color-mapping">Modifying output color mapping</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../tutorial/overview/plot_well_metadata.html#plotting-non-96-wells">Plotting non-96 wells</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/flow/index.html">Flow cytometry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/flow/loading_data.html">Loading flow data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../tutorial/flow/loading_data.html#metadata-in-yaml">Metadata in YAML</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../tutorial/flow/loading_data.html#metadata-in-filenames">Metadata in filenames</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/qpcr/index.html">qPCR</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/ddpcr/index.html">Droplet digital PCR (ddPCR)</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/plot/index.html">Plotting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/plot/generate_xticklabels.html">Generating table-like x-axis tick labels</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-rushd.ddpcr">rushd.ddpcr module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.ddpcr.DataPathError"><code class="docutils literal notranslate"><span class="pre">DataPathError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.ddpcr.YamlError"><code class="docutils literal notranslate"><span class="pre">YamlError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.ddpcr.load_ddpcr"><code class="docutils literal notranslate"><span class="pre">load_ddpcr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.ddpcr.load_ddpcr_metadata"><code class="docutils literal notranslate"><span class="pre">load_ddpcr_metadata()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-rushd.flow">rushd.flow module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.flow.ColumnError"><code class="docutils literal notranslate"><span class="pre">ColumnError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.flow.DataPathError"><code class="docutils literal notranslate"><span class="pre">DataPathError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.flow.GroupsError"><code class="docutils literal notranslate"><span class="pre">GroupsError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.flow.MOIinputError"><code class="docutils literal notranslate"><span class="pre">MOIinputError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.flow.MetadataWarning"><code class="docutils literal notranslate"><span class="pre">MetadataWarning</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.flow.RegexError"><code class="docutils literal notranslate"><span class="pre">RegexError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.flow.YamlError"><code class="docutils literal notranslate"><span class="pre">YamlError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.flow.load_csv"><code class="docutils literal notranslate"><span class="pre">load_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.flow.load_csv_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_csv_with_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.flow.load_groups_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_groups_with_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.flow.load_well_metadata"><code class="docutils literal notranslate"><span class="pre">load_well_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.flow.moi"><code class="docutils literal notranslate"><span class="pre">moi()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-rushd.io">rushd.io module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rationale">Rationale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.io.NoDatadirError"><code class="docutils literal notranslate"><span class="pre">NoDatadirError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.io.cache_dataframe"><code class="docutils literal notranslate"><span class="pre">cache_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.io.git_version"><code class="docutils literal notranslate"><span class="pre">git_version()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.io.infile"><code class="docutils literal notranslate"><span class="pre">infile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.io.outfile"><code class="docutils literal notranslate"><span class="pre">outfile()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-rushd.plot">rushd.plot module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.plot.adjust_subplot_margins_inches"><code class="docutils literal notranslate"><span class="pre">adjust_subplot_margins_inches()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.plot.debug_axes"><code class="docutils literal notranslate"><span class="pre">debug_axes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.plot.generate_xticklabels"><code class="docutils literal notranslate"><span class="pre">generate_xticklabels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.plot.plot_mapping"><code class="docutils literal notranslate"><span class="pre">plot_mapping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.plot.plot_well_metadata"><code class="docutils literal notranslate"><span class="pre">plot_well_metadata()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-rushd.qpcr">rushd.qpcr module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.qpcr.ColumnError"><code class="docutils literal notranslate"><span class="pre">ColumnError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.qpcr.DataPathError"><code class="docutils literal notranslate"><span class="pre">DataPathError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.qpcr.GroupsError"><code class="docutils literal notranslate"><span class="pre">GroupsError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.qpcr.InputError"><code class="docutils literal notranslate"><span class="pre">InputError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.qpcr.RegexError"><code class="docutils literal notranslate"><span class="pre">RegexError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.qpcr.YamlError"><code class="docutils literal notranslate"><span class="pre">YamlError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.qpcr.load_plates_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_plates_with_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.qpcr.load_single_csv_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_single_csv_with_metadata()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-rushd.well_mapper">rushd.well_mapper module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Rationale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#specification">Specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.well_mapper.well_mapping"><code class="docutils literal notranslate"><span class="pre">well_mapping()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-rushd">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.infile"><code class="docutils literal notranslate"><span class="pre">infile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rushd.outfile"><code class="docutils literal notranslate"><span class="pre">outfile()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2c6854" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">rushd</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">rushd package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/rushd.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rushd-package">
+<h1>rushd package<a class="headerlink" href="#rushd-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-rushd.ddpcr">
+<span id="rushd-ddpcr-module"></span><h2>rushd.ddpcr module<a class="headerlink" href="#module-rushd.ddpcr" title="Permalink to this heading"></a></h2>
+<p>Common functions for analyzing ddPCR data in Pandas Dataframes.</p>
+<p>Extracts data and metadata from .ddpcr files.
+Allows users to specify custom metadata applied via well mapping.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="rushd.ddpcr.DataPathError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rushd.ddpcr.</span></span><span class="sig-name descname"><span class="pre">DataPathError</span></span><a class="reference internal" href="../_modules/rushd/ddpcr.html#DataPathError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.ddpcr.DataPathError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+<p>Error raised when the path to the data is not specified correctly.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="rushd.ddpcr.YamlError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rushd.ddpcr.</span></span><span class="sig-name descname"><span class="pre">YamlError</span></span><a class="reference internal" href="../_modules/rushd/ddpcr.html#YamlError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.ddpcr.YamlError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+<p>Error raised when there is an issue with the provided .yaml file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rushd.ddpcr.load_ddpcr">
+<span class="sig-prename descclassname"><span class="pre">rushd.ddpcr.</span></span><span class="sig-name descname"><span class="pre">load_ddpcr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yaml_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extract_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rushd/ddpcr.html#load_ddpcr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.ddpcr.load_ddpcr" title="Permalink to this definition"></a></dt>
+<dd><p>Load ddPCR data into DataFrame with associated metadata.</p>
+<p>Generates a pandas DataFrame from a .ddpcr file, which is the
+file type for experiments on the BioRad QX100/QX200 machines.
+Adds columns for metadata encoded by a given .yaml file.
+Metadata is associated with the data based on well IDs extracted
+from the experiment data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_path</strong> (<em>str</em><em> or </em><em>Path</em>) – Path to .ddpcr file.</p></li>
+<li><p><strong>yaml_path</strong> (<em>str</em><em> or </em><em>Path</em><em> (</em><em>optional</em><em>)</em>) – Path to .yaml file to use for associating metadata with well IDs.
+All metadata must be contained under the header ‘metadata’.</p></li>
+<li><p><strong>extract_metadata</strong> (bool, default <code class="docutils literal notranslate"><span class="pre">True</span></code>) – Whether to extract metadata from the .ddpcr file. If <code class="docutils literal notranslate"><span class="pre">True</span></code>,
+adds a subset of the metadata associated with each well in the
+BioRad software, namely sample names (numbered ‘Sample description’ fields,
+returned as numbered ‘condition’ keys) and targets for each channel/dye
+(returned as ‘[channel]_target’ keys).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A single pandas DataFrame containing all data with associated metadata.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rushd.ddpcr.load_ddpcr_metadata">
+<span class="sig-prename descclassname"><span class="pre">rushd.ddpcr.</span></span><span class="sig-name descname"><span class="pre">load_ddpcr_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unzipped_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rushd/ddpcr.html#load_ddpcr_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.ddpcr.load_ddpcr_metadata" title="Permalink to this definition"></a></dt>
+<dd><p>Load well metadata from an unzipped .ddpcr file.</p>
+<p>Generates a metadata dict in the same format as the YAML well mapping,
+i.e., key -&gt; {well -&gt; value}. The columns are a subset of the
+metadata associated with each well in the BioRad software, namely
+sample names (numbered ‘Sample description’ fields, returned as
+numbered ‘sample_description’ keys) and targets for each channel/dye
+(returned as ‘[channel]_target’ keys).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>unzipped_path</strong> (<em>Path</em>) – Path to unzipped .ddpcr file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary that contains a well mapping for metadata extracted from
+the .ddpcr experiment.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rushd.flow">
+<span id="rushd-flow-module"></span><h2>rushd.flow module<a class="headerlink" href="#module-rushd.flow" title="Permalink to this heading"></a></h2>
+<p>Common functions for analyzing flow data in Pandas Dataframes.</p>
+<p>Allows users to specify custom metadata applied via well mapping.
+Combines user data from multiple .csv files into a single DataFrame.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="rushd.flow.ColumnError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rushd.flow.</span></span><span class="sig-name descname"><span class="pre">ColumnError</span></span><a class="reference internal" href="../_modules/rushd/flow.html#ColumnError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.flow.ColumnError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+<p>Error raised when the data is missing a column specifying well IDs.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="rushd.flow.DataPathError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rushd.flow.</span></span><span class="sig-name descname"><span class="pre">DataPathError</span></span><a class="reference internal" href="../_modules/rushd/flow.html#DataPathError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.flow.DataPathError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+<p>Error raised when the path to the data is not specified correctly.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="rushd.flow.GroupsError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rushd.flow.</span></span><span class="sig-name descname"><span class="pre">GroupsError</span></span><a class="reference internal" href="../_modules/rushd/flow.html#GroupsError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.flow.GroupsError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+<p>Error raised when there is an issue with the data groups DataFrame.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="rushd.flow.MOIinputError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rushd.flow.</span></span><span class="sig-name descname"><span class="pre">MOIinputError</span></span><a class="reference internal" href="../_modules/rushd/flow.html#MOIinputError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.flow.MOIinputError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+<p>Error raised when there is an issue with the provided dataframe.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="rushd.flow.MetadataWarning">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rushd.flow.</span></span><span class="sig-name descname"><span class="pre">MetadataWarning</span></span><a class="reference internal" href="../_modules/rushd/flow.html#MetadataWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.flow.MetadataWarning" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">UserWarning</span></code></p>
+<p>Warning raised when the passed metadata is possibly incorrect, but valid.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="rushd.flow.RegexError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rushd.flow.</span></span><span class="sig-name descname"><span class="pre">RegexError</span></span><a class="reference internal" href="../_modules/rushd/flow.html#RegexError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.flow.RegexError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+<p>Error raised when there is an issue with the file name regular expression.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="rushd.flow.YamlError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rushd.flow.</span></span><span class="sig-name descname"><span class="pre">YamlError</span></span><a class="reference internal" href="../_modules/rushd/flow.html#YamlError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.flow.YamlError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+<p>Error raised when there is an issue with the provided .yaml file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rushd.flow.load_csv">
+<span class="sig-prename descclassname"><span class="pre">rushd.flow.</span></span><span class="sig-name descname"><span class="pre">load_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename_regex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rushd/flow.html#load_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.flow.load_csv" title="Permalink to this definition"></a></dt>
+<dd><p>Load .csv data into DataFrame without additional metadata.</p>
+<p>Generates a pandas DataFrame from a set of .csv files located at the given path,
+adding columns for metadata encoded in the data filenames.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_path</strong> (<em>str</em><em> or </em><em>Path</em><em> or </em><em>a tuple with a str/Path to a zip file and a str folder inside</em>) – Path to directory containing data files (.csv)</p></li>
+<li><p><strong>filename_regex</strong> (<em>str</em><em> or </em><em>raw str</em><em> (</em><em>optional</em><em>)</em>) – Regular expression to use to extract metadata from data filenames.
+Any named capturing groups will be added as metadata.
+If not included, the filenames are assumed to follow this format (default
+export format from FlowJo): <code class="docutils literal notranslate"><span class="pre">export_[condition]_[population].csv</span></code></p></li>
+<li><p><strong>columns</strong> (<em>list</em><em> of </em><em>strings</em><em> (</em><em>optional</em><em>)</em>) – If specified, only these columns are loaded out of the .csv files.
+This can drastically reduce the amount of memory required to load
+flow data.</p></li>
+<li><p><strong>csv_kwargs</strong> (<em>dict</em><em> (</em><em>optional</em><em>)</em>) – Additional kwargs to pass to pandas <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>. For instance, to skip rows or
+to specify alternate delimiters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A single pandas DataFrame containing all data with associated filename metadata.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rushd.flow.load_csv_with_metadata">
+<span class="sig-prename descclassname"><span class="pre">rushd.flow.</span></span><span class="sig-name descname"><span class="pre">load_csv_with_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yaml_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename_regex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rushd/flow.html#load_csv_with_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.flow.load_csv_with_metadata" title="Permalink to this definition"></a></dt>
+<dd><p>Load .csv data into DataFrame with associated metadata.</p>
+<p>Generates a pandas DataFrame from a set of .csv files located at the given path,
+adding columns for metadata encoded by a given .yaml file. Metadata is associated
+with the data based on well IDs encoded in the data filenames.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_path</strong> (<em>location</em><em> of </em><em>the .csv files</em>) – Either a directory containing .csv files,
+a zip file containing .csv files,
+or a path within a zip file containing .csv files.</p></li>
+<li><p><strong>yaml_path</strong> (<em>either a path to a .yaml file</em><em> or </em><em>a path within a zip file to a .yaml</em>) – Path to .yaml file to use for associating metadata with well IDs.
+All metadata must be contained under the header ‘metadata’.</p></li>
+<li><p><strong>filename_regex</strong> (<em>str</em><em> or </em><em>raw str</em><em> (</em><em>optional</em><em>)</em>) – Regular expression to use to extract well IDs from data filenames.
+Must contain the capturing group ‘well’ for the sample well IDs.
+If not included, the filenames are assumed to follow this format (default
+export format from FlowJo): <code class="docutils literal notranslate"><span class="pre">export_[well]_[population].csv</span></code></p></li>
+<li><p><strong>columns</strong> (<em>list</em><em> of </em><em>strings</em><em> (</em><em>optional</em><em>)</em>) – If specified, only these columns are loaded out of the .csv files.
+This can drastically reduce the amount of memory required to load
+flow data.</p></li>
+<li><p><strong>csv_kwargs</strong> (<em>dict</em><em> (</em><em>optional</em><em>)</em>) – Additional kwargs to pass to pandas <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>. For instance, to skip rows or
+to specify alternate delimiters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A single pandas DataFrame containing all data with associated metadata.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rushd.flow.load_groups_with_metadata">
+<span class="sig-prename descclassname"><span class="pre">rushd.flow.</span></span><span class="sig-name descname"><span class="pre">load_groups_with_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">groups_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename_regex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rushd/flow.html#load_groups_with_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.flow.load_groups_with_metadata" title="Permalink to this definition"></a></dt>
+<dd><p>Load .csv data into DataFrame with associated metadata by group.</p>
+<p>Each group of .csv files may be located at a different path and be
+associated with additional user-defined metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>groups_df</strong> (<em>Pandas DataFrame</em>) – Each row of the DataFrame is evaluated as a separate group. Columns must
+include ‘data_path’ and ‘yaml_path’, specifying absolute or relative paths
+to the group of .csv files and metadata .yaml files, respectively.
+Optionally, regular expressions for the file names can be specified for each
+group using the column ‘filename_regex’ (this will override the
+<cite>filename_regex</cite> argument).</p></li>
+<li><p><strong>base_path</strong> (<em>str</em><em> or </em><em>Path</em><em> (</em><em>optional</em><em>)</em>) – If specified, path that data and yaml paths in input_df are defined relative to.</p></li>
+<li><p><strong>filename_regex</strong> (<em>str</em><em> or </em><em>raw str</em><em> (</em><em>optional</em><em>)</em>) – Regular expression to use to extract well IDs from data filenames.
+Must contain the capturing group <cite>well</cite> for the sample well IDs.
+Other capturing groups in the regex will be added as metadata.
+This value applies to all groups; to specify different regexes for each group,
+add the column ‘filename_regex’ to <cite>groups_df</cite> (this will override the
+<cite>filename_regex</cite> argument).
+If not included, the filenames are assumed to follow this format (default
+export format from FlowJo): <code class="docutils literal notranslate"><span class="pre">export_[well]_[population].csv</span></code></p></li>
+<li><p><strong>columns</strong> (<em>list</em><em> of </em><em>strings</em><em> (</em><em>optional</em><em>)</em>) – If specified, only these columns are loaded out of the .csv files.
+This can drastically reduce the amount of memory required to load
+flow data.</p></li>
+<li><p><strong>csv_kwargs</strong> (<em>dict</em><em> (</em><em>optional</em><em>)</em>) – Additional kwargs to pass to pandas <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>. For instance, to skip rows or
+to specify alternate delimiters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A single pandas DataFrame containing data from all groups with associated metadata.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rushd.flow.load_well_metadata">
+<span class="sig-prename descclassname"><span class="pre">rushd.flow.</span></span><span class="sig-name descname"><span class="pre">load_well_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">yaml_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rushd/flow.html#load_well_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.flow.load_well_metadata" title="Permalink to this definition"></a></dt>
+<dd><p>Load a YAML file and convert it into a well mapping.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>yaml_path</strong> (<em>str</em><em>, </em><em>Path</em><em>, or </em><em>a tuple</em><em> of </em><em>a str/Path zip file and a filename within</em>) – Path to the .yaml file to use for associating metadata with well IDs.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary that contains a well mapping for all metadata columns.
+Mapping is formatted as {key -&gt; {well -&gt; value}}.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rushd.flow.moi">
+<span class="sig-prename descclassname"><span class="pre">rushd.flow.</span></span><span class="sig-name descname"><span class="pre">moi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_column_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_cutoff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">summary_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'median'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rushd/flow.html#moi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.flow.moi" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate moi information from flowjo data with appropriate metadata.</p>
+<p>Generates a pandas DataFrame of virus titers from a pandas DataFrame of flowjo data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_frame</strong> (<em>pd.DataFrame</em>) – <dl class="simple">
+<dt>The pandas DataFrame to analyze. It must have the following columns:</dt><dd><ul>
+<li><p>condition: the conditions/types of virus being analyzed</p></li>
+<li><p>replicate: the replicate of the data (can have all data as the same replicate)</p></li>
+<li><p>starting_cell_count: the number of cells in the well at the time of infection</p></li>
+<li><p>scaling: the dilution factor of each row</p></li>
+<li><p>max_virus: the maximum virus added to that column
+scaling times max_virus should result in the volume of virus stock added to a well</p></li>
+</ul>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>color_column_name</strong> (<em>str</em>) – The name of the column on which to gate infection.</p></li>
+<li><p><strong>color_cutoff</strong> (<em>float</em>) – The level of fluoresence on which to gate infecction.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em><em> or </em><em>path</em><em> (</em><em>optional</em><em>)</em>) – The path to the output folder. If None, instead prints all plots to screen. Defaults to None</p></li>
+<li><p><strong>summary_method</strong> (<em>str</em><em> (</em><em>optional</em><em>)</em>) – Whether to return the calculated titer as the mean or median of the replicates.</p></li>
+<li><p><strong>scale_factor</strong> (<em>float</em><em> (</em><em>optional</em><em>)</em>) – Whether to scale down the Poisson fit by the given scale factor maximum.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A single pandas DataFrame containing the titer of each condition in TU per uL.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rushd.io">
+<span id="rushd-io-module"></span><h2>rushd.io module<a class="headerlink" href="#module-rushd.io" title="Permalink to this heading"></a></h2>
+<p>A submodule implementing common IO handling mechanisms.</p>
+<section id="rationale">
+<h3>Rationale<a class="headerlink" href="#rationale" title="Permalink to this heading"></a></h3>
+<p>File and folder management is a common problem when
+handling large datasets. You often want to separate
+out large data from your code. How do you keep track
+of where your data is, especially if moving between
+different computers/clusters?</p>
+<p><code class="docutils literal notranslate"><span class="pre">rushd.io</span></code> adds convenience functions to handle
+common cases, as well as writing metadata with
+your output files that identify input files.</p>
+</section>
+<dl class="py exception">
+<dt class="sig sig-object py" id="rushd.io.NoDatadirError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rushd.io.</span></span><span class="sig-name descname"><span class="pre">NoDatadirError</span></span><a class="reference internal" href="../_modules/rushd/io.html#NoDatadirError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.io.NoDatadirError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+<p>No datadir.txt file found.</p>
+<p>Error raised when rushd is unable to locate
+a datadir.txt path in the current file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rushd.io.cache_dataframe">
+<span class="sig-prename descclassname"><span class="pre">rushd.io.</span></span><span class="sig-name descname"><span class="pre">cache_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cache_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rushd/io.html#cache_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.io.cache_dataframe" title="Permalink to this definition"></a></dt>
+<dd><p>Wrap caching functionality around a dataframe-generating function.</p>
+<p class="rubric">Notes</p>
+<p>If you wrap a function that contains an <cite>invalidate</cite> keyword,
+this keyword will be removed when passed to your function!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cache_path</strong> (<em>str</em><em> or </em><em>Path</em>) – The path at which the dataframe cache should be saved</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A function that generates a dataframe with optional caching.
+An extra keyword argument, ‘invalidate’ is added that invalidates
+the cache if needed</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Callable[…, Callable[…, pd.DataFrame]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rushd.io.git_version">
+<span class="sig-prename descclassname"><span class="pre">rushd.io.</span></span><span class="sig-name descname"><span class="pre">git_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rushd/io.html#git_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.io.git_version" title="Permalink to this definition"></a></dt>
+<dd><p>Return the current version control state as a string.</p>
+<p>The state is a string {hash}, with {-dirty} appended
+if there are edits that have not been saved.
+Returns None if the current working directory is
+not contained within a git repository.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Current version control state as a string, or None if the current working directory is not
+contained within a git repository</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rushd.io.infile">
+<span class="sig-prename descclassname"><span class="pre">rushd.io.</span></span><span class="sig-name descname"><span class="pre">infile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">should_hash</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rushd/io.html#infile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.io.infile" title="Permalink to this definition"></a></dt>
+<dd><p>Wrap a filename, marking it as an input data file.</p>
+<p>Passthrough wrapper around a path that (optionally)
+hashes and adds the file to a internally tracked list.
+This list accumulates files that potentially went into
+creation of an output file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – The filename of the input file to open.</p></li>
+<li><p><strong>tag</strong> (<em>str</em><em> (</em><em>optional</em><em>)</em>) – A user-defined tag that organizes opened files.</p></li>
+<li><p><strong>should_hash</strong> (<em>bool</em>) – If the input file should be hashed. You may want to skip
+this if the file is extremely large.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Path object that represents the same file as <cite>filename</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rushd.io.outfile">
+<span class="sig-prename descclassname"><span class="pre">rushd.io.</span></span><span class="sig-name descname"><span class="pre">outfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rushd/io.html#outfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.io.outfile" title="Permalink to this definition"></a></dt>
+<dd><p>Wrap a filename, declaring it as a tracked output file.</p>
+<p>Passthrough method that write a YAML file defining
+which files went into creating a certain output file.</p>
+<p>Any needed subdirectories will be created if the outfile is relative
+to datadir or rootdir.</p>
+<p class="rubric">Example</p>
+<p>For output file <cite>out.txt</cite>, writes a YAML file <cite>out.txt.yaml</cite>
+that encodes the following type of metadata:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">:</span> <span class="n">tracked_outfile</span>
+<span class="n">name</span><span class="p">:</span> <span class="n">out</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">date</span><span class="p">:</span> <span class="mi">2022</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">31</span>
+<span class="n">git_version</span><span class="p">:</span> <span class="mi">13</span><span class="n">a81aa2a7b1035f6b59c2323b0a7c457eb1657e</span>
+<span class="n">dependencies</span><span class="p">:</span>
+<span class="o">-</span> <span class="n">file</span><span class="p">:</span> <span class="n">some_infile</span><span class="o">.</span><span class="n">csv</span>
+    <span class="n">path_type</span><span class="p">:</span> <span class="n">datadir_relative</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – An output filename to write data to.</p></li>
+<li><p><strong>tag</strong> (<em>str</em>) – A user-defined string that groups input and output files together.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Path object that represents the same file as <cite>filename</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rushd.plot">
+<span id="rushd-plot-module"></span><h2>rushd.plot module<a class="headerlink" href="#module-rushd.plot" title="Permalink to this heading"></a></h2>
+<p>Various helper plotting functions that make data analysis easier.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="rushd.plot.adjust_subplot_margins_inches">
+<span class="sig-prename descclassname"><span class="pre">rushd.plot.</span></span><span class="sig-name descname"><span class="pre">adjust_subplot_margins_inches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subfig</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rushd/plot.html#adjust_subplot_margins_inches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.plot.adjust_subplot_margins_inches" title="Permalink to this definition"></a></dt>
+<dd><p>Adjust subplot margins to specified margins in inches.</p>
+<p>This adjusts the extent of all subplot axes are
+placed the specified number of inches from the edges of the subfigure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fig</strong> (<em>matplotlib SubFigure</em>) – Subfigure to be adjusted</p></li>
+<li><p><strong>left</strong> (<em>float</em>) – Left margin, in inches</p></li>
+<li><p><strong>bottom</strong> (<em>float</em>) – Bottom margin, in inches</p></li>
+<li><p><strong>top</strong> (<em>float</em>) – Top margin, in inches</p></li>
+<li><p><strong>right</strong> (<em>float</em>) – Right margin, in inches</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None; modifies the subfigure in place.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rushd.plot.debug_axes">
+<span class="sig-prename descclassname"><span class="pre">rushd.plot.</span></span><span class="sig-name descname"><span class="pre">debug_axes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rushd/plot.html#debug_axes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.plot.debug_axes" title="Permalink to this definition"></a></dt>
+<dd><p>Add debug artists to a figure that shows subfigure axis alignment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fig</strong> (<em>matplotlib Figure</em>) – Figure that contains subfigures with axes to show debug info for.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None; modifies the figure in place.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rushd.plot.generate_xticklabels">
+<span class="sig-prename descclassname"><span class="pre">rushd.plot.</span></span><span class="sig-name descname"><span class="pre">generate_xticklabels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_cols</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align_ticklabels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'center'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align_annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'right'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linespacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rushd/plot.html#generate_xticklabels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.plot.generate_xticklabels" title="Permalink to this definition"></a></dt>
+<dd><p>Create table-like x-axis tick labels based on provided metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df_labels</strong> (<em>Pandas DataFrame</em>) – DataFrame of metadata related to original xticklabels. Columns are metadata values,
+including the x-axis value.</p></li>
+<li><p><strong>ax_col</strong> – Column of ‘df_labels’ that contains the original xticklabels. For seaborn plots, this
+should be equivalent to the column passed to the x variable.</p></li>
+<li><p><strong>label_cols</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></span>) – List of columns of ‘df_labels’ to use to replace the xticklabels.</p></li>
+<li><p><strong>ax</strong> (<em>Optional Matplotlib axes</em>) – Axes to edit, uses current axes if none specified.</p></li>
+<li><p><strong>align_ticklabels</strong> (<em>'left'</em><em>, </em><em>'center'</em><em>, or </em><em>'right'</em>) – Text alignment for multi-line xticklabels.</p></li>
+<li><p><strong>align_annotation</strong> (<em>'left'</em><em>, </em><em>'center'</em><em>, or </em><em>'right'</em>) – Text alignment for multi-line annotations comprising the columns of ‘df_labels’ used to
+replace the xticklabels. These appear to the bottom left of the plot, with the bounding
+box right-aligned with the right of the yticklabels and aligned vertically center with
+the vertical center of the xticklabels.</p></li>
+<li><p><strong>linespacing</strong> (<em>float</em>) – Spacing between rows of the new xticklabels, as a multiple of the font size. Keeps
+matplotlib default (1.2) if not specified.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None; modifies the axes in place.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rushd.plot.plot_mapping">
+<span class="sig-prename descclassname"><span class="pre">rushd.plot.</span></span><span class="sig-name descname"><span class="pre">plot_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plate_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rushd/plot.html#plot_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.plot.plot_mapping" title="Permalink to this definition"></a></dt>
+<dd><p>Plot a single well mapping as projected onto a 96 well plate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mapping</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – The mapping from well names to condition values to plot.</p></li>
+<li><p><strong>plate_size</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]</span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – The width and height of the plate, in number of wells.
+Defaults to a 96- or 384-well plate, depending on the size of the mapping.</p></li>
+<li><p><strong>fig</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code>]</span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – A matplotlib Figure to use to plot on. If not specified, a new figure is created.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>A <cite>matplotlib.figure.Figure</cite> object encoding the plot.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rushd.plot.plot_well_metadata">
+<span class="sig-prename descclassname"><span class="pre">rushd.plot.</span></span><span class="sig-name descname"><span class="pre">plot_well_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plate_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rushd/plot.html#plot_well_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.plot.plot_well_metadata" title="Permalink to this definition"></a></dt>
+<dd><p>Plot the specified metadata columns listed in a YAML file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<cite>str</cite> or <cite>pathlib.Path</cite>) – The path to the YAML file containing the mapping</p></li>
+<li><p><strong>output_dir</strong> (optional <cite>pathlib.Path</cite>) – If given, outputs plate maps as PNGs, PDFs, and SVGs into this folder.
+If not given, plots are <cite>plt.show</cite>’d interactively.</p></li>
+<li><p><strong>plate_size</strong> (optional <cite>Tuple[int,int]</cite>) – The width and height of the plate, in number of wells.
+Defaults to a 96- or 384-well plate.</p></li>
+<li><p><strong>columns</strong> (optional <cite>List[str]</cite>) – The list of columns to plot. If not specified, all metadata columns are plotted.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rushd.qpcr">
+<span id="rushd-qpcr-module"></span><h2>rushd.qpcr module<a class="headerlink" href="#module-rushd.qpcr" title="Permalink to this heading"></a></h2>
+<p>Common functions for analyzing qPCR data in Pandas Dataframes.</p>
+<p>Allows users to specify custom metadata applied via well mapping.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="rushd.qpcr.ColumnError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rushd.qpcr.</span></span><span class="sig-name descname"><span class="pre">ColumnError</span></span><a class="reference internal" href="../_modules/rushd/qpcr.html#ColumnError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.qpcr.ColumnError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+<p>Error raised when the data is missing a required column.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="rushd.qpcr.DataPathError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rushd.qpcr.</span></span><span class="sig-name descname"><span class="pre">DataPathError</span></span><a class="reference internal" href="../_modules/rushd/qpcr.html#DataPathError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.qpcr.DataPathError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+<p>Error raised when the path to the data is not specified correctly.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="rushd.qpcr.GroupsError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rushd.qpcr.</span></span><span class="sig-name descname"><span class="pre">GroupsError</span></span><a class="reference internal" href="../_modules/rushd/qpcr.html#GroupsError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.qpcr.GroupsError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+<p>Error raised when there is an issue with the data groups DataFrame.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="rushd.qpcr.InputError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rushd.qpcr.</span></span><span class="sig-name descname"><span class="pre">InputError</span></span><a class="reference internal" href="../_modules/rushd/qpcr.html#InputError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.qpcr.InputError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+<p>Error raised when there is an issue with an argument type.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="rushd.qpcr.RegexError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rushd.qpcr.</span></span><span class="sig-name descname"><span class="pre">RegexError</span></span><a class="reference internal" href="../_modules/rushd/qpcr.html#RegexError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.qpcr.RegexError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+<p>Error raised when there is an issue with the file name regular expression.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="rushd.qpcr.YamlError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rushd.qpcr.</span></span><span class="sig-name descname"><span class="pre">YamlError</span></span><a class="reference internal" href="../_modules/rushd/qpcr.html#YamlError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.qpcr.YamlError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+<p>Error raised when there is an issue with the provided .yaml file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rushd.qpcr.load_plates_with_metadata">
+<span class="sig-prename descclassname"><span class="pre">rushd.qpcr.</span></span><span class="sig-name descname"><span class="pre">load_plates_with_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename_regex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">well_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'well'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rushd/qpcr.html#load_plates_with_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.qpcr.load_plates_with_metadata" title="Permalink to this definition"></a></dt>
+<dd><p>Load data from multiple plates into a DataFrame with associated metadata.</p>
+<p>Each plate is a .csv file with well IDs encoded in one of the data columns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_df</strong> (<em>Pandas DataFrame</em>) – Each row of the DataFrame is evaluated as a separate plate. Columns must
+include ‘data_path’ and ‘yaml_path’, specifying absolute or relative paths
+to the .csv files and metadata .yaml files, respectively.
+Optionally, regular expressions for the file names can be specified for each
+file using the column ‘filename_regex’ (this will override the
+<cite>filename_regex</cite> argument).</p></li>
+<li><p><strong>base_path</strong> (<em>str</em><em> or </em><em>Path</em><em> (</em><em>optional</em><em>)</em>) – If specified, path that the data and yaml paths in <cite>input_df</cite> are defined relative to.</p></li>
+<li><p><strong>filename_regex</strong> (<em>str</em><em> or </em><em>raw str</em><em> (</em><em>optional</em><em>)</em>) – Regular expression to use to extract metadata from data filenames.
+This value applies to all groups; to specify different regexes for each group,
+add the column ‘filename_regex’ to <cite>input_df</cite> (this will override the
+<cite>filename_regex</cite> argument).
+If not included, filename information will not be added as metadata.</p></li>
+<li><p><strong>well_column</strong> (<em>str</em><em>, </em><em>default 'well'</em>) – Name of the column containing well IDs.</p></li>
+<li><p><strong>columns</strong> (<em>List</em><em> of </em><em>strings</em><em> (</em><em>optional</em><em>)</em>) – If specified, only these columns are loaded out of the .csv files.
+This can drastically reduce the amount of memory required to load
+flow data.</p></li>
+<li><p><strong>csv_kwargs</strong> (<em>dict</em><em> (</em><em>optional</em><em>)</em>) – Additional kwargs to pass to pandas <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>. For instance, to skip rows or
+to specify alternate delimiters.</p></li>
+<li><p><strong>is_default</strong> (bool, default <code class="docutils literal notranslate"><span class="pre">False</span></code>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, will override <cite>well_column</cite>, <cite>columns</cite>, and <cite>csv_kwargs</cite> with
+defaults for plates with the format exported from Roche LightCycler 480II.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A single pandas DataFrame containing data from all plates with associated metadata.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rushd.qpcr.load_single_csv_with_metadata">
+<span class="sig-prename descclassname"><span class="pre">rushd.qpcr.</span></span><span class="sig-name descname"><span class="pre">load_single_csv_with_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yaml_path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">well_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'well'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rushd/qpcr.html#load_single_csv_with_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.qpcr.load_single_csv_with_metadata" title="Permalink to this definition"></a></dt>
+<dd><p>Load .csv data into DataFrame with associated metadata.</p>
+<p>Generates a pandas DataFrame from a single .csv file located at the given path,
+adding columns for metadata encoded by a given .yaml file. Metadata is associated
+with the data based on well IDs encoded in one of the data columns.</p>
+<p>Note that this uses pandas <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>, so it is compatible with .tsv and .txt files
+with the appropriate kwargs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_path</strong> (<em>str</em><em> or </em><em>Path</em>) – Path to directory containing data files (.csv or similar)</p></li>
+<li><p><strong>yaml_path</strong> (<em>str</em><em> or </em><em>Path</em>) – Path to .yaml file to use for associating metadata with well IDs.
+All metadata must be contained under the header ‘metadata’.</p></li>
+<li><p><strong>well_column</strong> (<em>str</em><em>, </em><em>default 'well'</em>) – Name of the column containing well IDs.</p></li>
+<li><p><strong>columns</strong> (<em>List</em><em> of </em><em>strings</em><em> (</em><em>optional</em><em>)</em>) – If specified, only these columns are loaded out of the .csv files.
+This can drastically reduce the amount of memory required to load
+flow data.</p></li>
+<li><p><strong>csv_kwargs</strong> (<em>dict</em><em> (</em><em>optional</em><em>)</em>) – Additional kwargs to pass to pandas <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>. For instance, to skip rows or
+to specify alternate delimiters.</p></li>
+<li><p><strong>is_default</strong> (bool, default <code class="docutils literal notranslate"><span class="pre">False</span></code>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, will override <cite>well_column</cite>, <cite>columns</cite>, and <cite>csv_kwargs</cite> with
+defaults for plates with the format exported from Roche LightCycler 480II.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A single pandas DataFrame containing all data with associated metadata.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rushd.well_mapper">
+<span id="rushd-well-mapper-module"></span><h2>rushd.well_mapper module<a class="headerlink" href="#module-rushd.well_mapper" title="Permalink to this heading"></a></h2>
+<p>Converts user-specified plate specifications into well maps.</p>
+<section id="id1">
+<h3>Rationale<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<p>Helper module that parses plate specifications of the form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MEF</span><span class="o">-</span><span class="n">low</span><span class="p">:</span> <span class="n">A1</span><span class="o">-</span><span class="n">E1</span>
+<span class="n">MEF</span><span class="o">-</span><span class="n">bulk</span><span class="p">:</span> <span class="n">F1</span><span class="o">-</span><span class="n">H1</span><span class="p">,</span> <span class="n">A2</span><span class="o">-</span><span class="n">H2</span><span class="p">,</span> <span class="n">A3</span><span class="o">-</span><span class="n">B3</span>
+<span class="n">retroviral</span><span class="p">:</span> <span class="n">A1</span><span class="o">-</span><span class="n">H12</span>
+</pre></div>
+</div>
+<p>and returns a dictionary that lets you map from well number to a
+plate specification.</p>
+<p>This format allows for robust and concise description of plate maps.</p>
+</section>
+<section id="specification">
+<h3>Specification<a class="headerlink" href="#specification" title="Permalink to this heading"></a></h3>
+<p>While these plate maps can be concisely defined inside YAML or JSON
+files, this specification does not define an underlying format; it only
+deals with how to handle the specification.</p>
+<p>A <em>well specification</em> is a string containing a comma-separated list of
+<em>region specifiers</em>. A region specifier is one of two forms, a single
+well form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">A1</span>
+<span class="n">B05</span>
+</pre></div>
+</div>
+<p>or a rectangular region form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">A1</span><span class="o">-</span><span class="n">A12</span>
+<span class="n">B05</span><span class="o">-</span><span class="n">D8</span>
+<span class="n">B05</span> <span class="o">-</span> <span class="n">C02</span>
+</pre></div>
+</div>
+<p>As seen in these examples, the rectangular region form is distinguished
+by the presence of a hyphen between two single-well identifiers. Whitespace
+and leading zeros are allowed.</p>
+<p>A well specification is first <em>normalized</em> by the software, where all whitespace
+characters are removed. The resulting string is split by commas, and further parsed
+as one of the region specifiers.</p>
+<p>Within a single specifier, duplicate entries are <em>ignored</em>. That is, the following
+specifiers are all equivalent:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">A5</span><span class="o">-</span><span class="n">B7</span>
+<span class="n">A5</span><span class="p">,</span><span class="n">A6</span><span class="p">,</span><span class="n">A7</span><span class="p">,</span><span class="n">B5</span><span class="p">,</span><span class="n">B6</span><span class="p">,</span><span class="n">B7</span>
+<span class="n">A5</span><span class="o">-</span><span class="n">B7</span><span class="p">,</span><span class="n">B6</span>
+<span class="n">A5</span><span class="o">-</span><span class="n">B7</span><span class="p">,</span><span class="n">B5</span><span class="o">-</span><span class="n">B7</span>
+</pre></div>
+</div>
+<p>A <em>plate specification</em> is either a dictionary (if order is not important)
+or a sequence of dictionaries (if order is important). The difference between these
+in a YAML underlying format is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">test</span><span class="p">:</span> <span class="n">A5</span><span class="o">-</span><span class="n">A7</span>
+<span class="n">test2</span><span class="p">:</span> <span class="n">A5</span><span class="o">-</span><span class="n">A9</span>
+</pre></div>
+</div>
+<p>which yields <code class="docutils literal notranslate"><span class="pre">{'test':</span> <span class="pre">'A5-A7',</span> <span class="pre">'test2':</span> <span class="pre">'A5-A9'}</span></code>,</p>
+<p>and</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">test</span><span class="p">:</span> <span class="n">A5</span><span class="o">-</span><span class="n">A7</span>
+<span class="o">-</span> <span class="n">test2</span><span class="p">:</span> <span class="n">A5</span><span class="o">-</span><span class="n">A9</span>
+</pre></div>
+</div>
+<p>which yields <code class="docutils literal notranslate"><span class="pre">[{'test':</span> <span class="pre">'A5-A7'},</span> <span class="pre">{'test2':</span> <span class="pre">'A5-A9'}]</span></code>.</p>
+<p>This module reads either of these formats. It iterates over each of the well specifications,
+building up a dictionary that maps wells to conditions. If multiple well specifications overlap,
+then condition names are merged in the order in which they appear, separated by a separator
+(by default, a period). This allows very concise condition layouts, such as the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conditions</span><span class="p">:</span>
+    <span class="n">MEF</span><span class="p">:</span> <span class="n">A1</span><span class="o">-</span><span class="n">C12</span>
+    <span class="mi">293</span><span class="p">:</span> <span class="n">D1</span><span class="o">-</span><span class="n">F12</span>
+    <span class="n">untransformed</span><span class="p">:</span> <span class="n">A1</span><span class="o">-</span><span class="n">D3</span>
+    <span class="n">experimental</span><span class="p">:</span> <span class="n">A4</span><span class="o">-</span><span class="n">D12</span>
+</pre></div>
+</div>
+<p>will return a well map of the form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;A1&#39;</span><span class="p">:</span> <span class="s1">&#39;MEF.untransformed&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="s1">&#39;C10&#39;</span><span class="p">:</span> <span class="s1">&#39;293.experimental&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Both the non-normalized (no leading zeros, e.g., <code class="docutils literal notranslate"><span class="pre">A1</span></code>) and normalized
+(with leading zeros, e.g., <code class="docutils literal notranslate"><span class="pre">A01</span></code>) forms are returned for mapping.</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="rushd.well_mapper.well_mapping">
+<span class="sig-prename descclassname"><span class="pre">rushd.well_mapper.</span></span><span class="sig-name descname"><span class="pre">well_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plate_spec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rushd/well_mapper.html#well_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.well_mapper.well_mapping" title="Permalink to this definition"></a></dt>
+<dd><p>Generate a well mapping given a plate specification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>plate_spec</strong> (<em>dict</em><em> or </em><em>iterable</em>) – Either a single dictionary containing well specifications,
+or an iterable (list, tuple, etc) that returns dictionaries
+or well specifications as items.</p></li>
+<li><p><strong>separator</strong> (<em>str</em>) – The separator to use for overlapping plate specifications</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary that maps wells to conditions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rushd">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rushd" title="Permalink to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">rushd</span></code>: data management for humans.</p>
+<p>Collection of helper modules for maintaining
+robust, reproducible data management.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="rushd.infile">
+<span class="sig-prename descclassname"><span class="pre">rushd.</span></span><span class="sig-name descname"><span class="pre">infile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">should_hash</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rushd/io.html#infile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.infile" title="Permalink to this definition"></a></dt>
+<dd><p>Wrap a filename, marking it as an input data file.</p>
+<p>Passthrough wrapper around a path that (optionally)
+hashes and adds the file to a internally tracked list.
+This list accumulates files that potentially went into
+creation of an output file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – The filename of the input file to open.</p></li>
+<li><p><strong>tag</strong> (<em>str</em><em> (</em><em>optional</em><em>)</em>) – A user-defined tag that organizes opened files.</p></li>
+<li><p><strong>should_hash</strong> (<em>bool</em>) – If the input file should be hashed. You may want to skip
+this if the file is extremely large.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Path object that represents the same file as <cite>filename</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rushd.outfile">
+<span class="sig-prename descclassname"><span class="pre">rushd.</span></span><span class="sig-name descname"><span class="pre">outfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rushd/io.html#outfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rushd.outfile" title="Permalink to this definition"></a></dt>
+<dd><p>Wrap a filename, declaring it as a tracked output file.</p>
+<p>Passthrough method that write a YAML file defining
+which files went into creating a certain output file.</p>
+<p>Any needed subdirectories will be created if the outfile is relative
+to datadir or rootdir.</p>
+<p class="rubric">Example</p>
+<p>For output file <cite>out.txt</cite>, writes a YAML file <cite>out.txt.yaml</cite>
+that encodes the following type of metadata:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">:</span> <span class="n">tracked_outfile</span>
+<span class="n">name</span><span class="p">:</span> <span class="n">out</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">date</span><span class="p">:</span> <span class="mi">2022</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">31</span>
+<span class="n">git_version</span><span class="p">:</span> <span class="mi">13</span><span class="n">a81aa2a7b1035f6b59c2323b0a7c457eb1657e</span>
+<span class="n">dependencies</span><span class="p">:</span>
+<span class="o">-</span> <span class="n">file</span><span class="p">:</span> <span class="n">some_infile</span><span class="o">.</span><span class="n">csv</span>
+    <span class="n">path_type</span><span class="p">:</span> <span class="n">datadir_relative</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – An output filename to write data to.</p></li>
+<li><p><strong>tag</strong> (<em>str</em>) – A user-defined string that groups input and output files together.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Path object that represents the same file as <cite>filename</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Christopher Johnstone, Kasey Love, Conrad Oakes.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Downloads and versions</span>
+      v: v0.7.0
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      
+      
+      <dl>
+        <dt>Versions</dt>
+        
+          
+          <dd><a href="/rushd/en/future_features/">future_features</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/main/">main</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.4.0/">v0.4.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.5.0/">v0.5.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.5.1/">v0.5.1</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.6.0/">v0.6.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.6.1/">v0.6.1</a></dd>
+          
+        
+           <strong> 
+          <dd><a href="/rushd/en/v0.7.0/">v0.7.0</a></dd>
+           </strong> 
+        
+          
+          <dd><a href="/rushd/en//"></a></dd>
+          
+        
+      </dl>
+      
+      
+      
+      <hr/>
+      Hosted with <span class="fa fa-heart"></span> on GitHub Pages.
+
+    </div>
+  </div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

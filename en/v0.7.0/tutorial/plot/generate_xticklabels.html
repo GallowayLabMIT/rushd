@@ -1,0 +1,329 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generating table-like x-axis tick labels &mdash; rushd 0.5.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=3fadbb4a"></script>
+      <script src="../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="rushd package" href="../../api/rushd.html" />
+    <link rel="prev" title="Plotting" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2c6854" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            rushd
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview/index.html">Overview of <code class="docutils literal notranslate"><span class="pre">rushd</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../overview/plot_well_metadata.html">Visualizing YAML well metadata</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../overview/plot_well_metadata.html#automatic-plotting-of-well-metadata">Automatic plotting of well metadata</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../overview/plot_well_metadata.html#modifying-output-color-mapping">Modifying output color mapping</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../overview/plot_well_metadata.html#plotting-non-96-wells">Plotting non-96 wells</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../flow/index.html">Flow cytometry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../flow/loading_data.html">Loading flow data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../flow/loading_data.html#metadata-in-yaml">Metadata in YAML</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../flow/loading_data.html#metadata-in-filenames">Metadata in filenames</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../qpcr/index.html">qPCR</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../ddpcr/index.html">Droplet digital PCR (ddPCR)</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Plotting</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Generating table-like x-axis tick labels</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/rushd.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.ddpcr">rushd.ddpcr module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.DataPathError"><code class="docutils literal notranslate"><span class="pre">DataPathError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.YamlError"><code class="docutils literal notranslate"><span class="pre">YamlError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.load_ddpcr"><code class="docutils literal notranslate"><span class="pre">load_ddpcr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.load_ddpcr_metadata"><code class="docutils literal notranslate"><span class="pre">load_ddpcr_metadata()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.flow">rushd.flow module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.ColumnError"><code class="docutils literal notranslate"><span class="pre">ColumnError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.DataPathError"><code class="docutils literal notranslate"><span class="pre">DataPathError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.GroupsError"><code class="docutils literal notranslate"><span class="pre">GroupsError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.MOIinputError"><code class="docutils literal notranslate"><span class="pre">MOIinputError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.MetadataWarning"><code class="docutils literal notranslate"><span class="pre">MetadataWarning</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.RegexError"><code class="docutils literal notranslate"><span class="pre">RegexError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.YamlError"><code class="docutils literal notranslate"><span class="pre">YamlError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_csv"><code class="docutils literal notranslate"><span class="pre">load_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_csv_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_csv_with_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_groups_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_groups_with_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_well_metadata"><code class="docutils literal notranslate"><span class="pre">load_well_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.moi"><code class="docutils literal notranslate"><span class="pre">moi()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.io">rushd.io module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rationale">Rationale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.NoDatadirError"><code class="docutils literal notranslate"><span class="pre">NoDatadirError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.cache_dataframe"><code class="docutils literal notranslate"><span class="pre">cache_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.git_version"><code class="docutils literal notranslate"><span class="pre">git_version()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.infile"><code class="docutils literal notranslate"><span class="pre">infile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.outfile"><code class="docutils literal notranslate"><span class="pre">outfile()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.plot">rushd.plot module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.adjust_subplot_margins_inches"><code class="docutils literal notranslate"><span class="pre">adjust_subplot_margins_inches()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.debug_axes"><code class="docutils literal notranslate"><span class="pre">debug_axes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.generate_xticklabels"><code class="docutils literal notranslate"><span class="pre">generate_xticklabels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.plot_mapping"><code class="docutils literal notranslate"><span class="pre">plot_mapping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.plot_well_metadata"><code class="docutils literal notranslate"><span class="pre">plot_well_metadata()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.qpcr">rushd.qpcr module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.ColumnError"><code class="docutils literal notranslate"><span class="pre">ColumnError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.DataPathError"><code class="docutils literal notranslate"><span class="pre">DataPathError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.GroupsError"><code class="docutils literal notranslate"><span class="pre">GroupsError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.InputError"><code class="docutils literal notranslate"><span class="pre">InputError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.RegexError"><code class="docutils literal notranslate"><span class="pre">RegexError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.YamlError"><code class="docutils literal notranslate"><span class="pre">YamlError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.load_plates_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_plates_with_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.load_single_csv_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_single_csv_with_metadata()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.well_mapper">rushd.well_mapper module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#id1">Rationale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#specification">Specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.well_mapper.well_mapping"><code class="docutils literal notranslate"><span class="pre">well_mapping()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.infile"><code class="docutils literal notranslate"><span class="pre">infile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.outfile"><code class="docutils literal notranslate"><span class="pre">outfile()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2c6854" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">rushd</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Tutorials</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Plotting</a></li>
+      <li class="breadcrumb-item active">Generating table-like x-axis tick labels</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/tutorial/plot/generate_xticklabels.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="generating-table-like-x-axis-tick-labels">
+<h1>Generating table-like x-axis tick labels<a class="headerlink" href="#generating-table-like-x-axis-tick-labels" title="Permalink to this heading"></a></h1>
+<p>When plotting experimental data, it is common to generate categorical plots organized by condition.
+However, many times the full conditions are combinations of values for several different parameters.
+This can result in very long condition names that are difficult to read, and rotating the labels does
+not always help. Alternatively, conditions may be labeled with a short code (e.g., &quot;Condition 1&quot; or
+&quot;A+B&quot;). This is less intuitive to understand, as it requires cross-referencing with a legend.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="tutorial/_static/built_output/generate_xticklabels/bad-formatting-examples.svg"><img alt="tutorial/_static/built_output/generate_xticklabels/bad-formatting-examples.svg" src="tutorial/_static/built_output/generate_xticklabels/bad-formatting-examples.svg" width="80%" /></a>
+</figure>
+<p>A better solution would concisely communicate conditions based on its value of each relevant
+parameter (or metadata). A table-like format for the axis label is well-suited to achieve this.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="tutorial/_static/built_output/generate_xticklabels/desired-output.svg"><img alt="tutorial/_static/built_output/generate_xticklabels/desired-output.svg" src="tutorial/_static/built_output/generate_xticklabels/desired-output.svg" width="40%" /></a>
+</figure>
+<p>So, we’d like to convert default x-axis tick labels to custom ones, with each metadata value on a
+separate line. We’d also like to do this automatically to ensure that the new labels line up
+correctly with their corresponding condition, and to take advantage of any metadata already included
+in our data.</p>
+<p>We can use <code class="docutils literal notranslate"><span class="pre">generate_xticklabels</span></code> to do this:</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">rushd.plot.</span></span><span class="sig-name descname"><span class="pre">generate_xticklabels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_cols</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align_ticklabels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'center'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align_annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'right'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linespacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rushd/plot.html#generate_xticklabels"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Create table-like x-axis tick labels based on provided metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df_labels</strong> (<em>Pandas DataFrame</em>) – DataFrame of metadata related to original xticklabels. Columns are metadata values,
+including the x-axis value.</p></li>
+<li><p><strong>ax_col</strong> – Column of ‘df_labels’ that contains the original xticklabels. For seaborn plots, this
+should be equivalent to the column passed to the x variable.</p></li>
+<li><p><strong>label_cols</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></span>) – List of columns of ‘df_labels’ to use to replace the xticklabels.</p></li>
+<li><p><strong>ax</strong> (<em>Optional Matplotlib axes</em>) – Axes to edit, uses current axes if none specified.</p></li>
+<li><p><strong>align_ticklabels</strong> (<em>'left'</em><em>, </em><em>'center'</em><em>, or </em><em>'right'</em>) – Text alignment for multi-line xticklabels.</p></li>
+<li><p><strong>align_annotation</strong> (<em>'left'</em><em>, </em><em>'center'</em><em>, or </em><em>'right'</em>) – Text alignment for multi-line annotations comprising the columns of ‘df_labels’ used to
+replace the xticklabels. These appear to the bottom left of the plot, with the bounding
+box right-aligned with the right of the yticklabels and aligned vertically center with
+the vertical center of the xticklabels.</p></li>
+<li><p><strong>linespacing</strong> (<em>float</em>) – Spacing between rows of the new xticklabels, as a multiple of the font size. Keeps
+matplotlib default (1.2) if not specified.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None; modifies the axes in place.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>Consider an example with two cell lines and four conditions containing the presence or absence of
+each of two small molecules:</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="tutorial/_static/built_output/generate_xticklabels/main-example.svg"><img alt="tutorial/_static/built_output/generate_xticklabels/main-example.svg" src="tutorial/_static/built_output/generate_xticklabels/main-example.svg" width="60%" /></a>
+</figure>
+<p>You can also customize the text alignment using the <code class="docutils literal notranslate"><span class="pre">align_annotation</span></code> and <code class="docutils literal notranslate"><span class="pre">align_ticklabels</span></code> parameters:</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="tutorial/_static/built_output/generate_xticklabels/custom-alignment.svg"><img alt="tutorial/_static/built_output/generate_xticklabels/custom-alignment.svg" src="tutorial/_static/built_output/generate_xticklabels/custom-alignment.svg" width="60%" /></a>
+</figure>
+<p>Notice that this integrates with Seaborn plots:</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="tutorial/_static/built_output/generate_xticklabels/seaborn-usage.svg"><img alt="tutorial/_static/built_output/generate_xticklabels/seaborn-usage.svg" src="tutorial/_static/built_output/generate_xticklabels/seaborn-usage.svg" width="60%" /></a>
+</figure>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If creating multi-panel figures in Seaborn, either:</p>
+<ul class="simple">
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">sharex=True</span></code> and call <code class="docutils literal notranslate"><span class="pre">generate_xticklabels</span></code> on one set of axes</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">sharex=False</span></code> and call <code class="docutils literal notranslate"><span class="pre">generate_xticklabels</span></code> for each set of axes</p></li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Christopher Johnstone, Kasey Love, Conrad Oakes.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Downloads and versions</span>
+      v: v0.7.0
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      
+      
+      <dl>
+        <dt>Versions</dt>
+        
+          
+          <dd><a href="/rushd/en/future_features/">future_features</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/main/">main</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.4.0/">v0.4.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.5.0/">v0.5.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.5.1/">v0.5.1</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.6.0/">v0.6.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.6.1/">v0.6.1</a></dd>
+          
+        
+           <strong> 
+          <dd><a href="/rushd/en/v0.7.0/">v0.7.0</a></dd>
+           </strong> 
+        
+          
+          <dd><a href="/rushd/en//"></a></dd>
+          
+        
+      </dl>
+      
+      
+      
+      <hr/>
+      Hosted with <span class="fa fa-heart"></span> on GitHub Pages.
+
+    </div>
+  </div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

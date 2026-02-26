@@ -1,0 +1,613 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rushd.plot &mdash; rushd 0.5.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=3fadbb4a"></script>
+      <script src="../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2c6854" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            rushd
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/index.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/overview/index.html">Overview of <code class="docutils literal notranslate"><span class="pre">rushd</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorial/overview/plot_well_metadata.html">Visualizing YAML well metadata</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../tutorial/overview/plot_well_metadata.html#automatic-plotting-of-well-metadata">Automatic plotting of well metadata</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tutorial/overview/plot_well_metadata.html#modifying-output-color-mapping">Modifying output color mapping</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tutorial/overview/plot_well_metadata.html#plotting-non-96-wells">Plotting non-96 wells</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/flow/index.html">Flow cytometry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorial/flow/loading_data.html">Loading flow data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../tutorial/flow/loading_data.html#metadata-in-yaml">Metadata in YAML</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tutorial/flow/loading_data.html#metadata-in-filenames">Metadata in filenames</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/qpcr/index.html">qPCR</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/ddpcr/index.html">Droplet digital PCR (ddPCR)</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/plot/index.html">Plotting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorial/plot/generate_xticklabels.html">Generating table-like x-axis tick labels</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/rushd.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.ddpcr">rushd.ddpcr module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.DataPathError"><code class="docutils literal notranslate"><span class="pre">DataPathError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.YamlError"><code class="docutils literal notranslate"><span class="pre">YamlError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.load_ddpcr"><code class="docutils literal notranslate"><span class="pre">load_ddpcr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.load_ddpcr_metadata"><code class="docutils literal notranslate"><span class="pre">load_ddpcr_metadata()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.flow">rushd.flow module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.ColumnError"><code class="docutils literal notranslate"><span class="pre">ColumnError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.DataPathError"><code class="docutils literal notranslate"><span class="pre">DataPathError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.GroupsError"><code class="docutils literal notranslate"><span class="pre">GroupsError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.MOIinputError"><code class="docutils literal notranslate"><span class="pre">MOIinputError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.MetadataWarning"><code class="docutils literal notranslate"><span class="pre">MetadataWarning</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.RegexError"><code class="docutils literal notranslate"><span class="pre">RegexError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.YamlError"><code class="docutils literal notranslate"><span class="pre">YamlError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_csv"><code class="docutils literal notranslate"><span class="pre">load_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_csv_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_csv_with_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_groups_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_groups_with_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_well_metadata"><code class="docutils literal notranslate"><span class="pre">load_well_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.moi"><code class="docutils literal notranslate"><span class="pre">moi()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.io">rushd.io module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rationale">Rationale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.NoDatadirError"><code class="docutils literal notranslate"><span class="pre">NoDatadirError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.cache_dataframe"><code class="docutils literal notranslate"><span class="pre">cache_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.git_version"><code class="docutils literal notranslate"><span class="pre">git_version()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.infile"><code class="docutils literal notranslate"><span class="pre">infile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.outfile"><code class="docutils literal notranslate"><span class="pre">outfile()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.plot">rushd.plot module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.adjust_subplot_margins_inches"><code class="docutils literal notranslate"><span class="pre">adjust_subplot_margins_inches()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.debug_axes"><code class="docutils literal notranslate"><span class="pre">debug_axes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.generate_xticklabels"><code class="docutils literal notranslate"><span class="pre">generate_xticklabels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.plot_mapping"><code class="docutils literal notranslate"><span class="pre">plot_mapping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.plot_well_metadata"><code class="docutils literal notranslate"><span class="pre">plot_well_metadata()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.qpcr">rushd.qpcr module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.ColumnError"><code class="docutils literal notranslate"><span class="pre">ColumnError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.DataPathError"><code class="docutils literal notranslate"><span class="pre">DataPathError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.GroupsError"><code class="docutils literal notranslate"><span class="pre">GroupsError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.InputError"><code class="docutils literal notranslate"><span class="pre">InputError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.RegexError"><code class="docutils literal notranslate"><span class="pre">RegexError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.YamlError"><code class="docutils literal notranslate"><span class="pre">YamlError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.load_plates_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_plates_with_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.load_single_csv_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_single_csv_with_metadata()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.well_mapper">rushd.well_mapper module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#id1">Rationale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#specification">Specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.well_mapper.well_mapping"><code class="docutils literal notranslate"><span class="pre">well_mapping()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.infile"><code class="docutils literal notranslate"><span class="pre">infile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.outfile"><code class="docutils literal notranslate"><span class="pre">outfile()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2c6854" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">rushd</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">rushd.plot</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rushd.plot</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Various helper plotting functions that make data analysis easier.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.colors</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.figure</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.lines</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.patches</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">flow</span>
+
+<span class="n">WellMappingStyle</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">],</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;linear&quot;</span><span class="p">],</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;log&quot;</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span>
+
+
+<div class="viewcode-block" id="plot_mapping"><a class="viewcode-back" href="../../api/rushd.html#rushd.plot.plot_mapping">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">plot_mapping</span><span class="p">(</span>
+    <span class="n">mapping</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">plate_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fig</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">style</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">WellMappingStyle</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot a single well mapping as projected onto a 96 well plate.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mapping</span>
+<span class="sd">        The mapping from well names to condition values to plot.</span>
+<span class="sd">    plate_size</span>
+<span class="sd">        The width and height of the plate, in number of wells.</span>
+<span class="sd">        Defaults to a 96- or 384-well plate, depending on the size of the mapping.</span>
+<span class="sd">    fig</span>
+<span class="sd">        A matplotlib Figure to use to plot on. If not specified, a new figure is created.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    A `matplotlib.figure.Figure` object encoding the plot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">fig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
+
+    <span class="k">if</span> <span class="n">plate_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Check if we have any wells beyond H or beyond 12</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="s2">&quot;H&quot;</span> <span class="ow">or</span> <span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">&gt;</span> <span class="mi">12</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">plate_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plate_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+
+    <span class="c1"># Only use the two-digit mappings so they sort properly</span>
+    <span class="n">sorted_mapping_values</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">tup</span> <span class="k">for</span> <span class="n">tup</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tup</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">3</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">tup</span><span class="p">:</span> <span class="n">tup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">mapping_vals</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">sorted_mapping_values</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">sorted_mapping_values</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">style</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Autodetect mapping.</span>
+        <span class="c1"># If it is all numbers, then we find the median. If all numbers are non-negative</span>
+        <span class="c1"># and the median lies outside [.15, .85] percentile ranges, guess log scale.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mapping_vals</span><span class="p">):</span>
+            <span class="n">style</span> <span class="o">=</span> <span class="s2">&quot;category&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">min_val</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">mapping_vals</span><span class="p">)</span>
+            <span class="n">max_val</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">mapping_vals</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">min_val</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">max_val</span> <span class="o">==</span> <span class="n">min_val</span><span class="p">:</span>
+                <span class="n">style</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">median</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">mapping_vals</span><span class="p">)</span>
+                <span class="n">median_percentile</span> <span class="o">=</span> <span class="p">(</span><span class="n">median</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_val</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">median_percentile</span> <span class="o">&lt;</span> <span class="mf">0.15</span> <span class="ow">or</span> <span class="n">median_percentile</span> <span class="o">&gt;</span> <span class="mf">0.85</span><span class="p">:</span>
+                    <span class="n">style</span> <span class="o">=</span> <span class="s2">&quot;log&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">style</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span>
+    <span class="k">if</span> <span class="n">style</span> <span class="o">==</span> <span class="s2">&quot;category&quot;</span><span class="p">:</span>
+        <span class="n">base_cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s2">&quot;rainbow&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="n">mapping_colors</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">val</span><span class="p">:</span> <span class="n">base_cmap</span><span class="p">(</span><span class="n">idx</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">mapping_vals</span><span class="p">))</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mapping_vals</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="k">elif</span> <span class="n">style</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span><span class="p">:</span>
+        <span class="n">mapping_vals</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">mapping_vals</span><span class="p">)</span>
+        <span class="n">min_val</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">mapping_vals</span><span class="p">)</span>
+        <span class="n">max_val</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">mapping_vals</span><span class="p">)</span>
+        <span class="n">base_cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s2">&quot;viridis&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="n">mapping_colors</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">x</span><span class="p">:</span> <span class="n">base_cmap</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_val</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.85</span> <span class="k">if</span> <span class="n">min_val</span> <span class="o">!=</span> <span class="n">max_val</span> <span class="k">else</span> <span class="mf">0.0</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mapping_vals</span>
+        <span class="p">}</span>
+    <span class="k">elif</span> <span class="n">style</span> <span class="o">==</span> <span class="s2">&quot;log&quot;</span><span class="p">:</span>
+        <span class="n">mapping_vals</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">mapping_vals</span><span class="p">)</span>
+        <span class="n">min_nonzero_val</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mapping_vals</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">max_val</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">mapping_vals</span><span class="p">)</span>
+        <span class="n">base_cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s2">&quot;viridis&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="n">mapping_colors</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mapping_vals</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">mapping_colors</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;k&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mapping_colors</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">base_cmap</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">min_nonzero_val</span><span class="p">))</span>
+                    <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">max_val</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">min_nonzero_val</span><span class="p">))</span>
+                    <span class="o">*</span> <span class="mf">0.85</span>
+                <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mapping_colors</span> <span class="o">=</span> <span class="n">style</span>
+
+    <span class="n">row_str</span> <span class="o">=</span> <span class="s2">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;</span>
+    <span class="k">for</span> <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">plate_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">range</span><span class="p">(</span><span class="n">plate_size</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+        <span class="n">well</span> <span class="o">=</span> <span class="n">row_str</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">col</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="o">-</span><span class="n">row</span><span class="p">),</span>
+                <span class="mf">0.45</span><span class="p">,</span>
+                <span class="n">ec</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span>
+                <span class="n">fc</span><span class="o">=</span><span class="n">mapping_colors</span><span class="p">[</span><span class="n">mapping</span><span class="p">[</span><span class="n">well</span><span class="p">]]</span> <span class="k">if</span> <span class="n">well</span> <span class="ow">in</span> <span class="n">mapping</span> <span class="k">else</span> <span class="s2">&quot;#00000000&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="c1"># Create the legend</span>
+    <span class="n">legend_entries</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">0.45</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="n">color</span><span class="p">)</span> <span class="k">for</span> <span class="n">color</span> <span class="ow">in</span> <span class="n">mapping_colors</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+    <span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">legend_entries</span><span class="p">,</span> <span class="n">mapping_colors</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;center left&quot;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">,</span> <span class="n">adjustable</span><span class="o">=</span><span class="s2">&quot;box&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">+</span> <span class="n">plate_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mf">0.5</span> <span class="o">-</span> <span class="n">plate_size</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mf">0.5</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">plate_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">labels</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">plate_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">plate_size</span><span class="p">[</span><span class="mi">1</span><span class="p">])],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="n">row_str</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">plate_size</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+    <span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="plot_well_metadata"><a class="viewcode-back" href="../../tutorial/overview/plot_well_metadata.html#rushd.plot.plot_well_metadata">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">plot_well_metadata</span><span class="p">(</span>
+    <span class="n">filename</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">output_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">plate_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">style</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">WellMappingStyle</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot the specified metadata columns listed in a YAML file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename: `str` or `pathlib.Path`</span>
+<span class="sd">        The path to the YAML file containing the mapping</span>
+<span class="sd">    output_dir: optional `pathlib.Path`</span>
+<span class="sd">        If given, outputs plate maps as PNGs, PDFs, and SVGs into this folder.</span>
+<span class="sd">        If not given, plots are `plt.show`&#39;d interactively.</span>
+<span class="sd">    plate_size: optional `Tuple[int,int]`</span>
+<span class="sd">        The width and height of the plate, in number of wells.</span>
+<span class="sd">        Defaults to a 96- or 384-well plate.</span>
+<span class="sd">    columns: optional `List[str]`</span>
+<span class="sd">        The list of columns to plot. If not specified, all metadata columns are plotted.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">load_well_metadata</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">columns</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+        <span class="n">col_style</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="p">(</span><span class="n">style</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">style</span><span class="p">)</span> <span class="k">else</span> <span class="n">style</span><span class="p">[</span><span class="n">column</span><span class="p">]</span>
+        <span class="n">plot_mapping</span><span class="p">(</span><span class="n">mapping</span><span class="p">[</span><span class="n">column</span><span class="p">],</span> <span class="n">plate_size</span><span class="o">=</span><span class="n">plate_size</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">col_style</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">column</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">column</span><span class="si">}</span><span class="s2">.svg&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">column</span><span class="si">}</span><span class="s2">.pdf&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="generate_xticklabels"><a class="viewcode-back" href="../../tutorial/plot/generate_xticklabels.html#rushd.plot.generate_xticklabels">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">generate_xticklabels</span><span class="p">(</span>
+    <span class="n">df_labels</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">ax_col</span><span class="p">,</span>
+    <span class="n">label_cols</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">ax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">align_ticklabels</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
+        <span class="n">Union</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">],</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;center&quot;</span><span class="p">],</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]]</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span>
+    <span class="n">align_annotation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
+        <span class="n">Union</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">],</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;center&quot;</span><span class="p">],</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]]</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;right&quot;</span><span class="p">,</span>
+    <span class="n">linespacing</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.2</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create table-like x-axis tick labels based on provided metadata.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df_labels: Pandas DataFrame</span>
+<span class="sd">        DataFrame of metadata related to original xticklabels. Columns are metadata values,</span>
+<span class="sd">        including the x-axis value.</span>
+<span class="sd">    ax_col:</span>
+<span class="sd">        Column of &#39;df_labels&#39; that contains the original xticklabels. For seaborn plots, this</span>
+<span class="sd">        should be equivalent to the column passed to the x variable.</span>
+<span class="sd">    label_cols:</span>
+<span class="sd">        List of columns of &#39;df_labels&#39; to use to replace the xticklabels.</span>
+<span class="sd">    ax: Optional Matplotlib axes</span>
+<span class="sd">        Axes to edit, uses current axes if none specified.</span>
+<span class="sd">    align_ticklabels: &#39;left&#39;, &#39;center&#39;, or &#39;right&#39;</span>
+<span class="sd">        Text alignment for multi-line xticklabels.</span>
+<span class="sd">    align_annotation: &#39;left&#39;, &#39;center&#39;, or &#39;right&#39;</span>
+<span class="sd">        Text alignment for multi-line annotations comprising the columns of &#39;df_labels&#39; used to</span>
+<span class="sd">        replace the xticklabels. These appear to the bottom left of the plot, with the bounding</span>
+<span class="sd">        box right-aligned with the right of the yticklabels and aligned vertically center with</span>
+<span class="sd">        the vertical center of the xticklabels.</span>
+<span class="sd">    linespacing: float</span>
+<span class="sd">        Spacing between rows of the new xticklabels, as a multiple of the font size. Keeps</span>
+<span class="sd">        matplotlib default (1.2) if not specified.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None; modifies the axes in place.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Draw plotting canvas to generate original xticklabels</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+    <span class="c1"># Create dictionary from DataFrame, where keys are original xticklabels</span>
+    <span class="c1">#  and values are dictionaries of (metadata_key, metadata_value) pairs</span>
+    <span class="n">dict_labels_by_xticklabel</span> <span class="o">=</span> <span class="n">df_labels</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">ax_col</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Loop over xticklabels and set new values</span>
+    <span class="n">ax_labels</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span> <span class="ow">in</span> <span class="n">dict_labels_by_xticklabel</span><span class="p">:</span>
+            <span class="n">dict_labels</span> <span class="o">=</span> <span class="n">dict_labels_by_xticklabel</span><span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">get_text</span><span class="p">()]</span>
+
+            <span class="c1"># For each specified metadata key (label_cols), get the metadata value</span>
+            <span class="c1">#  and concatenate all values into separate lines of a single string</span>
+            <span class="n">new_xticklabel</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">dict_labels</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">label_cols</span><span class="p">])</span>
+            <span class="n">ax_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_xticklabel</span><span class="p">)</span>
+
+        <span class="c1"># If the original label is not in the provided dictionary, leave as is</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">get_text</span><span class="p">())</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">get_xticks</span><span class="p">(),</span> <span class="n">ax_labels</span><span class="p">,</span> <span class="n">multialignment</span><span class="o">=</span><span class="n">align_ticklabels</span><span class="p">,</span> <span class="n">linespacing</span><span class="o">=</span><span class="n">linespacing</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Add annotation with metadata keys, only if the plot has yticklabels</span>
+    <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_yticklabels</span><span class="p">():</span>
+        <span class="c1"># Get Artists for first axes labels</span>
+        <span class="n">xlabel_bbox</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">ylabel_bbox</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_yticklabels</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">font_size</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;xtick.labelsize&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Annotate plot with metadata keys</span>
+        <span class="c1">#   x value: align the right of the annotation bbox (ha=&#39;right&#39;)</span>
+        <span class="c1">#       with the right (x=1) of the ylabel bbox (xcoord=ylabel_bbox)</span>
+        <span class="c1">#   y value: align the vertical center of the annotation bbox (va=&#39;center&#39;)</span>
+        <span class="c1">#       with the vertical center (y=0.5) of the xlabel bbox (ycoord=xlabel_bbox)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
+            <span class="n">text</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">label_cols</span><span class="p">),</span>
+            <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+            <span class="n">xycoords</span><span class="o">=</span><span class="p">(</span><span class="n">ylabel_bbox</span><span class="p">,</span> <span class="n">xlabel_bbox</span><span class="p">),</span>
+            <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>
+            <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+            <span class="n">multialignment</span><span class="o">=</span><span class="n">align_annotation</span><span class="p">,</span>
+            <span class="n">fontsize</span><span class="o">=</span><span class="n">font_size</span><span class="p">,</span>
+            <span class="n">linespacing</span><span class="o">=</span><span class="n">linespacing</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="adjust_subplot_margins_inches"><a class="viewcode-back" href="../../api/rushd.html#rushd.plot.adjust_subplot_margins_inches">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">adjust_subplot_margins_inches</span><span class="p">(</span>
+    <span class="n">subfig</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">SubFigure</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">left</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">bottom</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">top</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">right</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adjust subplot margins to specified margins in inches.</span>
+
+<span class="sd">    This adjusts the extent of all subplot axes are</span>
+<span class="sd">    placed the specified number of inches from the edges of the subfigure.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fig: matplotlib SubFigure</span>
+<span class="sd">        Subfigure to be adjusted</span>
+<span class="sd">    left: float</span>
+<span class="sd">        Left margin, in inches</span>
+<span class="sd">    bottom: float</span>
+<span class="sd">        Bottom margin, in inches</span>
+<span class="sd">    top: float</span>
+<span class="sd">        Top margin, in inches</span>
+<span class="sd">    right: float</span>
+<span class="sd">        Right margin, in inches</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None; modifies the subfigure in place.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">to_inches</span> <span class="o">=</span> <span class="n">subfig</span><span class="o">.</span><span class="n">transSubfigure</span> <span class="o">+</span> <span class="n">subfig</span><span class="o">.</span><span class="n">dpi_scale_trans</span><span class="o">.</span><span class="n">inverted</span><span class="p">()</span>
+    <span class="n">to_subfig</span> <span class="o">=</span> <span class="n">to_inches</span><span class="o">.</span><span class="n">inverted</span><span class="p">()</span>
+    <span class="c1"># Calculate subfigure offsets</span>
+    <span class="n">lb_corner</span> <span class="o">=</span> <span class="n">to_subfig</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">to_inches</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span> <span class="o">+</span> <span class="p">[</span><span class="n">left</span><span class="p">,</span> <span class="n">bottom</span><span class="p">])</span>
+    <span class="n">rt_corner</span> <span class="o">=</span> <span class="n">to_subfig</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">to_inches</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span> <span class="o">-</span> <span class="p">[</span><span class="n">right</span><span class="p">,</span> <span class="n">top</span><span class="p">])</span>
+    <span class="n">subfig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span>
+        <span class="n">left</span><span class="o">=</span><span class="n">lb_corner</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bottom</span><span class="o">=</span><span class="n">lb_corner</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">right</span><span class="o">=</span><span class="n">rt_corner</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">top</span><span class="o">=</span><span class="n">rt_corner</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="debug_axes"><a class="viewcode-back" href="../../api/rushd.html#rushd.plot.debug_axes">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">debug_axes</span><span class="p">(</span><span class="n">fig</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add debug artists to a figure that shows subfigure axis alignment.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fig: matplotlib Figure</span>
+<span class="sd">        Figure that contains subfigures with axes to show debug info for.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None; modifies the figure in place.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_subfigs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">subfigs</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">subfig</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">subfigs</span><span class="p">):</span>
+        <span class="n">figbox_color</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">hsv_to_rgb</span><span class="p">(((</span><span class="n">idx</span> <span class="o">/</span> <span class="n">n_subfigs</span><span class="p">),</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span>
+            <span class="n">matplotlib</span><span class="o">.</span><span class="n">patches</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">(</span>
+                <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="n">figbox_color</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">subfig</span><span class="o">.</span><span class="n">transSubfigure</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">guide_color</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">hsv_to_rgb</span><span class="p">(((</span><span class="n">idx</span> <span class="o">/</span> <span class="n">n_subfigs</span><span class="p">),</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+        <span class="n">guide_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;transform&quot;</span><span class="p">:</span> <span class="n">subfig</span><span class="o">.</span><span class="n">transFigure</span><span class="p">,</span> <span class="s2">&quot;zorder&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">guide_color</span><span class="p">}</span>
+        <span class="n">transform</span> <span class="o">=</span> <span class="n">subfig</span><span class="o">.</span><span class="n">transSubfigure</span> <span class="o">+</span> <span class="n">subfig</span><span class="o">.</span><span class="n">transFigure</span><span class="o">.</span><span class="n">inverted</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">subfig</span><span class="o">.</span><span class="n">axes</span><span class="p">:</span>
+            <span class="n">xmin</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span><span class="o">.</span><span class="n">extents</span>
+            <span class="n">xmin</span> <span class="o">=</span> <span class="n">transform</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="n">xmin</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">xmax</span> <span class="o">=</span> <span class="n">transform</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="n">xmax</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">ymin</span> <span class="o">=</span> <span class="n">transform</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ymin</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">ymax</span> <span class="o">=</span> <span class="n">transform</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ymax</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span><span class="p">((</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmin</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="o">**</span><span class="n">guide_kwargs</span><span class="p">))</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span><span class="p">((</span><span class="n">xmax</span><span class="p">,</span> <span class="n">xmax</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="o">**</span><span class="n">guide_kwargs</span><span class="p">))</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymin</span><span class="p">),</span> <span class="o">**</span><span class="n">guide_kwargs</span><span class="p">))</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="n">ymax</span><span class="p">,</span> <span class="n">ymax</span><span class="p">),</span> <span class="o">**</span><span class="n">guide_kwargs</span><span class="p">))</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Christopher Johnstone, Kasey Love, Conrad Oakes.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Downloads and versions</span>
+      v: v0.7.0
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      
+      
+      <dl>
+        <dt>Versions</dt>
+        
+          
+          <dd><a href="/rushd/en/future_features/">future_features</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/main/">main</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.4.0/">v0.4.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.5.0/">v0.5.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.5.1/">v0.5.1</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.6.0/">v0.6.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.6.1/">v0.6.1</a></dd>
+          
+        
+           <strong> 
+          <dd><a href="/rushd/en/v0.7.0/">v0.7.0</a></dd>
+           </strong> 
+        
+          
+          <dd><a href="/rushd/en//"></a></dd>
+          
+        
+      </dl>
+      
+      
+      
+      <hr/>
+      Hosted with <span class="fa fa-heart"></span> on GitHub Pages.
+
+    </div>
+  </div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

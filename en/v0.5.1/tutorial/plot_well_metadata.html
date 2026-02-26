@@ -1,0 +1,340 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visualizing YAML well metadata &mdash; rushd 0.5.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=3fadbb4a"></script>
+      <script src="../_static/doctools.js?v=888ff710"></script>
+      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Generating table-like x-axis tick labels" href="generate_xticklabels.html" />
+    <link rel="prev" title="Tutorials" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2c6854" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            rushd
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Visualizing YAML well metadata</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#automatic-plotting-of-well-metadata">Automatic plotting of well metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#modifying-output-color-mapping">Modifying output color mapping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#plotting-non-96-wells">Plotting non-96 wells</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="generate_xticklabels.html">Generating table-like x-axis tick labels</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/rushd.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/rushd.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/rushd.html#module-rushd.flow">rushd.flow module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rushd.flow.GroupsError"><code class="docutils literal notranslate"><span class="pre">GroupsError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rushd.flow.MOIinputError"><code class="docutils literal notranslate"><span class="pre">MOIinputError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rushd.flow.MetadataWarning"><code class="docutils literal notranslate"><span class="pre">MetadataWarning</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rushd.flow.RegexError"><code class="docutils literal notranslate"><span class="pre">RegexError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rushd.flow.YamlError"><code class="docutils literal notranslate"><span class="pre">YamlError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rushd.flow.load_csv_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_csv_with_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rushd.flow.load_groups_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_groups_with_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rushd.flow.load_well_metadata"><code class="docutils literal notranslate"><span class="pre">load_well_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rushd.flow.moi"><code class="docutils literal notranslate"><span class="pre">moi()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/rushd.html#module-rushd.io">rushd.io module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rushd.io.NoDatadirError"><code class="docutils literal notranslate"><span class="pre">NoDatadirError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rushd.io.cache_dataframe"><code class="docutils literal notranslate"><span class="pre">cache_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rushd.io.git_version"><code class="docutils literal notranslate"><span class="pre">git_version()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rushd.io.infile"><code class="docutils literal notranslate"><span class="pre">infile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rushd.io.outfile"><code class="docutils literal notranslate"><span class="pre">outfile()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/rushd.html#module-rushd.plot">rushd.plot module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rushd.plot.adjust_subplot_margins_inches"><code class="docutils literal notranslate"><span class="pre">adjust_subplot_margins_inches()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rushd.plot.debug_axes"><code class="docutils literal notranslate"><span class="pre">debug_axes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rushd.plot.generate_xticklabels"><code class="docutils literal notranslate"><span class="pre">generate_xticklabels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rushd.plot.plot_mapping"><code class="docutils literal notranslate"><span class="pre">plot_mapping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rushd.plot.plot_well_metadata"><code class="docutils literal notranslate"><span class="pre">plot_well_metadata()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/rushd.html#module-rushd.well_mapper">rushd.well_mapper module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rationale">Rationale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#specification">Specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rushd.well_mapper.well_mapping"><code class="docutils literal notranslate"><span class="pre">well_mapping()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/rushd.html#module-rushd">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rushd.infile"><code class="docutils literal notranslate"><span class="pre">infile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/rushd.html#rushd.outfile"><code class="docutils literal notranslate"><span class="pre">outfile()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2c6854" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">rushd</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Visualizing YAML well metadata</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorial/plot_well_metadata.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="visualizing-yaml-well-metadata">
+<h1>Visualizing YAML well metadata<a class="headerlink" href="#visualizing-yaml-well-metadata" title="Permalink to this heading"></a></h1>
+<p>Many of the features of <code class="docutils literal notranslate"><span class="pre">rushd</span></code> load metadata using YAML files.
+However, writing these files can be error-prone, especially with complicated
+experimental setups.</p>
+<p><code class="docutils literal notranslate"><span class="pre">rushd</span></code> also includes plotting functions that can generate well maps automatically for you!
+Enter <code class="docutils literal notranslate"><span class="pre">plot_well_metadata</span></code>, which has the following interface:</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">rushd.plot.</span></span><span class="sig-name descname"><span class="pre">plot_well_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plate_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rushd/plot.html#plot_well_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plot the specified metadata columns listed in a YAML file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<cite>str</cite> or <cite>pathlib.Path</cite>) – The path to the YAML file containing the mapping</p></li>
+<li><p><strong>output_dir</strong> (optional <cite>pathlib.Path</cite>) – If given, outputs plate maps as PNGs, PDFs, and SVGs into this folder.
+If not given, plots are <cite>plt.show</cite>’d interactively.</p></li>
+<li><p><strong>plate_size</strong> (optional <cite>Tuple[int,int]</cite>) – The width and height of the plate, in number of wells.
+Defaults to a 96- or 384-well plate.</p></li>
+<li><p><strong>columns</strong> (optional <cite>List[str]</cite>) – The list of columns to plot. If not specified, all metadata columns are plotted.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<section id="automatic-plotting-of-well-metadata">
+<h2>Automatic plotting of well metadata<a class="headerlink" href="#automatic-plotting-of-well-metadata" title="Permalink to this heading"></a></h2>
+<p>Consider the following YAML metadata file:</p>
+<div class="code yaml highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">metadata</span><span class="p">:</span>
+    <span class="n">inducible_fluorophore</span><span class="p">:</span>
+        <span class="o">-</span> <span class="n">TagBFP</span><span class="p">:</span> <span class="n">A1</span><span class="o">-</span><span class="n">H9</span>
+        <span class="o">-</span> <span class="n">EGFP</span><span class="p">:</span> <span class="n">A10</span><span class="o">-</span><span class="n">H12</span>
+    <span class="n">orientation</span><span class="p">:</span>
+        <span class="o">-</span> <span class="n">tandem</span><span class="p">:</span> <span class="n">A1</span><span class="o">-</span><span class="n">H3</span><span class="p">,</span> <span class="n">A10</span><span class="o">-</span><span class="n">H12</span>
+        <span class="o">-</span> <span class="n">convergent</span><span class="p">:</span> <span class="n">A4</span><span class="o">-</span><span class="n">H6</span>
+        <span class="o">-</span> <span class="n">divergent</span><span class="p">:</span> <span class="n">A7</span><span class="o">-</span><span class="n">H9</span>
+    <span class="n">inducible_spacerlength</span><span class="p">:</span>
+        <span class="o">-</span> <span class="mi">0</span><span class="p">:</span> <span class="n">A1</span><span class="o">-</span><span class="n">H9</span>
+        <span class="o">-</span> <span class="mi">2</span><span class="p">:</span> <span class="n">A10</span><span class="o">-</span><span class="n">H12</span>
+    <span class="n">dox</span><span class="p">:</span>
+        <span class="o">-</span> <span class="mi">0</span><span class="p">:</span> <span class="n">A1</span><span class="o">-</span><span class="n">A12</span>
+        <span class="o">-</span> <span class="mf">0.0000820</span><span class="p">:</span> <span class="n">B1</span><span class="o">-</span><span class="n">B12</span>
+        <span class="o">-</span> <span class="mf">0.0003248</span><span class="p">:</span> <span class="n">C1</span><span class="o">-</span><span class="n">C12</span>
+        <span class="o">-</span> <span class="mf">0.0012864</span><span class="p">:</span> <span class="n">D1</span><span class="o">-</span><span class="n">D12</span>
+        <span class="o">-</span> <span class="mf">0.0050940</span><span class="p">:</span> <span class="n">E1</span><span class="o">-</span><span class="n">E12</span>
+        <span class="o">-</span> <span class="mf">0.0201723</span><span class="p">:</span> <span class="n">F1</span><span class="o">-</span><span class="n">F12</span>
+        <span class="o">-</span> <span class="mf">0.0798822</span><span class="p">:</span> <span class="n">G1</span><span class="o">-</span><span class="n">G12</span>
+        <span class="o">-</span> <span class="mf">0.3163330</span><span class="p">:</span> <span class="n">H1</span><span class="o">-</span><span class="n">H12</span>
+</pre></div>
+</div>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">plot_well_metadata</span></code> will use a default color scheme for every column
+listed in the metadata file. For numerical columns, it will auto-detect if a linear
+or log plot is better, and use a Viridis color scheme (with the yellow part of viridis removed).</p>
+<p>For the above YAML file, we can get the following plots:</p>
+<pre class="code python literal-block"><code><span class="keyword namespace">import</span><span class="whitespace"> </span><span class="name namespace">rushd</span><span class="whitespace"> </span><span class="keyword">as</span><span class="whitespace"> </span><span class="name namespace">rd</span></code></pre>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/inducible_fluorophore.svg"><img alt="../_images/inducible_fluorophore.svg" src="../_images/inducible_fluorophore.svg" width="60%" /></a>
+</figure>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/orientation.svg"><img alt="../_images/orientation.svg" src="../_images/orientation.svg" width="60%" /></a>
+</figure>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/inducible_spacerlength.svg"><img alt="../_images/inducible_spacerlength.svg" src="../_images/inducible_spacerlength.svg" width="60%" /></a>
+</figure>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/dox.svg"><img alt="../_images/dox.svg" src="../_images/dox.svg" width="60%" /></a>
+</figure>
+<p>Here, you can see the automatic color assignment for both categorical variables, linear numerical variables,
+and log-distributed variables.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The automatic detection of log-distributed data examines the median of the values.
+If all values are non-negative and the median is outside of the percentile range
+[0.15, 0.85], the data is detected as log-distributed.</p>
+<p>You can override this as discussed below.</p>
+</div>
+</section>
+<section id="modifying-output-color-mapping">
+<h2>Modifying output color mapping<a class="headerlink" href="#modifying-output-color-mapping" title="Permalink to this heading"></a></h2>
+<p>You can override the default color set in multiple ways. First, you can specify the style
+of a column to be <code class="docutils literal notranslate"><span class="pre">'category'</span></code>, <code class="docutils literal notranslate"><span class="pre">'linear'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'log'</span></code> to override autodetection:</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/dox1.svg"><img alt="../_images/dox1.svg" src="../_images/dox1.svg" width="60%" /></a>
+</figure>
+<p>Importantly, you don’t have to specify a style for each column plotted; it will default to style autodetection.</p>
+<p>You can also specify an explicit colormap that specifies a color for each entry:</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rd</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_well_metadata</span><span class="p">(</span><span class="s2">&quot;example_plot_metadata.yaml&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;dox&quot;</span><span class="p">],</span> <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;dox&quot;</span><span class="p">:</span> <span class="s2">&quot;linear&quot;</span><span class="p">})</span>
+<span class="n">rd</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_well_metadata</span><span class="p">(</span>
+    <span class="s2">&quot;example_plot_metadata.yaml&quot;</span><span class="p">,</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;orientation&quot;</span><span class="p">],</span>
+    <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;orientation&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tandem&quot;</span><span class="p">:</span> <span class="s2">&quot;#19D2BF&quot;</span><span class="p">,</span> <span class="s2">&quot;convergent&quot;</span><span class="p">:</span> <span class="s2">&quot;#FFB133&quot;</span><span class="p">,</span> <span class="s2">&quot;divergent&quot;</span><span class="p">:</span> <span class="s2">&quot;#FE484E&quot;</span><span class="p">}},</span>
+</pre></div>
+</div>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/orientation1.svg"><img alt="../_images/orientation1.svg" src="../_images/orientation1.svg" width="60%" /></a>
+</figure>
+</section>
+<section id="plotting-non-96-wells">
+<h2>Plotting non-96 wells<a class="headerlink" href="#plotting-non-96-wells" title="Permalink to this heading"></a></h2>
+<p>By using the <code class="docutils literal notranslate"><span class="pre">plate_size</span></code> parameter, you can plot smaller plates, like a 6 well plate:</p>
+<div class="code yaml highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">metadata</span><span class="p">:</span>
+  <span class="n">virus</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">N</span><span class="p">:</span> <span class="n">A1</span>
+    <span class="o">-</span> <span class="n">I</span><span class="p">:</span> <span class="n">A2</span>
+    <span class="o">-</span> <span class="n">L</span><span class="p">:</span> <span class="n">A3</span>
+    <span class="o">-</span> <span class="n">B</span><span class="p">:</span> <span class="n">B1</span>
+    <span class="o">-</span> <span class="n">A</span><span class="p">:</span> <span class="n">B2</span>
+    <span class="o">-</span> <span class="n">M</span><span class="p">:</span> <span class="n">B3</span>
+</pre></div>
+</div>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/virus.svg"><img alt="../_images/virus.svg" src="../_images/virus.svg" width="60%" /></a>
+</figure>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Christopher Johnstone, Kasey Love, Conrad Oakes.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Downloads and versions</span>
+      v: v0.5.1
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      
+      
+      <dl>
+        <dt>Versions</dt>
+        
+          
+          <dd><a href="/rushd/en/future_features/">future_features</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/main/">main</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.4.0/">v0.4.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.5.0/">v0.5.0</a></dd>
+          
+        
+           <strong> 
+          <dd><a href="/rushd/en/v0.5.1/">v0.5.1</a></dd>
+           </strong> 
+        
+          
+          <dd><a href="/rushd/en/v0.6.0/">v0.6.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.6.1/">v0.6.1</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.7.0/">v0.7.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en//"></a></dd>
+          
+        
+      </dl>
+      
+      
+      
+      <hr/>
+      Hosted with <span class="fa fa-heart"></span> on GitHub Pages.
+
+    </div>
+  </div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

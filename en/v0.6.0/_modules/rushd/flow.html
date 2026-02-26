@@ -1,0 +1,757 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rushd.flow &mdash; rushd 0.5.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=3fadbb4a"></script>
+      <script src="../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2c6854" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            rushd
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/index.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/overview/index.html">Overview of <code class="docutils literal notranslate"><span class="pre">rushd</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorial/overview/plot_well_metadata.html">Visualizing YAML well metadata</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../tutorial/overview/plot_well_metadata.html#automatic-plotting-of-well-metadata">Automatic plotting of well metadata</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tutorial/overview/plot_well_metadata.html#modifying-output-color-mapping">Modifying output color mapping</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tutorial/overview/plot_well_metadata.html#plotting-non-96-wells">Plotting non-96 wells</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/flow/index.html">Flow cytometry</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/qpcr/index.html">qPCR</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/ddpcr/index.html">Droplet digital PCR (ddPCR)</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/plot/index.html">Plotting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorial/plot/generate_xticklabels.html">Generating table-like x-axis tick labels</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/rushd.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.ddpcr">rushd.ddpcr module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.DataPathError"><code class="docutils literal notranslate"><span class="pre">DataPathError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.YamlError"><code class="docutils literal notranslate"><span class="pre">YamlError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.load_ddpcr"><code class="docutils literal notranslate"><span class="pre">load_ddpcr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.load_ddpcr_metadata"><code class="docutils literal notranslate"><span class="pre">load_ddpcr_metadata()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.flow">rushd.flow module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.ColumnError"><code class="docutils literal notranslate"><span class="pre">ColumnError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.DataPathError"><code class="docutils literal notranslate"><span class="pre">DataPathError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.GroupsError"><code class="docutils literal notranslate"><span class="pre">GroupsError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.MOIinputError"><code class="docutils literal notranslate"><span class="pre">MOIinputError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.MetadataWarning"><code class="docutils literal notranslate"><span class="pre">MetadataWarning</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.RegexError"><code class="docutils literal notranslate"><span class="pre">RegexError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.YamlError"><code class="docutils literal notranslate"><span class="pre">YamlError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_csv"><code class="docutils literal notranslate"><span class="pre">load_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_csv_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_csv_with_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_groups_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_groups_with_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_well_metadata"><code class="docutils literal notranslate"><span class="pre">load_well_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.moi"><code class="docutils literal notranslate"><span class="pre">moi()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.io">rushd.io module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rationale">Rationale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.NoDatadirError"><code class="docutils literal notranslate"><span class="pre">NoDatadirError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.cache_dataframe"><code class="docutils literal notranslate"><span class="pre">cache_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.git_version"><code class="docutils literal notranslate"><span class="pre">git_version()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.infile"><code class="docutils literal notranslate"><span class="pre">infile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.outfile"><code class="docutils literal notranslate"><span class="pre">outfile()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.plot">rushd.plot module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.adjust_subplot_margins_inches"><code class="docutils literal notranslate"><span class="pre">adjust_subplot_margins_inches()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.debug_axes"><code class="docutils literal notranslate"><span class="pre">debug_axes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.generate_xticklabels"><code class="docutils literal notranslate"><span class="pre">generate_xticklabels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.plot_mapping"><code class="docutils literal notranslate"><span class="pre">plot_mapping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.plot_well_metadata"><code class="docutils literal notranslate"><span class="pre">plot_well_metadata()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.qpcr">rushd.qpcr module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.ColumnError"><code class="docutils literal notranslate"><span class="pre">ColumnError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.DataPathError"><code class="docutils literal notranslate"><span class="pre">DataPathError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.GroupsError"><code class="docutils literal notranslate"><span class="pre">GroupsError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.InputError"><code class="docutils literal notranslate"><span class="pre">InputError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.RegexError"><code class="docutils literal notranslate"><span class="pre">RegexError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.YamlError"><code class="docutils literal notranslate"><span class="pre">YamlError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.load_plates_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_plates_with_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.load_single_csv_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_single_csv_with_metadata()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.well_mapper">rushd.well_mapper module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#id1">Rationale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#specification">Specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.well_mapper.well_mapping"><code class="docutils literal notranslate"><span class="pre">well_mapping()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.infile"><code class="docutils literal notranslate"><span class="pre">infile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.outfile"><code class="docutils literal notranslate"><span class="pre">outfile()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2c6854" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">rushd</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">rushd.flow</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rushd.flow</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Common functions for analyzing flow data in Pandas Dataframes.</span>
+
+<span class="sd">Allows users to specify custom metadata applied via well mapping.</span>
+<span class="sd">Combines user data from multiple .csv files into a single DataFrame.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="c1"># Support Python 3.7 by importing Literal from typing_extensions</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>  <span class="c1"># type: ignore</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">curve_fit</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">well_mapper</span>
+
+
+<div class="viewcode-block" id="MetadataWarning"><a class="viewcode-back" href="../../api/rushd.html#rushd.flow.MetadataWarning">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">MetadataWarning</span><span class="p">(</span><span class="ne">UserWarning</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Warning raised when the passed metadata is possibly incorrect, but valid.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="YamlError"><a class="viewcode-back" href="../../api/rushd.html#rushd.flow.YamlError">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">YamlError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when there is an issue with the provided .yaml file.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="RegexError"><a class="viewcode-back" href="../../api/rushd.html#rushd.flow.RegexError">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">RegexError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when there is an issue with the file name regular expression.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="GroupsError"><a class="viewcode-back" href="../../api/rushd.html#rushd.flow.GroupsError">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">GroupsError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when there is an issue with the data groups DataFrame.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="ColumnError"><a class="viewcode-back" href="../../api/rushd.html#rushd.flow.ColumnError">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ColumnError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when the data is missing a column specifying well IDs.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="DataPathError"><a class="viewcode-back" href="../../api/rushd.html#rushd.flow.DataPathError">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">DataPathError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when the path to the data is not specified correctly.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="MOIinputError"><a class="viewcode-back" href="../../api/rushd.html#rushd.flow.MOIinputError">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">MOIinputError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when there is an issue with the provided dataframe.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="load_well_metadata"><a class="viewcode-back" href="../../api/rushd.html#rushd.flow.load_well_metadata">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_well_metadata</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load a YAML file and convert it into a well mapping.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    yaml_path: Path</span>
+<span class="sd">        Path to the .yaml file to use for associating metadata with well IDs.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        A dictionary that contains a well mapping for all metadata columns.</span>
+<span class="sd">        Mapping is formatted as {key -&gt; {well -&gt; value}}.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
+        <span class="n">yaml_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">yaml_path</span><span class="o">.</span><span class="n">open</span><span class="p">()</span> <span class="k">as</span> <span class="n">yaml_file</span><span class="p">:</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">yaml_file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s2">&quot;metadata&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">metadata</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">YamlError</span><span class="p">(</span>
+                <span class="s2">&quot;Incorrectly formatted .yaml file.&quot;</span>
+                <span class="s2">&quot; All metadata must be stored under the header &#39;metadata&#39;&quot;</span>
+            <span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;Metadata column &quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">&quot; is a YAML dictionary, not a list!&#39;</span>
+                    <span class="s2">&quot; Make sure your entries under this key start with dashes.&quot;</span>
+                    <span class="s2">&quot; Passing a dictionary does not allow duplicate keys and&quot;</span>
+                    <span class="s2">&quot; is sort-order-dependent.&quot;</span><span class="p">,</span>
+                    <span class="n">MetadataWarning</span><span class="p">,</span>
+                    <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">well_mapper</span><span class="o">.</span><span class="n">well_mapping</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
+
+
+<div class="viewcode-block" id="load_csv_with_metadata"><a class="viewcode-back" href="../../api/rushd.html#rushd.flow.load_csv_with_metadata">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_csv_with_metadata</span><span class="p">(</span>
+    <span class="n">data_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
+    <span class="n">yaml_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
+    <span class="n">filename_regex</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">csv_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load .csv data into DataFrame with associated metadata.</span>
+
+<span class="sd">    Generates a pandas DataFrame from a set of .csv files located at the given path,</span>
+<span class="sd">    adding columns for metadata encoded by a given .yaml file. Metadata is associated</span>
+<span class="sd">    with the data based on well IDs encoded in the data filenames.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data_path: str or Path</span>
+<span class="sd">        Path to directory containing data files (.csv)</span>
+<span class="sd">    yaml_path: str or Path</span>
+<span class="sd">        Path to .yaml file to use for associating metadata with well IDs.</span>
+<span class="sd">        All metadata must be contained under the header &#39;metadata&#39;.</span>
+<span class="sd">    filename_regex: str or raw str (optional)</span>
+<span class="sd">        Regular expression to use to extract well IDs from data filenames.</span>
+<span class="sd">        Must contain the capturing group &#39;well&#39; for the sample well IDs.</span>
+<span class="sd">        If not included, the filenames are assumed to follow this format (default</span>
+<span class="sd">        export format from FlowJo): ``export_[well]_[population].csv``</span>
+<span class="sd">    columns: list of strings (optional)</span>
+<span class="sd">        If specified, only these columns are loaded out of the .csv files.</span>
+<span class="sd">        This can drastically reduce the amount of memory required to load</span>
+<span class="sd">        flow data.</span>
+<span class="sd">    csv_kwargs: dict (optional)</span>
+<span class="sd">        Additional kwargs to pass to pandas ``read_csv``. For instance, to skip rows or</span>
+<span class="sd">        to specify alternate delimiters.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    DataFrame</span>
+<span class="sd">        A single pandas DataFrame containing all data with associated metadata.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
+        <span class="n">data_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">data_path</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">metadata_map</span> <span class="o">=</span> <span class="n">load_well_metadata</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">YamlError</span><span class="p">(</span><span class="s2">&quot;Specified metadata YAML file does not exist!&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span>
+
+    <span class="k">if</span> <span class="n">csv_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">csv_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># Load data from .csv files</span>
+    <span class="n">data_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">data_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.csv&quot;</span><span class="p">):</span>
+        <span class="c1"># Default filename from FlowJo export is &#39;export_[well]_[population].csv&#39;</span>
+        <span class="k">if</span> <span class="n">filename_regex</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">filename_regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^.*export_(?P&lt;well&gt;[A-P]\d+)_(?P&lt;population&gt;.+)\.csv&quot;</span>
+
+        <span class="n">regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">filename_regex</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;well&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">regex</span><span class="o">.</span><span class="n">groupindex</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">RegexError</span><span class="p">(</span><span class="s2">&quot;Regular expression does not contain capturing group &#39;well&#39;&quot;</span><span class="p">)</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Load the first row so we get the column names</span>
+        <span class="n">df_onerow</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">csv_kwargs</span><span class="p">)</span>
+        <span class="c1"># Load data: we allow extra columns in our column list, so subset it</span>
+        <span class="n">valid_cols</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df_onerow</span><span class="o">.</span><span class="n">columns</span><span class="p">)))</span> <span class="k">if</span> <span class="n">columns</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">valid_cols</span><span class="p">,</span> <span class="o">**</span><span class="n">csv_kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Add metadata to DataFrame</span>
+        <span class="n">well</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;well&quot;</span><span class="p">)</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">metadata_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># Replace custom metadata keys with &lt;NA&gt; if not present</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">[</span><span class="n">well</span><span class="p">]</span> <span class="k">if</span> <span class="n">well</span> <span class="ow">in</span> <span class="n">v</span> <span class="k">else</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">NA</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
+            <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">regex</span><span class="o">.</span><span class="n">groupindex</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+            <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">data_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+    <span class="c1"># Concatenate all the data into a single DataFrame</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">RegexError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No data files match the regular expression &#39;</span><span class="si">{</span><span class="n">filename_regex</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">data_list</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">NA</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="load_groups_with_metadata"><a class="viewcode-back" href="../../api/rushd.html#rushd.flow.load_groups_with_metadata">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_groups_with_metadata</span><span class="p">(</span>
+    <span class="n">groups_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">base_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">filename_regex</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">csv_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load .csv data into DataFrame with associated metadata by group.</span>
+
+<span class="sd">    Each group of .csv files may be located at a different path and be</span>
+<span class="sd">    associated with additional user-defined metadata.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    groups_df: Pandas DataFrame</span>
+<span class="sd">        Each row of the DataFrame is evaluated as a separate group. Columns must</span>
+<span class="sd">        include &#39;data_path&#39; and &#39;yaml_path&#39;, specifying absolute or relative paths</span>
+<span class="sd">        to the group of .csv files and metadata .yaml files, respectively.</span>
+<span class="sd">        Optionally, regular expressions for the file names can be specified for each</span>
+<span class="sd">        group using the column &#39;filename_regex&#39; (this will override the</span>
+<span class="sd">        `filename_regex` argument).</span>
+<span class="sd">    base_path: str or Path (optional)</span>
+<span class="sd">        If specified, path that data and yaml paths in input_df are defined relative to.</span>
+<span class="sd">    filename_regex: str or raw str (optional)</span>
+<span class="sd">        Regular expression to use to extract well IDs from data filenames.</span>
+<span class="sd">        Must contain the capturing group `well` for the sample well IDs.</span>
+<span class="sd">        Other capturing groups in the regex will be added as metadata.</span>
+<span class="sd">        This value applies to all groups; to specify different regexes for each group,</span>
+<span class="sd">        add the column &#39;filename_regex&#39; to `groups_df` (this will override the</span>
+<span class="sd">        `filename_regex` argument).</span>
+<span class="sd">        If not included, the filenames are assumed to follow this format (default</span>
+<span class="sd">        export format from FlowJo): ``export_[well]_[population].csv``</span>
+<span class="sd">    columns: list of strings (optional)</span>
+<span class="sd">        If specified, only these columns are loaded out of the .csv files.</span>
+<span class="sd">        This can drastically reduce the amount of memory required to load</span>
+<span class="sd">        flow data.</span>
+<span class="sd">    csv_kwargs: dict (optional)</span>
+<span class="sd">        Additional kwargs to pass to pandas ``read_csv``. For instance, to skip rows or</span>
+<span class="sd">        to specify alternate delimiters.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    DataFrame</span>
+<span class="sd">        A single pandas DataFrame containing data from all groups with associated metadata.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;data_path&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">groups_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">GroupsError</span><span class="p">(</span><span class="s2">&quot;&#39;groups_df&#39; must contain column &#39;data_path&#39;&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;yaml_path&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">groups_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">GroupsError</span><span class="p">(</span><span class="s2">&quot;&#39;groups_df&#39; must contain column &#39;yaml_path&#39;&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">base_path</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
+        <span class="n">base_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">base_path</span><span class="p">:</span>
+        <span class="n">base_path</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="n">group_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groups_df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="c1"># Load data in group</span>
+        <span class="n">data_path</span> <span class="o">=</span> <span class="n">base_path</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;data_path&quot;</span><span class="p">])</span>
+        <span class="n">yaml_path</span> <span class="o">=</span> <span class="n">base_path</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;yaml_path&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s2">&quot;filename_regex&quot;</span> <span class="ow">in</span> <span class="n">groups_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">filename_regex</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="s2">&quot;filename_regex&quot;</span><span class="p">]</span>
+        <span class="n">group_data</span> <span class="o">=</span> <span class="n">load_csv_with_metadata</span><span class="p">(</span>
+            <span class="n">data_path</span><span class="p">,</span> <span class="n">yaml_path</span><span class="p">,</span> <span class="n">filename_regex</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">csv_kwargs</span><span class="o">=</span><span class="n">csv_kwargs</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Add associated metadata (not paths)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">k</span> <span class="o">==</span> <span class="s2">&quot;data_path&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">k</span> <span class="o">==</span> <span class="s2">&quot;yaml_path&quot;</span><span class="p">):</span>
+                <span class="n">group_data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+        <span class="n">group_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group_data</span><span class="p">)</span>
+
+    <span class="c1"># Concatenate all the data into a single DataFrame</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">group_list</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">NA</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="load_csv"><a class="viewcode-back" href="../../api/rushd.html#rushd.flow.load_csv">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_csv</span><span class="p">(</span>
+    <span class="n">data_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
+    <span class="n">filename_regex</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">csv_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load .csv data into DataFrame without additional metadata.</span>
+
+<span class="sd">    Generates a pandas DataFrame from a set of .csv files located at the given path,</span>
+<span class="sd">    adding columns for metadata encoded in the data filenames.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data_path: str or Path</span>
+<span class="sd">        Path to directory containing data files (.csv)</span>
+<span class="sd">    filename_regex: str or raw str (optional)</span>
+<span class="sd">        Regular expression to use to extract metadata from data filenames.</span>
+<span class="sd">        Any named capturing groups will be added as metadata.</span>
+<span class="sd">        If not included, the filenames are assumed to follow this format (default</span>
+<span class="sd">        export format from FlowJo): ``export_[condition]_[population].csv``</span>
+<span class="sd">    columns: list of strings (optional)</span>
+<span class="sd">        If specified, only these columns are loaded out of the .csv files.</span>
+<span class="sd">        This can drastically reduce the amount of memory required to load</span>
+<span class="sd">        flow data.</span>
+<span class="sd">    csv_kwargs: dict (optional)</span>
+<span class="sd">        Additional kwargs to pass to pandas ``read_csv``. For instance, to skip rows or</span>
+<span class="sd">        to specify alternate delimiters.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    DataFrame</span>
+<span class="sd">        A single pandas DataFrame containing all data with associated filename metadata.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
+        <span class="n">data_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">data_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">csv_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">csv_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># Load data from .csv files</span>
+    <span class="n">data_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">data_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.csv&quot;</span><span class="p">):</span>
+        <span class="c1"># Default filename from FlowJo export is &#39;export_[sample name]_[population].csv&#39;</span>
+        <span class="k">if</span> <span class="n">filename_regex</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">filename_regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^.*export_(?P&lt;condition&gt;[A-P]\d+)_(?P&lt;population&gt;.+)\.csv&quot;</span>
+
+        <span class="n">regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">filename_regex</span><span class="p">)</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Load the first row so we get the column names</span>
+        <span class="n">df_onerow</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">csv_kwargs</span><span class="p">)</span>
+        <span class="c1"># Load data: we allow extra columns in our column list, so subset it</span>
+        <span class="n">valid_cols</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df_onerow</span><span class="o">.</span><span class="n">columns</span><span class="p">)))</span> <span class="k">if</span> <span class="n">columns</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">valid_cols</span><span class="p">,</span> <span class="o">**</span><span class="n">csv_kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Add metadata to DataFrame from filename</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">regex</span><span class="o">.</span><span class="n">groupindex</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+            <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">data_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+    <span class="c1"># Concatenate all the data into a single DataFrame</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">RegexError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No data files match the regular expression &#39;</span><span class="si">{</span><span class="n">filename_regex</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">data_list</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">NA</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="moi"><a class="viewcode-back" href="../../api/rushd.html#rushd.flow.moi">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">moi</span><span class="p">(</span>
+    <span class="n">data_frame</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">color_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">color_cutoff</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">output_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">summary_method</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;mean&quot;</span><span class="p">],</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;median&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;median&quot;</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">scale_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate moi information from flowjo data with appropriate metadata.</span>
+
+<span class="sd">    Generates a pandas DataFrame of virus titers from a pandas DataFrame of flowjo data.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data_frame: pd.DataFrame</span>
+<span class="sd">        The pandas DataFrame to analyze. It must have the following columns:</span>
+<span class="sd">            - condition: the conditions/types of virus being analyzed</span>
+<span class="sd">            - replicate: the replicate of the data (can have all data as the same replicate)</span>
+<span class="sd">            - starting_cell_count: the number of cells in the well at the time of infection</span>
+<span class="sd">            - scaling: the dilution factor of each row</span>
+<span class="sd">            - max_virus: the maximum virus added to that column</span>
+<span class="sd">              scaling times max_virus should result in the volume of virus stock added to a well</span>
+<span class="sd">    color_column_name: str</span>
+<span class="sd">        The name of the column on which to gate infection.</span>
+<span class="sd">    color_cutoff: float</span>
+<span class="sd">        The level of fluoresence on which to gate infecction.</span>
+<span class="sd">    output_path: str or path (optional)</span>
+<span class="sd">        The path to the output folder. If None, instead prints all plots to screen. Defaults to None</span>
+<span class="sd">    summary_method: str (optional)</span>
+<span class="sd">        Whether to return the calculated titer as the mean or median of the replicates.</span>
+<span class="sd">    scale_factor: float (optional)</span>
+<span class="sd">        Whether to scale down the Poisson fit by the given scale factor maximum.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    DataFrame</span>
+<span class="sd">        A single pandas DataFrame containing the titer of each condition in TU per uL.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">data_frame</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">color_column_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">MOIinputError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input dataframe does not have a column called </span><span class="si">{</span><span class="n">color_column_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">output_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;figures&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">{</span><span class="s2">&quot;condition&quot;</span><span class="p">,</span> <span class="s2">&quot;replicate&quot;</span><span class="p">,</span> <span class="s2">&quot;starting_cell_count&quot;</span><span class="p">,</span> <span class="s2">&quot;scaling&quot;</span><span class="p">,</span> <span class="s2">&quot;max_virus&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">columns</span>
+    <span class="p">):</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;virus_amount&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;scaling&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;max_virus&quot;</span><span class="p">]</span>
+        <span class="n">int_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="n">color_column_name</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">color_cutoff</span><span class="p">)]</span>
+
+        <span class="c1"># Summarize cell counts for virus</span>
+        <span class="n">sum_df</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">int_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;condition&quot;</span><span class="p">,</span> <span class="s2">&quot;replicate&quot;</span><span class="p">,</span> <span class="s2">&quot;starting_cell_count&quot;</span><span class="p">,</span> <span class="s2">&quot;virus_amount&quot;</span><span class="p">])</span>
+            <span class="o">.</span><span class="n">count</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">sum_df</span> <span class="o">=</span> <span class="n">sum_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        <span class="n">sum_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;virus_cell_count&quot;</span>
+        <span class="c1"># Summarize cell counts overall</span>
+        <span class="n">overall_counts</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;condition&quot;</span><span class="p">,</span> <span class="s2">&quot;replicate&quot;</span><span class="p">,</span> <span class="s2">&quot;starting_cell_count&quot;</span><span class="p">,</span> <span class="s2">&quot;virus_amount&quot;</span><span class="p">])</span>
+            <span class="o">.</span><span class="n">count</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">overall_counts</span> <span class="o">=</span> <span class="n">overall_counts</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        <span class="n">overall_counts</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;flowed_cell_count&quot;</span>
+        <span class="c1"># Merge into one dataframe</span>
+        <span class="n">sum_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+            <span class="n">sum_df</span><span class="p">,</span>
+            <span class="n">overall_counts</span><span class="p">,</span>
+            <span class="n">how</span><span class="o">=</span><span class="s2">&quot;outer&quot;</span><span class="p">,</span>
+            <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;condition&quot;</span><span class="p">,</span> <span class="s2">&quot;replicate&quot;</span><span class="p">,</span> <span class="s2">&quot;starting_cell_count&quot;</span><span class="p">,</span> <span class="s2">&quot;virus_amount&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">sum_df</span><span class="p">[</span><span class="s2">&quot;virus_cell_count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sum_df</span><span class="p">[</span><span class="s2">&quot;virus_cell_count&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Calculate fraction infected, moi, and the titer</span>
+        <span class="n">sum_df</span><span class="p">[</span><span class="s2">&quot;fraction_inf&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sum_df</span><span class="p">[</span><span class="s2">&quot;virus_cell_count&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">sum_df</span><span class="p">[</span><span class="s2">&quot;flowed_cell_count&quot;</span><span class="p">]</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">poisson_model</span><span class="p">(</span><span class="n">virus_vol</span><span class="p">,</span> <span class="n">tui_ratio_per_vol</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">scale_factor</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">tui_ratio_per_vol</span> <span class="o">*</span> <span class="n">virus_vol</span><span class="p">))</span>
+
+        <span class="c1"># create the final dataframe</span>
+        <span class="n">final_titers</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">sum_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;condition&quot;</span><span class="p">,</span> <span class="s2">&quot;replicate&quot;</span><span class="p">,</span> <span class="s2">&quot;starting_cell_count&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">final_titers</span> <span class="o">=</span> <span class="n">final_titers</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        <span class="n">final_titers</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;tui_ratio_per_vol&quot;</span>
+
+        <span class="n">tui</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Calculate TU per cell per vol for each condition/replicate</span>
+        <span class="c1"># via curvefit, then graph expected fraction infected for each uL of virus</span>
+        <span class="c1"># and graph/save best fit</span>
+        <span class="k">for</span> <span class="n">cond</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">sum_df</span><span class="p">[</span><span class="s2">&quot;condition&quot;</span><span class="p">]):</span>
+            <span class="n">current_df</span> <span class="o">=</span> <span class="n">sum_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">sum_df</span><span class="p">[</span><span class="s2">&quot;condition&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">cond</span><span class="p">)]</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">rep</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">current_df</span><span class="p">[</span><span class="s2">&quot;replicate&quot;</span><span class="p">]):</span>
+                <span class="n">plot_df</span> <span class="o">=</span> <span class="n">current_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">current_df</span><span class="p">[</span><span class="s2">&quot;replicate&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">rep</span><span class="p">)]</span>
+                <span class="n">plot_df</span> <span class="o">=</span> <span class="n">plot_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;virus_amount&quot;</span><span class="p">)</span>
+
+                <span class="n">popt</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span>
+                    <span class="n">poisson_model</span><span class="p">,</span>
+                    <span class="n">plot_df</span><span class="p">[</span><span class="s2">&quot;virus_amount&quot;</span><span class="p">],</span>
+                    <span class="n">plot_df</span><span class="p">[</span><span class="s2">&quot;fraction_inf&quot;</span><span class="p">],</span>
+                    <span class="n">p0</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                    <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">),</span>
+                <span class="p">)</span>
+
+                <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">plot_df</span><span class="p">[</span><span class="s2">&quot;virus_amount&quot;</span><span class="p">],</span> <span class="n">plot_df</span><span class="p">[</span><span class="s2">&quot;fraction_inf&quot;</span><span class="p">])</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">plot_df</span><span class="p">[</span><span class="s2">&quot;virus_amount&quot;</span><span class="p">],</span> <span class="n">poisson_model</span><span class="p">(</span><span class="n">plot_df</span><span class="p">[</span><span class="s2">&quot;virus_amount&quot;</span><span class="p">],</span> <span class="o">*</span><span class="n">popt</span><span class="p">))</span>
+                <span class="n">tui</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">popt</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Best Fit of Poisson Distribution for </span><span class="si">{</span><span class="n">cond</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Fraction infected&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Log (uL of virus in well)&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">output_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
+                    <span class="n">Path</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;figures&quot;</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">cond</span><span class="p">)</span><span class="si">}</span><span class="s2">_titer.png&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span>
+                <span class="p">)</span>
+            <span class="c1"># graph MOI vs Fraction Infected with reference line</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">,</span> <span class="mi">100</span><span class="p">)))</span>
+            <span class="k">for</span> <span class="n">rep</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">current_df</span><span class="p">[</span><span class="s2">&quot;replicate&quot;</span><span class="p">]):</span>
+                <span class="n">plot_df</span> <span class="o">=</span> <span class="n">current_df</span><span class="p">[(</span><span class="n">current_df</span><span class="p">[</span><span class="s2">&quot;replicate&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">rep</span><span class="p">)]</span>
+                <span class="n">plot_df</span> <span class="o">=</span> <span class="n">plot_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;virus_amount&quot;</span><span class="p">)</span>
+                <span class="n">popt</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">poisson_model</span><span class="p">,</span> <span class="n">plot_df</span><span class="p">[</span><span class="s2">&quot;virus_amount&quot;</span><span class="p">],</span> <span class="n">plot_df</span><span class="p">[</span><span class="s2">&quot;fraction_inf&quot;</span><span class="p">])</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                    <span class="n">scale_factor</span> <span class="o">*</span> <span class="n">popt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">plot_df</span><span class="p">[</span><span class="s2">&quot;virus_amount&quot;</span><span class="p">],</span> <span class="n">plot_df</span><span class="p">[</span><span class="s2">&quot;fraction_inf&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Log MOI&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Log Fraction Infected&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MOI v Fraction Infected Spread for </span><span class="si">{</span><span class="n">cond</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">output_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
+                    <span class="n">Path</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;figures&quot;</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">cond</span><span class="p">)</span><span class="si">}</span><span class="s2">_MOIcurve.png&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span>
+                <span class="p">)</span>
+        <span class="c1"># convert TU per cell per vol to TU per uL</span>
+        <span class="n">final_titers</span><span class="p">[</span><span class="s2">&quot;moi&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tui</span>
+        <span class="n">final_titers</span><span class="p">[</span><span class="s2">&quot;titer_in_uL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">final_titers</span><span class="p">[</span><span class="s2">&quot;moi&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">final_titers</span><span class="p">[</span><span class="s2">&quot;starting_cell_count&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">summary_method</span> <span class="o">==</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span>
+            <span class="n">final_output</span> <span class="o">=</span> <span class="n">final_titers</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;condition&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">final_output</span> <span class="o">=</span> <span class="n">final_titers</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;condition&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">output_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">final_output</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;MOI_titer_data.csv&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">final_output</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">want</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;condition&quot;</span><span class="p">,</span> <span class="s2">&quot;replicate&quot;</span><span class="p">,</span> <span class="s2">&quot;starting_cell_count&quot;</span><span class="p">,</span> <span class="s2">&quot;scaling&quot;</span><span class="p">,</span> <span class="s2">&quot;max_virus&quot;</span><span class="p">}</span>
+        <span class="n">have</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span>
+        <span class="n">lost</span> <span class="o">=</span> <span class="n">want</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">have</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">MOIinputError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing the following columns from the input dataframe: </span><span class="si">{</span><span class="n">lost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Christopher Johnstone, Kasey Love, Conrad Oakes.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Downloads and versions</span>
+      v: v0.6.0
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      
+      
+      <dl>
+        <dt>Versions</dt>
+        
+          
+          <dd><a href="/rushd/en/future_features/">future_features</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/main/">main</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.4.0/">v0.4.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.5.0/">v0.5.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.5.1/">v0.5.1</a></dd>
+          
+        
+           <strong> 
+          <dd><a href="/rushd/en/v0.6.0/">v0.6.0</a></dd>
+           </strong> 
+        
+          
+          <dd><a href="/rushd/en/v0.6.1/">v0.6.1</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.7.0/">v0.7.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en//"></a></dd>
+          
+        
+      </dl>
+      
+      
+      
+      <hr/>
+      Hosted with <span class="fa fa-heart"></span> on GitHub Pages.
+
+    </div>
+  </div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

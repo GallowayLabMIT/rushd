@@ -1,0 +1,434 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loading flow data &mdash; rushd 0.5.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=3fadbb4a"></script>
+      <script src="../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="qPCR" href="../qpcr/index.html" />
+    <link rel="prev" title="Flow cytometry" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2c6854" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            rushd
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview/index.html">Overview of <code class="docutils literal notranslate"><span class="pre">rushd</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../overview/plot_well_metadata.html">Visualizing YAML well metadata</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../overview/plot_well_metadata.html#automatic-plotting-of-well-metadata">Automatic plotting of well metadata</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../overview/plot_well_metadata.html#modifying-output-color-mapping">Modifying output color mapping</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../overview/plot_well_metadata.html#plotting-non-96-wells">Plotting non-96 wells</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Flow cytometry</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Loading flow data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#metadata-in-yaml">Metadata in YAML</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metadata-in-filenames">Metadata in filenames</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../qpcr/index.html">qPCR</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../ddpcr/index.html">Droplet digital PCR (ddPCR)</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../plot/index.html">Plotting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../plot/generate_xticklabels.html">Generating table-like x-axis tick labels</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/rushd.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.ddpcr">rushd.ddpcr module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.DataPathError"><code class="docutils literal notranslate"><span class="pre">DataPathError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.YamlError"><code class="docutils literal notranslate"><span class="pre">YamlError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.load_ddpcr"><code class="docutils literal notranslate"><span class="pre">load_ddpcr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.ddpcr.load_ddpcr_metadata"><code class="docutils literal notranslate"><span class="pre">load_ddpcr_metadata()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.flow">rushd.flow module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.ColumnError"><code class="docutils literal notranslate"><span class="pre">ColumnError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.DataPathError"><code class="docutils literal notranslate"><span class="pre">DataPathError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.GroupsError"><code class="docutils literal notranslate"><span class="pre">GroupsError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.MOIinputError"><code class="docutils literal notranslate"><span class="pre">MOIinputError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.MetadataWarning"><code class="docutils literal notranslate"><span class="pre">MetadataWarning</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.RegexError"><code class="docutils literal notranslate"><span class="pre">RegexError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.YamlError"><code class="docutils literal notranslate"><span class="pre">YamlError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_csv"><code class="docutils literal notranslate"><span class="pre">load_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_csv_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_csv_with_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_groups_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_groups_with_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.load_well_metadata"><code class="docutils literal notranslate"><span class="pre">load_well_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.flow.moi"><code class="docutils literal notranslate"><span class="pre">moi()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.io">rushd.io module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rationale">Rationale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.NoDatadirError"><code class="docutils literal notranslate"><span class="pre">NoDatadirError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.cache_dataframe"><code class="docutils literal notranslate"><span class="pre">cache_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.git_version"><code class="docutils literal notranslate"><span class="pre">git_version()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.infile"><code class="docutils literal notranslate"><span class="pre">infile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.io.outfile"><code class="docutils literal notranslate"><span class="pre">outfile()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.plot">rushd.plot module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.adjust_subplot_margins_inches"><code class="docutils literal notranslate"><span class="pre">adjust_subplot_margins_inches()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.debug_axes"><code class="docutils literal notranslate"><span class="pre">debug_axes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.generate_xticklabels"><code class="docutils literal notranslate"><span class="pre">generate_xticklabels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.plot_mapping"><code class="docutils literal notranslate"><span class="pre">plot_mapping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.plot.plot_well_metadata"><code class="docutils literal notranslate"><span class="pre">plot_well_metadata()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.qpcr">rushd.qpcr module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.ColumnError"><code class="docutils literal notranslate"><span class="pre">ColumnError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.DataPathError"><code class="docutils literal notranslate"><span class="pre">DataPathError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.GroupsError"><code class="docutils literal notranslate"><span class="pre">GroupsError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.InputError"><code class="docutils literal notranslate"><span class="pre">InputError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.RegexError"><code class="docutils literal notranslate"><span class="pre">RegexError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.YamlError"><code class="docutils literal notranslate"><span class="pre">YamlError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.load_plates_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_plates_with_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.qpcr.load_single_csv_with_metadata"><code class="docutils literal notranslate"><span class="pre">load_single_csv_with_metadata()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd.well_mapper">rushd.well_mapper module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#id1">Rationale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#specification">Specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.well_mapper.well_mapping"><code class="docutils literal notranslate"><span class="pre">well_mapping()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rushd.html#module-rushd">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.infile"><code class="docutils literal notranslate"><span class="pre">infile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/rushd.html#rushd.outfile"><code class="docutils literal notranslate"><span class="pre">outfile()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2c6854" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">rushd</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Tutorials</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Flow cytometry</a></li>
+      <li class="breadcrumb-item active">Loading flow data</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/tutorial/flow/loading_data.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="loading-flow-data">
+<h1>Loading flow data<a class="headerlink" href="#loading-flow-data" title="Permalink to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">rushd</span></code> provides several convenient ways to load flow data.
+We recommend that you put all metadata into a YAML file and load it based
+on auto-generated well-ID information, but you can also load metadata
+directly from CSV filenames.</p>
+<section id="metadata-in-yaml">
+<h2>Metadata in YAML<a class="headerlink" href="#metadata-in-yaml" title="Permalink to this heading"></a></h2>
+<p>You can load extra metadata using a YAML file that defines
+which wells had which conditions / treatments / cell lines / etc.</p>
+<p>For example, this YAML files specifies circuit syntax and dox treatment:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">syntax</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">tandem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A1-A12</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">convergent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">B1-B12</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">divergent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">C1-C12</span>
+<span class="w">  </span><span class="nt">dox_ng</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A1-C6</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">1000</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A7-C12</span>
+</pre></div>
+</div>
+<p>You are required to place all metadata conditions inside a top-level
+key called <code class="docutils literal notranslate"><span class="pre">metadata</span></code>. Within this, you can define arbitrary mappings
+that map onto ranges of wells.</p>
+<p>To load a plate of flow data, you can use <code class="docutils literal notranslate"><span class="pre">rushd</span></code> by specifying
+a path to this YAML file and a path to the folder containing the <code class="docutils literal notranslate"><span class="pre">.csv</span></code> files:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">rd</span><span class="o">.</span><span class="n">flow</span><span class="o">.</span><span class="n">load_csv_with_metadata</span><span class="p">(</span><span class="n">rd</span><span class="o">.</span><span class="n">datadir</span><span class="o">/</span><span class="s2">&quot;exp01&quot;</span><span class="o">/</span><span class="s2">&quot;metadata.yaml&quot;</span><span class="p">,</span> <span class="n">rd</span><span class="o">.</span><span class="n">datadir</span><span class="o">/</span><span class="s2">&quot;exp01&quot;</span><span class="o">/</span><span class="s2">&quot;csv_export&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Alternatively, you can specify a <code class="docutils literal notranslate"><span class="pre">.zip</span></code> file of the metadata. Let’s assume you zipped all of the CSVs into
+one file, called <code class="docutils literal notranslate"><span class="pre">csvs.zip</span></code>. Then, you can load this as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">rd</span><span class="o">.</span><span class="n">flow</span><span class="o">.</span><span class="n">load_csv_with_metadata</span><span class="p">(</span><span class="n">rd</span><span class="o">.</span><span class="n">datadir</span><span class="o">/</span><span class="s2">&quot;exp01&quot;</span><span class="o">/</span><span class="s2">&quot;metadata.yaml&quot;</span><span class="p">,</span> <span class="n">rd</span><span class="o">.</span><span class="n">datadir</span><span class="o">/</span><span class="s2">&quot;exp01&quot;</span><span class="o">/</span><span class="s2">&quot;csvs.zip&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, you are allowed to zip the metadata and CSVs together. Let’s say you have the following zip file:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>exp01.zip/
+├── metadata.yaml
+└── export/
+    ├── export_A1_singlets.csv
+    ├── export_A2_singlets.csv
+    ├── ...
+    └── export_G12_singlets.csv
+</pre></div>
+</div>
+<p>You can load this by specifying the path to the metadata file and the CSVs as a tuple:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">rd</span><span class="o">.</span><span class="n">flow</span><span class="o">.</span><span class="n">load_csv_with_metadata</span><span class="p">((</span><span class="n">rd</span><span class="o">.</span><span class="n">datadir</span><span class="o">/</span><span class="s2">&quot;exp01.zip&quot;</span><span class="p">,</span> <span class="s2">&quot;metadata.yaml&quot;</span><span class="p">),</span> <span class="p">(</span><span class="n">rd</span><span class="o">.</span><span class="n">datadir</span><span class="o">/</span><span class="s2">&quot;exp01.zip&quot;</span><span class="p">,</span> <span class="s2">&quot;export&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Check out the documentation for this function for more things you can do, like specifying only certain
+columns to be loaded:</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">rushd.flow.</span></span><span class="sig-name descname"><span class="pre">load_csv_with_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yaml_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename_regex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rushd/flow.html#load_csv_with_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Load .csv data into DataFrame with associated metadata.</p>
+<p>Generates a pandas DataFrame from a set of .csv files located at the given path,
+adding columns for metadata encoded by a given .yaml file. Metadata is associated
+with the data based on well IDs encoded in the data filenames.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_path</strong> (<em>location</em><em> of </em><em>the .csv files</em>) – Either a directory containing .csv files,
+a zip file containing .csv files,
+or a path within a zip file containing .csv files.</p></li>
+<li><p><strong>yaml_path</strong> (<em>either a path to a .yaml file</em><em> or </em><em>a path within a zip file to a .yaml</em>) – Path to .yaml file to use for associating metadata with well IDs.
+All metadata must be contained under the header ‘metadata’.</p></li>
+<li><p><strong>filename_regex</strong> (<em>str</em><em> or </em><em>raw str</em><em> (</em><em>optional</em><em>)</em>) – Regular expression to use to extract well IDs from data filenames.
+Must contain the capturing group ‘well’ for the sample well IDs.
+If not included, the filenames are assumed to follow this format (default
+export format from FlowJo): <code class="docutils literal notranslate"><span class="pre">export_[well]_[population].csv</span></code></p></li>
+<li><p><strong>columns</strong> (<em>list</em><em> of </em><em>strings</em><em> (</em><em>optional</em><em>)</em>) – If specified, only these columns are loaded out of the .csv files.
+This can drastically reduce the amount of memory required to load
+flow data.</p></li>
+<li><p><strong>csv_kwargs</strong> (<em>dict</em><em> (</em><em>optional</em><em>)</em>) – Additional kwargs to pass to pandas <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>. For instance, to skip rows or
+to specify alternate delimiters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A single pandas DataFrame containing all data with associated metadata.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>Finally, you can use any of these data loading techniques with the multi-plate loading function:</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">rushd.flow.</span></span><span class="sig-name descname"><span class="pre">load_groups_with_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">groups_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename_regex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rushd/flow.html#load_groups_with_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Load .csv data into DataFrame with associated metadata by group.</p>
+<p>Each group of .csv files may be located at a different path and be
+associated with additional user-defined metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>groups_df</strong> (<em>Pandas DataFrame</em>) – Each row of the DataFrame is evaluated as a separate group. Columns must
+include ‘data_path’ and ‘yaml_path’, specifying absolute or relative paths
+to the group of .csv files and metadata .yaml files, respectively.
+Optionally, regular expressions for the file names can be specified for each
+group using the column ‘filename_regex’ (this will override the
+<cite>filename_regex</cite> argument).</p></li>
+<li><p><strong>base_path</strong> (<em>str</em><em> or </em><em>Path</em><em> (</em><em>optional</em><em>)</em>) – If specified, path that data and yaml paths in input_df are defined relative to.</p></li>
+<li><p><strong>filename_regex</strong> (<em>str</em><em> or </em><em>raw str</em><em> (</em><em>optional</em><em>)</em>) – Regular expression to use to extract well IDs from data filenames.
+Must contain the capturing group <cite>well</cite> for the sample well IDs.
+Other capturing groups in the regex will be added as metadata.
+This value applies to all groups; to specify different regexes for each group,
+add the column ‘filename_regex’ to <cite>groups_df</cite> (this will override the
+<cite>filename_regex</cite> argument).
+If not included, the filenames are assumed to follow this format (default
+export format from FlowJo): <code class="docutils literal notranslate"><span class="pre">export_[well]_[population].csv</span></code></p></li>
+<li><p><strong>columns</strong> (<em>list</em><em> of </em><em>strings</em><em> (</em><em>optional</em><em>)</em>) – If specified, only these columns are loaded out of the .csv files.
+This can drastically reduce the amount of memory required to load
+flow data.</p></li>
+<li><p><strong>csv_kwargs</strong> (<em>dict</em><em> (</em><em>optional</em><em>)</em>) – Additional kwargs to pass to pandas <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>. For instance, to skip rows or
+to specify alternate delimiters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A single pandas DataFrame containing data from all groups with associated metadata.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="metadata-in-filenames">
+<h2>Metadata in filenames<a class="headerlink" href="#metadata-in-filenames" title="Permalink to this heading"></a></h2>
+<p>If you ran a tube experiment or otherwise have metadata specified in filenames, you can use a function that just
+loads CSVs and extracts the metadata out of.</p>
+<p>Let’s say that we have some files that have metadata in their filenames, like:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">export_BFP_100_singlets.csv</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">export_GFP_1000_singlets.csv</span></code></p></li>
+</ul>
+<p>where we want to extract the construct and the dox concentration. Developing the regex is beyond the scope here:
+use <a class="reference external" href="https://regex101.com">https://regex101.com</a> to evaluate teh regex. In this case, a regex that works here is <code class="docutils literal notranslate"><span class="pre">^.*export_(?P&lt;construct&gt;.+)_(?P&lt;dox&gt;[0-9]+)_(?P&lt;population&gt;.+)\.csv</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^.*export_(?P&lt;construct&gt;.+)_(?P&lt;dox&gt;[0-9]+)_(?P&lt;population&gt;.+)\.csv&quot;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">rd</span><span class="o">.</span><span class="n">flow</span><span class="o">.</span><span class="n">load_csv</span><span class="p">(</span><span class="n">rd</span><span class="o">.</span><span class="n">datadir</span><span class="o">/</span><span class="s2">&quot;exp02&quot;</span><span class="p">,</span> <span class="n">regex</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can see more details of this function below:</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">rushd.flow.</span></span><span class="sig-name descname"><span class="pre">load_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename_regex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rushd/flow.html#load_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Load .csv data into DataFrame without additional metadata.</p>
+<p>Generates a pandas DataFrame from a set of .csv files located at the given path,
+adding columns for metadata encoded in the data filenames.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_path</strong> (<em>str</em><em> or </em><em>Path</em><em> or </em><em>a tuple with a str/Path to a zip file and a str folder inside</em>) – Path to directory containing data files (.csv)</p></li>
+<li><p><strong>filename_regex</strong> (<em>str</em><em> or </em><em>raw str</em><em> (</em><em>optional</em><em>)</em>) – Regular expression to use to extract metadata from data filenames.
+Any named capturing groups will be added as metadata.
+If not included, the filenames are assumed to follow this format (default
+export format from FlowJo): <code class="docutils literal notranslate"><span class="pre">export_[condition]_[population].csv</span></code></p></li>
+<li><p><strong>columns</strong> (<em>list</em><em> of </em><em>strings</em><em> (</em><em>optional</em><em>)</em>) – If specified, only these columns are loaded out of the .csv files.
+This can drastically reduce the amount of memory required to load
+flow data.</p></li>
+<li><p><strong>csv_kwargs</strong> (<em>dict</em><em> (</em><em>optional</em><em>)</em>) – Additional kwargs to pass to pandas <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>. For instance, to skip rows or
+to specify alternate delimiters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A single pandas DataFrame containing all data with associated filename metadata.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Christopher Johnstone, Kasey Love, Conrad Oakes.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Downloads and versions</span>
+      v: main
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      
+      
+      <dl>
+        <dt>Versions</dt>
+        
+          
+          <dd><a href="/rushd/en/future_features/">future_features</a></dd>
+          
+        
+           <strong> 
+          <dd><a href="/rushd/en/main/">main</a></dd>
+           </strong> 
+        
+          
+          <dd><a href="/rushd/en/v0.4.0/">v0.4.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.5.0/">v0.5.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.5.1/">v0.5.1</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.6.0/">v0.6.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.6.1/">v0.6.1</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en/v0.7.0/">v0.7.0</a></dd>
+          
+        
+          
+          <dd><a href="/rushd/en//"></a></dd>
+          
+        
+      </dl>
+      
+      
+      
+      <hr/>
+      Hosted with <span class="fa fa-heart"></span> on GitHub Pages.
+
+    </div>
+  </div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
