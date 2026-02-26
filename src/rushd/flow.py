@@ -19,6 +19,7 @@ import yaml
 from scipy.optimize import curve_fit
 
 from . import well_mapper
+from .io import _is_relative_to
 
 OptionalZipPath = Union[str, Path, Tuple[Union[str, Path], str]]
 
@@ -268,7 +269,7 @@ def load_csv_with_metadata(
         with ZipFile(zip_path) as data_zip:
             for file in data_zip.infolist():
                 filename = Path(file.filename)
-                if filename.is_relative_to(rel_to):
+                if _is_relative_to(filename, rel_to):
                     match = regex.match(filename.name)
                     if match is None:
                         continue
@@ -465,7 +466,7 @@ def load_csv(
         with ZipFile(zip_path) as data_zip:
             for file in data_zip.infolist():
                 filename = Path(file.filename)
-                if filename.is_relative_to(rel_to):
+                if _is_relative_to(filename, rel_to):
                     match = regex.match(filename.name)
                     if match is None:
                         continue
