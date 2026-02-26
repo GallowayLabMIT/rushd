@@ -636,7 +636,6 @@ def test_csv_valid_custom_regex_zip_file(tmp_path: Path):
         zip.writestr("export_GFP_1000_singlets.csv", "channel1,channel2\n10,20")
 
     with zipfile.ZipFile(tmp_path / "test_subdir.zip", "w") as zip:
-        zip.mkdir("export")
         zip.writestr("export/export_BFP_100_singlets.csv", "channel1,channel2\n1,2")
         zip.writestr("export/export_GFP_1000_singlets.csv", "channel1,channel2\n10,20")
 
@@ -743,7 +742,6 @@ def test_data_metadata_zip(tmp_path: Path):
             - cond1: A1,G12
         """,
         )
-        zip.mkdir("export")
         zip.writestr("export/export_A1_singlets.csv", "channel1,channel2\n1,2")
         zip.writestr("export/export_G12_singlets.csv", "channel1,channel2\n10,20")
 
@@ -775,7 +773,6 @@ def test_zip_group_valid(tmp_path: Path):
                 - cond1: A1,G12
             """,
             )
-            zip.mkdir("export")
             zip.writestr("export/export_A1_singlets.csv", "channel1,channel2\n1,2")
             zip.writestr("export/export_G12_singlets.csv", "channel1,channel2\n10,20")
 
