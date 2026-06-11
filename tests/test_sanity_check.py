@@ -66,14 +66,12 @@ def venv(class_tmp: Path, request) -> VirtualEnvironment:
     return VirtualEnvironment(python=python_path, pip=pip_path, root=class_tmp)
 
 
-def run_pip(venv: VirtualEnvironment, *args) -> subprocess.CompletedProcess[bytes]:
+def run_pip(venv: VirtualEnvironment, *args) -> subprocess.CompletedProcess:
     """Runs a pip command in the virtual environment"""
     return subprocess.run([str(venv.pip), *args], cwd=venv.root, capture_output=True, check=True)
 
 
-def run_python_with_cov(
-    venv: VirtualEnvironment, lines: List[str]
-) -> subprocess.CompletedProcess[bytes]:
+def run_python_with_cov(venv: VirtualEnvironment, lines: List[str]) -> subprocess.CompletedProcess:
     """Runs a series of python commands, loading coverage first"""
     pre_lines = ["import coverage", "coverage.process_startup()"]
 
@@ -82,7 +80,7 @@ def run_python_with_cov(
     )
 
 
-def run_sanity_check(venv: VirtualEnvironment) -> subprocess.CompletedProcess[bytes]:
+def run_sanity_check(venv: VirtualEnvironment) -> subprocess.CompletedProcess:
     """Runs the full rushd sanity check"""
     return run_python_with_cov(venv, ["import rushd", "rushd.check.sanity_check()"])
 
