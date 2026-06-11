@@ -4,14 +4,16 @@ Collection of helper modules for maintaining
 robust, reproducible data management.
 """
 
-from . import flow, io, plot, qpcr, ddpcr  # noqa
+from . import flow, check, io, plot, qpcr, ddpcr  # noqa
 from .io import infile, outfile  # noqa
+from .check import sanity_check  # noqa
 
-submodules = ["io", "flow", "plot", "qpcr", "ddpcr"]
+submodules = ["io", "check", "flow", "plot", "qpcr", "ddpcr"]
 
 re_exports = [
     "infile",
     "outfile",
+    "sanity_check",
 ]
 # Re-exports of common functions loaded from submodules
 __all__ = submodules + re_exports

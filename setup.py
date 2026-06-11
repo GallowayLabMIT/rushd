@@ -42,6 +42,7 @@ setuptools.setup(
     install_requires=[
         "pyyaml",
         "pandas",
+        "packaging",
         "matplotlib",
         "scipy",
         'typing-extensions;python_version<"3.8"',
