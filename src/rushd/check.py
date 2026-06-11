@@ -198,6 +198,21 @@ def sanity_check_venv() -> bool:
     return True
 
 
+def _python_38_39_dist_fixup(dist):
+    """
+    Fixup the name field of installed distributions.
+
+    On Python 3.8 and 3.9, the distribution object
+    doesn't have a name field, and we have to parse it
+    ourselves.
+    """
+    if not hasattr(dist, "name"):
+        for entry in dist.metadata.as_string().split("\n"):
+            if entry.startswith("Name: "):
+                dist.name = entry[6:]
+    return dist
+
+
 def sanity_check_requirements() -> bool:
     """Check that a requirements.txt file exists and is up to date."""
     # check for a requirements.txt file.
@@ -220,6 +235,10 @@ def sanity_check_requirements() -> bool:
 
     # check for superset of requirements
     installed_packages = list(importlib.metadata.distributions())
+    # add the name field if required, for python 3.8 and 3.9
+    # remove once we stop supporting 3.8 and 3.9
+    installed_packages = [_python_38_39_dist_fixup(dist) for dist in installed_packages]
+
     requirements = [Requirement(r) for r in requirements_path.read_text().strip().split("\n")]
 
     diffed_packages = _diff_requirements(requirements, installed_packages)
