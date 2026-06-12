@@ -297,11 +297,6 @@ def sanity_check_git() -> bool:
             cwd=repo_root,
             capture_output=True,
         )
-        print(
-            f"Requirements git check: return: {result.returncode}"
-            + f"\nstdout:\n{result.stdout.decode()}"
-            + f"\nstderr:\n{result.stderr.decode()}"
-        )
         if result.returncode != 0:
             warnings.warn(
                 "The requirements.txt file exists but is not tracked by git!", stacklevel=2
