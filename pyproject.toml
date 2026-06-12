@@ -23,6 +23,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Topic :: Scientific/Engineering",
 ]
@@ -31,7 +32,6 @@ classifiers = [
 # once python 3.8 support is dropped, we can bump setuptools
 # and use the modern approach:
 # https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license-and-license-files
-license = {file = "LICENSE"}
 
 dependencies = [
     "pyyaml",
