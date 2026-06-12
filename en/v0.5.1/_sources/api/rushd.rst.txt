@@ -1,0 +1,45 @@
+rushd package
+=============
+
+Submodules
+----------
+
+rushd.flow module
+-----------------
+
+.. automodule:: rushd.flow
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+rushd.io module
+---------------
+
+.. automodule:: rushd.io
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+rushd.plot module
+-----------------
+
+.. automodule:: rushd.plot
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+rushd.well\_mapper module
+-------------------------
+
+.. automodule:: rushd.well_mapper
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: rushd
+   :members:
+   :show-inheritance:
+   :undoc-members:

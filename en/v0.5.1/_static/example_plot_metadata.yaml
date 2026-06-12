@@ -1,0 +1,20 @@
+metadata:
+    inducible_fluorophore:
+        - TagBFP: A1-H9
+        - EGFP: A10-H12
+    orientation:
+        - tandem: A1-H3, A10-H12
+        - convergent: A4-H6
+        - divergent: A7-H9
+    inducible_spacerlength:
+        - 0: A1-H9
+        - 2: A10-H12
+    dox:
+        - 0: A1-A12
+        - 0.0000820: B1-B12
+        - 0.0003248: C1-C12
+        - 0.0012864: D1-D12
+        - 0.0050940: E1-E12
+        - 0.0201723: F1-F12
+        - 0.0798822: G1-G12
+        - 0.3163330: H1-H12
