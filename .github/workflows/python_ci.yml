@@ -38,7 +38,7 @@ jobs:
       env:
           PYTHON: ${{ matrix.python-version }}
       with:
-          file: ./coverage.xml
+          files: ./coverage.xml
           flags: unittests
           env_vars: PYTHON
           name: github_actions
@@ -46,4 +46,4 @@ jobs:
     - name: Run test-suite in fail mode
       run: pytest --continue-on-collection-errors
     - name: Run pre-commit
-      uses: pre-commit/action@v3.0.1
+      run: pre-commit run --all-files
