@@ -1,9 +1,64 @@
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel"
-]
+requires = ["setuptools >= 77.0.3"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "rushd"
+version = "1.0.0rc1"
+authors = [
+    { name="Christopher Johnstone", email="meson800@gmail.com" },
+    { name="Kasey Love", email="kslove@mit.edu" },
+    { name="Conrad Oakes", email="coakes@caltech.edu" }
+]
+description = "A package for maintaining robust, reproducible data management"
+readme = "README.md"
+requires-python = ">=3.8"
+
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering",
+]
+license = "MIT"
+license-files = ["LICENSE"]
+
+dependencies = [
+    "pyyaml",
+    "pandas",
+    "packaging",
+    "matplotlib",
+    "scipy",
+    'typing-extensions;python_version<"3.8"',
+    "py7zr",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pyarrow",
+    "pytest",
+    "pytest-pep8",
+    "pytest-cov",
+    "pytest-mock",
+    "pre-commit",
+    "ruff",
+    "seaborn",
+    "build",
+    "twine",
+    "sphinx",
+    "sphinx-rtd-theme",
+    "sphinx-autodoc-typehints",
+]
+
+[project.urls]
+Homepage = "https://github.com/GallowayLabMIT/rushd"
+Issues = "https://github.com/GallowayLabMIT/rushd/issues"
 
 [tool.ruff]
 target-version = "py38"
