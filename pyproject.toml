@@ -26,8 +26,12 @@ classifiers = [
     "Operating System :: OS Independent",
     "Topic :: Scientific/Engineering",
 ]
-license = "MIT"
-license-files = ["LICENSE"]
+# setuptools 75 (required for Python 3.8 support)
+# requires this license layout
+# once python 3.8 support is dropped, we can bump setuptools
+# and use the modern approach:
+# https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license-and-license-files
+license = {file = "LICENSE"}
 
 dependencies = [
     "pyyaml",
